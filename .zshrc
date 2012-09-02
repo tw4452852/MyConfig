@@ -1,26 +1,11 @@
 #myself
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/lib
-export SBCL_HOME=/home/wtan/lib/sbcl
-export PERL=/usr/bin/perl
 export CSCOPE_EDITOR=vim
 export EDITOR=vim
-export OCTEON_MODEL=OCTEON_CN68XX
-export OCTEON_ROOT=/home/wtan/svn/sdk2.1/trunk
 
-export GOROOT="/home/wtan/tmp/go"
-export GOBIN=$GOROOT/bin
-export GOARCH="amd64"
-export GOCHAR="6"
-export GOOS="linux"
-export GOEXE=""
-export GOHOSTARCH="amd64"
-export GOHOSTOS="linux"
-export GOTOOLDIR="/home/wtan/tmp/go/pkg/tool/linux_amd64"
-export GOGCCFLAGS="-g -O2 -fPIC -m64 -pthread"
-export CGO_ENABLED="1"
-export GOPATH=$HOME/test/go
+export GOROOT=/home/tw/goroot
+export GOPATH=/home/tw/golib
 
-export PATH=$PATH:$HOME/bin:$GOBIN:$GOTOOLDIR
+export PATH=$PATH:$GOROOT/bin
 
 #color{{{
 autoload colors
