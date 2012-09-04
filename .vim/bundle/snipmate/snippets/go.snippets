@@ -1,0 +1,44 @@
+# fun
+snippet fu
+	func ${1} ${2}(${3}) ${4} {
+		${5}
+	}
+# pac
+snippet pa
+	package ${1}
+# imp
+snippet im
+	import (
+		${1}
+	)
+# If Condition
+snippet if
+	if ${1:/* init and condition */} {
+		${2:/* code */}
+	}
+# else Condition
+snippet el
+	else {
+		${1}
+	}
+# For Loop
+snippet fo
+	for ${1}; ${2}; ${3} {
+		${4:/* code */}
+	}
+# type
+snippet ty
+	type ${1} ${2}
+#switch
+snippet sw
+	switch ${1} {
+		case ${2}
+		default:
+			${3}
+	}${4}
+
+snippet bl
+	/*------------------------${1:/*what*/} start------------------------*/
+	${2}
+	/*------------------------$1 end------------------------*/
+	${3}
