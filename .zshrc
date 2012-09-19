@@ -230,8 +230,8 @@ bindkey "\e\e" sudo-command-line
 
 #命令别名 {{{
 alias -g cp='cp -i'
-alias -g mv='mv -i'
-alias -g rm='rm -i'
+#alias -g mv='mv -i'
+#alias -g rm='rm -i'
 alias -g ls='ls -F --color=auto'
 alias -g ll='ls -l'
 alias -g grep='grep --color=auto'
