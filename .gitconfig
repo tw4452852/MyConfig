@@ -12,3 +12,4 @@
 	ci = commit
 	sci = svn dcommit
 	co = checkout
+	di = diff
