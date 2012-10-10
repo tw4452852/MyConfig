@@ -1,0 +1,13 @@
+[user]
+	name = Tw
+	email = tw19881113@gmail.com
+[core]
+	editor = vim
+[color]
+	ui = true
+[alias]
+	st = status
+	srb = svn rebase
+	rb = rebase
+	ci = commit
+	co = checkout
