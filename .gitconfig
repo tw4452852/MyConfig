@@ -10,4 +10,5 @@
 	srb = svn rebase
 	rb = rebase
 	ci = commit
+	sci = svn dcommit
 	co = checkout
