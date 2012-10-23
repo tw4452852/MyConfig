@@ -1,5 +1,5 @@
 # fun
-snippet func
+snippet fun
 	func ${1}(${2})${3} {
 		${4}
 	}
@@ -22,6 +22,11 @@ snippet el
 	else {
 		${1}
 	}
+# else if
+snippet ei
+	else if ${1} {
+		${2}
+	}
 # For Loop
 snippet for
 	for ${1} {
@@ -40,9 +45,9 @@ snippet tdi
 #switch
 snippet sw
 	switch ${1} {
-		case ${2}
-		default:
-			${3}
+	case: ${2}
+	default:
+		${3}
 	}${4}
 
 snippet bl
