@@ -13,3 +13,4 @@
 	sci = svn dcommit
 	co = checkout
 	di = diff
+	br = branch
