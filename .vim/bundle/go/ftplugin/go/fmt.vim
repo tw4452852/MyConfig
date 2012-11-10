@@ -41,4 +41,5 @@ function! s:GoFormat()
     call winrestview(view)
 endfunction
 
+autocmd BufWritePre *.go :silent Fmt
 " vim:ts=4:sw=4:et
