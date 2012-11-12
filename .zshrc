@@ -5,7 +5,7 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="juanghurtado"
+ZSH_THEME="frisk"
 
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
@@ -33,6 +33,10 @@ plugins=(git github vi-mode)
 
 source $ZSH/oh-my-zsh.sh
 
+function git_promp_info () {
+	ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+	echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+}
 # Customize to your needs...
 export CSCOPE_EDITOR=vim
 export EDITOR=vim
