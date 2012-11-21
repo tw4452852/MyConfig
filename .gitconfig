@@ -3,6 +3,7 @@
 	email = tw19881113@gmail.com
 [core]
 	editor = vim
+	autocrlf = input
 [color]
 	ui = true
 [alias]
@@ -14,3 +15,5 @@
 	co = checkout
 	di = diff
 	br = branch
+[apply]
+	whitespace = fix
