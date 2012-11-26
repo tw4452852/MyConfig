@@ -31,8 +31,8 @@ set laststatus=2
 set nu
 syntax enable
 "set undofile
-"set list
-"set listchars=tab:»\ ,eol:¬,trail:▲,nbsp:▲
+set list
+set listchars=tab:»\ ,eol:¬,trail:▲,nbsp:▲
 
 set ignorecase
 set smartcase
@@ -184,3 +184,8 @@ nmap <leader>si :cs find i ^<C-R>=expand("<cfile>")<cr><cr>
 nmap <leader>sd :cs find d <C-R>=expand("<cword>")<cr><cr>
 nmap <c-]> :cs find g <C-R>=expand("<cword>")<cr><cr>
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"go
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufWritePre *.go :silent Fmt
+autocmd BufNewFile,BufRead *.go ino <leader>g <c-x><c-o>
