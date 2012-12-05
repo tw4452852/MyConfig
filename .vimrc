@@ -9,7 +9,6 @@ filetype plugin on
 filetype indent on
 set nocompatible
 set modelines=0
-set spell
 
 set tabstop=4
 set shiftwidth=4
@@ -195,3 +194,4 @@ autocmd BufNewFile,BufRead *.go ino <leader>g <c-x><c-o>
 "markdown
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd BufNewFile,BufRead *.md set textwidth=80
+autocmd BufNewFile,BufRead *.md set spell
