@@ -9,6 +9,7 @@ filetype plugin on
 filetype indent on
 set nocompatible
 set modelines=0
+set spell
 
 set tabstop=4
 set shiftwidth=4
@@ -189,3 +190,8 @@ nmap <c-]> :cs find g <C-R>=expand("<cword>")<cr><cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd BufWritePre *.go :silent Fmt
 autocmd BufNewFile,BufRead *.go ino <leader>g <c-x><c-o>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"markdown
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufNewFile,BufRead *.md set textwidth=80
