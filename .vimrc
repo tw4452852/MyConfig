@@ -193,5 +193,5 @@ autocmd BufNewFile,BufRead *.go ino <leader>g <c-x><c-o>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "markdown
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd BufNewFile,BufRead *.md set textwidth=80
+autocmd BufNewFile,BufRead *.md set textwidth=100
 autocmd BufNewFile,BufRead *.md set spell
