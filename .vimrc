@@ -119,18 +119,6 @@ let Tlist_Exit_OnlyWindow = 1
 nnoremap <leader>t :TlistToggle<cr>   
 inoremap <leader>t <esc>:TlistToggle<cr>   
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"miniBufExpl
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"let g:miniBufExplModSelTarget = 1
-"let g:miniBufExplorerMoreThanOne = 2
-"let g:miniBufExplModSelTarget = 0
-"let g:miniBufExplUseSingleClick = 1
-"let g:miniBufExplMapWindowNavVim = 1
-"let g:miniBufExplSplitBelow = 0
-"let g:bufExplorerSortBy = "name"
-"nnoremap <leader>b :TMiniBufExplorer<cr>
-"inoremap <leader>b <esc>:TMiniBufExlorer<cr>
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "snipmate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 ino <leader>m <c-r>=TriggerSnippet()<cr>
