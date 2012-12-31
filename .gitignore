@@ -1,1 +1,3 @@
 *.swp
+*.~
+.oh-my-zsh/cache/
