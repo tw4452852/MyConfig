@@ -37,10 +37,10 @@ plugins=(git github vi-mode ssh-agent)
 
 source $ZSH/oh-my-zsh.sh
 
-function git_prompt_info () {
-	ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-	echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
-}
+#function git_prompt_info () {
+	#ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+	#echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+#}
 # Customize to your needs...
 export LC_ALL="en_US.UTF-8"
 
