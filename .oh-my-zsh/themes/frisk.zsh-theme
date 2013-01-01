@@ -1,6 +1,6 @@
 PROMPT=$'
 %{$fg[blue]%}%/%{$reset_color%} $(git_prompt_info)%{$fg[white]%}[%n@%m]%{$reset_color%} %{$fg[white]%}[%T]%{$reset_color%}
-%{$fg_bold[black]%}%?>%{$reset_color%} '
+%{$fg_bold[white]%}%?>%{$reset_color%} '
 
 PROMPT2="%{$fg_blod[black]%}%_> %{$reset_color%}"
 
