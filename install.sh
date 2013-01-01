@@ -50,12 +50,12 @@ export PATH=~/MyRoot/bin/:$PATH
 
 #fetch the submodule src
 git sm init
-git sm update
 
 #build the software
 #libevent (needed by tmux)
 pkg-config --exists libevent
 if [[ $? -ne 0 ]]; then
+	git sm update libevent
 	cd libevent
 	git co master
 	./autogen.sh &&
@@ -72,6 +72,7 @@ fi
 #tmux
 which tmux
 if [[ $? -ne 0 ]]; then
+	git sm update tmux
 	cd tmux
 	git co master
 	./autogen.sh &&
@@ -86,8 +87,8 @@ if [[ $? -ne 0 ]]; then
 fi
 
 #go
-export GOROOT=''
-export GOPATH=''
+export GOROOT=
+export GOPATH=
 hg clone http://code.google.com/p/go ~/goroot &&
 cd ~/goroot/src &&
 ./all.bash
@@ -100,6 +101,7 @@ cd -
 #zsh
 which zsh
 if [[ $? -ne 0 ]]; then
+	git sm update zsh
 	cd zsh
 	git co master
 	./Util/preconfig;
@@ -107,14 +109,14 @@ if [[ $? -ne 0 ]]; then
 	make;
 	make install;
 	cd -
-	#change default shell
-	if [[ $USER != root ]]; then
-		sudo echo `which zsh` >> /etc/shells
-		chsh -s `which zsh`
-		if [[ $? -ne 0 ]]; then
-			echo 'changing default shell failed' 1 >&2
-			exit 1
-		fi
+fi
+#change default shell
+if [[ $USER != root ]]; then
+	sudo echo `which zsh` >> /etc/shells
+	chsh -s `which zsh`
+	if [[ $? -ne 0 ]]; then
+		echo 'changing default shell failed' 1 >&2
+		exit 1
 	fi
 fi
 
