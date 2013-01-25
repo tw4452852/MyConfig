@@ -9,6 +9,8 @@
 [alias]
 	st = status
 	sa = stash
+	fe = fetch
+	sm = submodule
 	srb = svn rebase
 	rb = rebase
 	ci = commit
