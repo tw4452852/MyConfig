@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set +e
 if [[ ! -f install.sh ]]; then
 	echo 'install.sh must be run in where it locates' 1 >&2
 	exit 1
@@ -33,10 +33,13 @@ git sm update
 #build the software
 #libevent (needed by tmux)
 cd libevent
-./autogen.sh
-./configure --prefix=$BASE/MyRoot/
-make
-make install
+./autogen.sh &&
+./configure --prefix=$BASE/MyRoot/ &&
+make &&
+make install &&
+if [[ $? -ne 0 ]]; then
+	exit 1
+fi
 cd -
 
 #tmux
@@ -45,11 +48,15 @@ cd tmux
 ./configure --prefix=$BASE/MyRoot/
 make
 make install
+if [[ $? -ne 0 ]]; then
+	exit 1
+fi
 cd -
 
 #zsh
-cd zsh-5.0.2
-./configure --prefix=$BASE/MyRoot/
-make
-make install
+cd zsh
+./Util/preconfig;
+./configure --prefix=$BASE/MyRoot/;
+make;
+make install;
 cd -
