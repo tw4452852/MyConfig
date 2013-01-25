@@ -1,9 +1,0 @@
-root = true  # Top-most editorconfig file
-
-[*]
-end_of_line = lf
-tab_width   = 8
-indent_size = 2
-
-[*.[ch]]
-indent_size = 4
