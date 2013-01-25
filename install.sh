@@ -21,7 +21,7 @@ ln -sf `pwd`/.oh-my-zsh ~
 ln -sf `pwd`/.zshrc ~
 
 #tw_cscope
-ln -sf `pwd`/tw_cscope ~/MyRoot/bin/
+ln -sf `pwd`/bin/tw_cscope ~/MyRoot/bin/
 
 export PKG_CONFIG_PATH=~/MyRoot/lib/pkgconfig/:$PKG_CONFIG_PATH
 export PATH=~/MyRoot/bin/:$PATH
@@ -36,7 +36,7 @@ cd libevent
 ./autogen.sh &&
 ./configure --prefix=$BASE/MyRoot/ &&
 make &&
-make install &&
+make install
 if [[ $? -ne 0 ]]; then
 	exit 1
 fi
@@ -44,9 +44,9 @@ cd -
 
 #tmux
 cd tmux
-./autogen.sh
-./configure --prefix=$BASE/MyRoot/
-make
+./autogen.sh &&
+./configure --prefix=$BASE/MyRoot/ &&
+make &&
 make install
 if [[ $? -ne 0 ]]; then
 	exit 1
