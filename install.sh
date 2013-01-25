@@ -60,3 +60,12 @@ cd zsh
 make;
 make install;
 cd -
+
+#mercurial
+cd mercurial
+./make &&
+./make PREFIX=$BASE/MyRoot/
+if [[ $? -ne 0 ]]; then
+	exit 1
+fi
+cd -
