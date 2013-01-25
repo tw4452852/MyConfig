@@ -5,6 +5,8 @@ if [[ ! -f install.sh ]]; then
 	exit 1
 fi
 
+BASE="$(cd ~ && pwd)"
+
 #mkdir myself dirs
 mkdir -p ~/MyRoot/bin
 mkdir -p ~/goroot
@@ -21,24 +23,33 @@ ln -sf `pwd`/.zshrc ~
 #tw_cscope
 ln -sf `pwd`/tw_cscope ~/MyRoot/bin/
 
+export PKG_CONFIG_PATH=~/MyRoot/lib/pkgconfig/:$PKG_CONFIG_PATH
+export PATH=~/MyRoot/bin/:$PATH
+
+#fetch the submodule src
+git sm init
+git sm update
+
 #build the software
-#libevent
+#libevent (needed by tmux)
 cd libevent
-./autogen.sh &&
-./configure --prefix=~/MyRoot/ &&
-make && make install
+./autogen.sh
+./configure --prefix=$BASE/MyRoot/
+make
+make install
 cd -
 
 #tmux
 cd tmux
-./autogen.sh &&
-./configure --prefix=~/MyRoot/ &&
-make && make install
+./autogen.sh
+./configure --prefix=$BASE/MyRoot/
+make
+make install
 cd -
 
 #zsh
-cd zsh
-./Util/preconfig &&
-./configure --prefix=~/MyRoot/ &&
-make && make install
+cd zsh-5.0.2
+./configure --prefix=$BASE/MyRoot/
+make
+make install
 cd -
