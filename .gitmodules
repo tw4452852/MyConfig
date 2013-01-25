@@ -1,0 +1,9 @@
+[submodule "zsh"]
+	path = zsh
+	url = git://github.com/zsh-users/zsh.git
+[submodule "tmux"]
+	path = tmux
+	url = git://tmux.git.sourceforge.net/gitroot/tmux/tmux
+[submodule "libevent"]
+	path = libevent
+	url = git://levent.git.sourceforge.net/gitroot/levent/libevent
