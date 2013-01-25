@@ -33,6 +33,7 @@ git sm update
 #build the software
 #libevent (needed by tmux)
 cd libevent
+git co master
 ./autogen.sh &&
 ./configure --prefix=$BASE/MyRoot/ &&
 make &&
@@ -44,6 +45,7 @@ cd -
 
 #tmux
 cd tmux
+git co master
 ./autogen.sh &&
 ./configure --prefix=$BASE/MyRoot/ &&
 make &&
@@ -55,6 +57,7 @@ cd -
 
 #zsh
 cd zsh
+git co master
 ./Util/preconfig;
 ./configure --prefix=$BASE/MyRoot/;
 make;
@@ -63,8 +66,9 @@ cd -
 
 #mercurial
 cd mercurial
-./make &&
-./make PREFIX=$BASE/MyRoot/
+git co master
+make &&
+make PREFIX=$BASE/MyRoot/
 if [[ $? -ne 0 ]]; then
 	exit 1
 fi
