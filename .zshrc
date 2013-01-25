@@ -42,13 +42,16 @@ function git_promp_info () {
 	echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 # Customize to your needs...
+export LC_ALL="en_US.UTF-8"
+
 export CSCOPE_EDITOR=vim
 export EDITOR=vim
 
-export GOROOT=/home/tw/goroot
-export GOPATH=/home/tw/golib
+export GOROOT=~/goroot
+export GOPATH=~/golib
 
-export PATH=$PATH:$GOROOT/bin
+export PATH=~/MyRoot/bin:$PATH:$GOROOT/bin:$GOPATH/bin
+export PKG_CONFIG_PATH=~/MyRoot/usr
 
 #tmux
 if which test 2>&1 >/dev/null;then
