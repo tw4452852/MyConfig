@@ -64,23 +64,3 @@ make;
 make install;
 cd -
 
-
-#python2.7
-cd python-2.7
-./configure --prefix=$BASE/MyRoot/ &&
-make &&
-make install
-if [[ $? -ne 0 ]]; then
-	exit 1
-fi
-cd -
-
-#mercurial
-cd mercurial
-git co master
-make all &&
-make PREFIX=$BASE/MyRoot/ install 
-if [[ $? -ne 0 ]]; then
-	exit 1
-fi
-cd -
