@@ -7,9 +7,3 @@
 [submodule "zsh"]
 	path = zsh
 	url = git://github.com/zsh-users/zsh.git
-[submodule "mercurial"]
-	path = mercurial
-	url = git://github.com/ajaxorg/mercurial.git
-[submodule "python-2.7"]
-	path = python-2.7
-	url = https://github.com/certik/python-2.7.git
