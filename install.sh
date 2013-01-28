@@ -80,13 +80,6 @@ make;
 make install;
 cd -
 
-#change default shell
-chsh -s $BASE/MyRoot/bin/zsh
-if [[ $? -ne 0 ]]; then
-	echo 'changing default shell failed' 1 >&2
-	exit 1
-fi
-
 #go
 export GOROOT=''
 export GOPATH=''
@@ -98,6 +91,15 @@ if [[ $? -ne 0 ]]; then
 	exit 1
 fi
 cd -
+
+#change default shell
+if [[ $USER != root ]]; then
+	chsh -s $BASE/MyRoot/bin/zsh
+	if [[ $? -ne 0 ]]; then
+		echo 'changing default shell failed' 1 >&2
+		exit 1
+	fi
+fi
 
 #use zsh
 source ~/.zshrc
