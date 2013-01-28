@@ -6,12 +6,12 @@ if [[ ! -f install.sh ]]; then
 fi
 
 #test the necessary tool
-git --version
+git --version >/dev/null
 if [[ $? -ne 0 ]]; then
 	echo 'You must install git before install the environment' 1 >&2
 	exit 1
 fi
-hg --version
+hg --version >/dev/null
 if [[ $? -ne 0 ]]; then
 	echo 'You must install mercurial before install the environment' 1 >&2
 	exit 1
