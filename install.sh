@@ -27,10 +27,18 @@ mkdir -p ~/golib/pkg
 mkdir -p ~/golib/src
 
 #config files
+if [[ -d ~/.vim ]]; then
+	echo 'rm -fr ~/.vim' 1 >&2
+	rm -fr ~/.vim
+fi
 ln -sf `pwd`/.vim ~
 ln -sf `pwd`/.vimrc ~
 ln -sf `pwd`/.gitconfig ~
 ln -sf `pwd`/.tmux.conf ~
+if [[ -d ~/.oh-my-zsh ]]; then
+	echo 'rm -fr ~/.oh-my-zsh' 1 >&2
+	rm -fr ~/.oh-my-zsh
+fi
 ln -sf `pwd`/.oh-my-zsh ~
 ln -sf `pwd`/.zshrc ~
 
@@ -46,39 +54,36 @@ git sm update
 
 #build the software
 #libevent (needed by tmux)
-cd libevent
-git co master
-./autogen.sh &&
-./configure --prefix=$BASE/MyRoot/ &&
-make &&
-make install
+pkg-config --exists libevent
 if [[ $? -ne 0 ]]; then
-	echo 'install libevent failed' 1 >&2
-	exit 1
+	cd libevent
+	git co master
+	./autogen.sh &&
+	./configure --prefix=$BASE/MyRoot/ &&
+	make &&
+	make install
+	if [[ $? -ne 0 ]]; then
+		echo 'install libevent failed' 1 >&2
+		exit 1
+	fi
+	cd -
 fi
-cd -
 
 #tmux
-cd tmux
-git co master
-./autogen.sh &&
-./configure --prefix=$BASE/MyRoot/ &&
-make &&
-make install
+which tmux
 if [[ $? -ne 0 ]]; then
-	echo 'install tmux failed' 1 >&2
-	exit 1
+	cd tmux
+	git co master
+	./autogen.sh &&
+	./configure --prefix=$BASE/MyRoot/ &&
+	make &&
+	make install
+	if [[ $? -ne 0 ]]; then
+		echo 'install tmux failed' 1 >&2
+		exit 1
+	fi
+	cd -
 fi
-cd -
-
-#zsh
-cd zsh
-git co master
-./Util/preconfig;
-./configure --prefix=$BASE/MyRoot/;
-make;
-make install;
-cd -
 
 #go
 export GOROOT=''
@@ -92,14 +97,26 @@ if [[ $? -ne 0 ]]; then
 fi
 cd -
 
-#change default shell
-if [[ $USER != root ]]; then
-	chsh -s $BASE/MyRoot/bin/zsh
-	if [[ $? -ne 0 ]]; then
-		echo 'changing default shell failed' 1 >&2
-		exit 1
+#zsh
+which zsh
+if [[ $? -ne 0 ]]; then
+	cd zsh
+	git co master
+	./Util/preconfig;
+	./configure --prefix=$BASE/MyRoot/;
+	make;
+	make install;
+	cd -
+	#change default shell
+	if [[ $USER != root ]]; then
+		sudo echo `which zsh` >> /etc/shells
+		chsh -s `which zsh`
+		if [[ $? -ne 0 ]]; then
+			echo 'changing default shell failed' 1 >&2
+			exit 1
+		fi
 	fi
 fi
 
 #use zsh
-source ~/.zshrc
+echo 'Well done, Reboot now' 1 >&2
