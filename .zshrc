@@ -52,6 +52,7 @@ export GOPATH=~/golib
 
 export PATH=~/MyRoot/bin:$PATH:$GOROOT/bin:$GOPATH/bin
 export PKG_CONFIG_PATH=~/MyRoot/lib/pkgconfig/:$PKG_CONFIG_PATH
+export LD_LIBRARY_PATH=~/MyRoot/lib:$LD_LIBRARY_PATH
 
 #tmux
 if which test 2>&1 >/dev/null;then
