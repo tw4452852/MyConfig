@@ -1,7 +1,7 @@
 <opml version="1.0" xmlns:fz="urn:forumzilla:">
   <head>
     <title>导出 Thunderbird OPML - rss</title>
-    <dateCreated>Mon, 04 Feb 2013 14:19:59 GMT</dateCreated>
+    <dateCreated>Sun, 17 Feb 2013 02:33:38 GMT</dateCreated>
   </head>
   <body>
     <outline title="A Geek's Page">
@@ -10,6 +10,8 @@
       <outline type="rss" title="delectate's blog" text="delectate's blog" version="RSS" fz:quickMode="false" xmlUrl="http://www.deleak.com/blog/feed/" htmlUrl="http://www.deleak.com/blog"/></outline>
     <outline title="Dutor">
       <outline type="rss" title="Dutor" text="Dutor" version="RSS" fz:quickMode="false" xmlUrl="http://feeds.feedburner.com/dutor" htmlUrl="http://www.dutor.net"/></outline>
+    <outline title="go with confidence">
+      <outline type="rss" title="go with confidence" text="go with confidence" version="RSS" fz:quickMode="false" xmlUrl="http://gowithconfidence.tumblr.com/rss" htmlUrl="http://gowithconfidence.tumblr.com/"/></outline>
     <outline title="Heiher's Blog">
       <outline type="rss" title="Heiher's Blog" text="Heiher's Blog" version="RSS" fz:quickMode="false" xmlUrl="https://heiher.info/feed" htmlUrl="https://heiher.info"/></outline>
     <outline title="I am LAZY bones ?">
@@ -18,6 +20,8 @@
       <outline type="rss" title="I'm rem1x." text="I'm rem1x." version="RSS" fz:quickMode="false" xmlUrl="http://imxie.net/feed" htmlUrl="http://imxie.net"/></outline>
     <outline title="LinuxTOY">
       <outline type="rss" title="LinuxTOY" text="LinuxTOY" version="RSS" fz:quickMode="false" xmlUrl="http://linuxtoy.org/feed/" htmlUrl="http://linuxtoy.org"/></outline>
+    <outline title="Savoury Morsels">
+      <outline type="rss" title="Savoury Morsels" text="Savoury Morsels" version="RSS" fz:quickMode="false" xmlUrl="http://rogpeppe.wordpress.com/feed/" htmlUrl="http://rogpeppe.wordpress.com"/></outline>
     <outline title="The Go Programming Language Blog">
       <outline type="rss" title="The Go Programming Language Blog" text="The Go Programming Language Blog" version="RSS" fz:quickMode="false" xmlUrl="http://blog.golang.org/feeds/posts/default" htmlUrl="http://blog.golang.org/"/></outline>
     <outline title="《程序员》杂志官网">
@@ -30,9 +34,7 @@
       <outline type="rss" title="酷壳 - CoolShell.cn" text="酷壳 - CoolShell.cn" version="RSS" fz:quickMode="false" xmlUrl="http://coolshell.cn/feed" htmlUrl="http://coolshell.cn"/></outline>
     <outline title="黑客志">
       <outline type="rss" title="黑客志" text="黑客志" version="RSS" fz:quickMode="false" xmlUrl="http://feed.feedsky.com/heikezhi" htmlUrl="http://heikezhi.com"/></outline>
-    <outline title="Savoury Morsels">
-      <outline type="rss" title="Savoury Morsels" text="Savoury Morsels" version="RSS" fz:quickMode="false" xmlUrl="http://rogpeppe.wordpress.com/feed/" htmlUrl="http://rogpeppe.wordpress.com"/></outline>
-    <outline title="go with confidence">
-      <outline type="rss" title="go with confidence" text="go with confidence" version="RSS" fz:quickMode="false" xmlUrl="http://gowithconfidence.tumblr.com/rss" htmlUrl="http://gowithconfidence.tumblr.com/"/></outline>
+    <outline title="Posts of golangpatterns Updates">
+      <outline type="rss" title="Posts of golangpatterns Updates" text="Posts of golangpatterns Updates" version="RSS" fz:quickMode="false" xmlUrl="http://sites.google.com/site/gopatterns/home/updates/posts.xml" htmlUrl=""/></outline>
   </body>
 </opml>
