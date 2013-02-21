@@ -1,7 +1,7 @@
 <opml version="1.0" xmlns:fz="urn:forumzilla:">
   <head>
-    <title>导出 Thunderbird OPML - rss</title>
-    <dateCreated>Sun, 17 Feb 2013 02:33:38 GMT</dateCreated>
+    <title>Thunderbird OPML Export - RSS</title>
+    <dateCreated>Thu, 21 Feb 2013 04:47:39 GMT</dateCreated>
   </head>
   <body>
     <outline title="A Geek's Page">
@@ -36,5 +36,7 @@
       <outline type="rss" title="黑客志" text="黑客志" version="RSS" fz:quickMode="false" xmlUrl="http://feed.feedsky.com/heikezhi" htmlUrl="http://heikezhi.com"/></outline>
     <outline title="Posts of golangpatterns Updates">
       <outline type="rss" title="Posts of golangpatterns Updates" text="Posts of golangpatterns Updates" version="RSS" fz:quickMode="false" xmlUrl="http://sites.google.com/site/gopatterns/home/updates/posts.xml" htmlUrl=""/></outline>
+    <outline title="我的迦南地">
+      <outline type="rss" title="我的迦南地" text="我的迦南地" version="RSS" fz:quickMode="false" xmlUrl="http://blog.sina.com.cn/rss/2615392497.xml" htmlUrl="http://blog.sina.com.cn/u/2615392497"/></outline>
   </body>
 </opml>
