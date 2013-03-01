@@ -20,6 +20,9 @@
 	br = branch
 	me = merge
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+	ds = diff --staged
+	amend = commit --amend -C HEAD
+	undo = reset --soft HEAD^
 [apply]
 	whitespace = fix
 [push]
