@@ -3,4 +3,4 @@ function! s:youdaoTranslate(...)
 	echo result
 endfunction
 
-command! -buffer -nargs=* YoudaoTranslate :call s:youdaoTranslate(<f-args>)
+command! -nargs=* YoudaoTranslate :call s:youdaoTranslate(<f-args>)
