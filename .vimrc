@@ -112,8 +112,8 @@ let Tlist_Sort_Type = "name"
 let Tlist_Show_Menu = 0
 let Tlist_Show_One_File=1
 let Tlist_Exit_OnlyWindow = 1
-nnoremap <leader>t :TlistToggle<cr>   
-inoremap <leader>t <esc>:TlistToggle<cr>   
+nnoremap <leader>t :TlistToggle<cr>
+inoremap <leader>t <esc>:TlistToggle<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "snipmate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -122,8 +122,8 @@ snor <leader>m <esc>i<right><c-r>=TriggerSnippet()<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "NERDTree
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <leader>n :NERDTreeToggle<cr>   
-inoremap <leader>n <esc>:NERDTreeToggle<cr>   
+nnoremap <leader>n :NERDTreeToggle<cr>
+inoremap <leader>n <esc>:NERDTreeToggle<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Doxygen
 "Dox        DoxAuthor  DoxBlock   DoxLic     DoxUndoc
@@ -179,3 +179,7 @@ autocmd BufNewFile,BufRead *.go ino <leader>g <c-x><c-o>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd BufNewFile,BufRead *.md set textwidth=100
 autocmd BufNewFile,BufRead *.md set spell
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"youdao-traslation
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader>tr :YoudaoTranslate <C-R>=expand("<cword>")<cr><cr>
