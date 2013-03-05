@@ -9,6 +9,7 @@ filetype plugin on
 filetype indent on
 set nocompatible
 set modelines=0
+set linebreak
 
 set tabstop=4
 set shiftwidth=4
@@ -50,59 +51,40 @@ set fdm=marker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let mapleader = ","
 
-nnoremap / /\v
-vnoremap / /\v
+nnore / /\v
+vnore / /\v
 
-inoremap <f1> <esc>
-nnoremap <f1> <esc>
-vnoremap <f1> <esc>
-"nnoremap <up> <nop>
-"nnoremap <down> <nop>
-"nnoremap <left> <nop>
-"nnoremap <right> <nop>
-"inoremap <up> <nop>
-"inoremap <down> <nop>
-"inoremap <left> <nop>
-"inoremap <right> <nop>
+inore <f1> <esc>
+nnore <f1> <esc>
+vnore <f1> <esc>
 
-nnoremap ; :
-inoremap jj <esc>
-nnoremap <leader>mk :w<cr>:make<cr>
-inoremap <leader>mk <esc>:w<cr>:make<cr>
-nnoremap <leader>mi :w<cr>:make install<cr>
-inoremap <leader>mi <esc>:w<cr>:make install<cr>
-nnoremap <leader>ms :w<cr>:make strip<cr>
-inoremap <leader>ms <esc>:w<cr>:make strip<cr>
-nnoremap <leader>w :update<cr>
-inoremap <leader>w <esc>:update<cr>
-nnoremap <leader><space> :noh<cr>
-nnoremap <tab> %
-vnoremap <tab> %
-nnoremap <leader>at Vat
-nnoremap <leader>ev <c-w><c-v><c-l>:e $MYVIMRC<cr>
+nnore ; :
+inore jj <esc>
+nnore <leader>mk :w<cr>:make<cr>
+inore <leader>mk <esc>:w<cr>:make<cr>
+nnore <leader>mi :w<cr>:make install<cr>
+inore <leader>mi <esc>:w<cr>:make install<cr>
+nnore <leader>ms :w<cr>:make strip<cr>
+inore <leader>ms <esc>:w<cr>:make strip<cr>
+nnore <leader>w :update<cr>
+inore <leader>w <esc>:update<cr>
+nnore <leader><space> :noh<cr>
+nnore <tab> %
+vnore <tab> %
+nnore <leader>at Vat
+nnore <leader>ev <c-w><c-v><c-l>:e $MYVIMRC<cr>
+nnore <leader>" viw<esc>a"<esc>hbi"<esc>lel
+nnore <leader>' viw<esc>a'<esc>hbi'<esc>lel
+nnore <leader>( viw<esc>a)<esc>hbi(<esc>lel
+nnore <leader>< viw<esc>a><esc>hbi<<esc>lel
+nnore <leader>{ viw<esc>a}<esc>hbi{<esc>lel
+nnore <leader>[ viw<esc>a]<esc>hbi;<esc>lel
 
 inore <f7> <esc>:cn<cr>
 nnore <f7> :cn<cr>
 inore <f6> <esc>:cl<cr>
 nnore <f6> :cl<cr>
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"match (),{},[] 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"inoremap ( ()<ESC>i
-"inoremap ) <c-r>=ClosePair(')')<CR>
-"inoremap { {}<ESC>i
-"inoremap } <c-r>=ClosePair('}')<CR>
-"inoremap [ []<ESC>i
-"inoremap ] <c-r>=ClosePair(']')<CR>
-"
-"function ClosePair(char)
-"if getline('.')[col('.') - 1] == a:char
-"return "\<Right>"
-"else
-"return a:char
-"endif
-"endf
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "tag list
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -112,8 +94,8 @@ let Tlist_Sort_Type = "name"
 let Tlist_Show_Menu = 0
 let Tlist_Show_One_File=1
 let Tlist_Exit_OnlyWindow = 1
-nnoremap <leader>t :TlistToggle<cr>
-inoremap <leader>t <esc>:TlistToggle<cr>
+nnor <leader>t :TlistToggle<cr>
+inore <leader>t <esc>:TlistToggle<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "snipmate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -122,8 +104,8 @@ snor <leader>m <esc>i<right><c-r>=TriggerSnippet()<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "NERDTree
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <leader>n :NERDTreeToggle<cr>
-inoremap <leader>n <esc>:NERDTreeToggle<cr>
+nnore <leader>n :NERDTreeToggle<cr>
+inore <leader>n <esc>:NERDTreeToggle<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Doxygen
 "Dox        DoxAuthor  DoxBlock   DoxLic     DoxUndoc
@@ -158,15 +140,15 @@ if has("cscope")
     set csverb
 endif
 
-nmap <leader>ss :cs find s <C-R>=expand("<cword>")<cr><cr>
-nmap <leader>sg :cs find g <C-R>=expand("<cword>")<cr><cr>
-nmap <leader>sc :cs find c <C-R>=expand("<cword>")<cr><cr>
-nmap <leader>st :cs find t <C-R>=expand("<cword>")<cr><cr>
-nmap <leader>se :cs find e <C-R>=expand("<cword>")<cr><cr>
-nmap <leader>sf :cs find f <C-R>=expand("<cfile>")<cr><cr>
-nmap <leader>si :cs find i ^<C-R>=expand("<cfile>")<cr><cr>
-nmap <leader>sd :cs find d <C-R>=expand("<cword>")<cr><cr>
-nmap <c-]> :cs find g <C-R>=expand("<cword>")<cr><cr>
+nnor <leader>ss :cs find s <C-R>=expand("<cword>")<cr><cr>
+nnor <leader>sg :cs find g <C-R>=expand("<cword>")<cr><cr>
+nnor <leader>sc :cs find c <C-R>=expand("<cword>")<cr><cr>
+nnor <leader>st :cs find t <C-R>=expand("<cword>")<cr><cr>
+nnor <leader>se :cs find e <C-R>=expand("<cword>")<cr><cr>
+nnor <leader>sf :cs find f <C-R>=expand("<cfile>")<cr><cr>
+nnor <leader>si :cs find i ^<C-R>=expand("<cfile>")<cr><cr>
+nnor <leader>sd :cs find d <C-R>=expand("<cword>")<cr><cr>
+nnor <c-]> :cs find g <C-R>=expand("<cword>")<cr><cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "go
@@ -182,4 +164,4 @@ autocmd BufNewFile,BufRead *.md set spell
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "youdao-traslation
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <leader>tr :YoudaoTranslate <C-R>=expand("<cword>")<cr><cr>
+nnor <leader>tr :YoudaoTranslate <C-R>=expand("<cword>")<cr><cr>
