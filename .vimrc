@@ -45,10 +45,6 @@ set mouse=a
 
 set fdm=marker
 
-"tags
-"set tags+=/home/wtan/cur/GEO_REL2_TRANSFORMER_NETFLOW/src/tags
-"set tags+=/home/wtan/cur/GEO_REL2_TRANSFORMER_NETFLOW/src/meterd/tags
-"set tags+=/home/wtan/cur/GEO_REL2_TRANSFORMER_NETFLOW/src/tf-x86/healthd/tags
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "myself keymap
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
