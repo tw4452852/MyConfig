@@ -32,8 +32,10 @@ set laststatus=2
 set nu
 syntax enable
 "set undofile
-set list
-set listchars=tab:»\ ,eol:¬,trail:▲,nbsp:▲
+if !has('win32') && !has('win64')
+	set list
+	set listchars=tab:»\ ,eol:¬,trail:▲,nbsp:▲
+endif
 
 set ignorecase
 set smartcase
@@ -79,6 +81,7 @@ nnore <leader>( viw<esc>a)<esc>hbi(<esc>lel
 nnore <leader>< viw<esc>a><esc>hbi<<esc>lel
 nnore <leader>{ viw<esc>a}<esc>hbi{<esc>lel
 nnore <leader>[ viw<esc>a]<esc>hbi;<esc>lel
+nnore <leader>; mqA;<esc>`q
 
 inore <f7> <esc>:cn<cr>
 nnore <f7> :cn<cr>
@@ -130,7 +133,6 @@ let g:DoxygenToolkit_licenseTag = g:DoxygenToolkit_licenseTag . "accepts the ter
 "cscope
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has("cscope")
-    set csprg=/usr/bin/cscope
     set csto=1
     set cst
     set nocsverb
@@ -154,7 +156,7 @@ nnor <c-]> :cs find g <C-R>=expand("<cword>")<cr><cr>
 "go
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd BufWritePre *.go :silent Fmt
-autocmd BufNewFile,BufRead *.go ino <leader>g <c-x><c-o>
+autocmd BufNewFile,BufRead *.go ino <leader>go <c-x><c-o>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "markdown
