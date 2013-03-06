@@ -37,10 +37,6 @@ plugins=(ssh-agent history-substring-search)
 
 source $ZSH/oh-my-zsh.sh
 
-#function git_prompt_info () {
-	#ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-	#echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
-#}
 # Customize to your needs...
 export LC_ALL="en_US.UTF-8"
 
@@ -53,6 +49,9 @@ export GOPATH=~/golib
 export PATH=~/MyRoot/bin:$PATH:$GOROOT/bin:$GOPATH/bin
 export PKG_CONFIG_PATH=~/MyRoot/lib/pkgconfig/:$PKG_CONFIG_PATH
 export LD_LIBRARY_PATH=~/MyRoot/lib:$LD_LIBRARY_PATH
+
+#autoload
+source $HOME/.autoload.sh
 
 #tmux
 if which test 2>&1 >/dev/null;then

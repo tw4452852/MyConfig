@@ -41,6 +41,8 @@ if [[ -d ~/.oh-my-zsh ]]; then
 fi
 ln -sf `pwd`/config/.oh-my-zsh ~
 ln -sf `pwd`/config/.zshrc ~
+ln -sf `pwd`/config/.autoload.sh ~
+mkdir -p $HOME/.autoload.d
 
 #tw_cscope
 ln -sf `pwd`/bin/tw_cscope ~/MyRoot/bin/
