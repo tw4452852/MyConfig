@@ -1,6 +1,6 @@
-function! s:youdaoTranslate(...)
+function! s:YoudaoTranslate(...)
 	let result=system("youdao-translation" . ' ' . join(a:000, " "))
 	echo result
 endfunction
 
-command! -nargs=* YoudaoTranslate :call s:youdaoTranslate(<f-args>)
+command! -nargs=* YoudaoTranslate :call <SID>YoudaoTranslate(<f-args>)
