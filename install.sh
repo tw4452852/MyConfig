@@ -5,6 +5,18 @@ if [[ ! -f install.sh ]]; then
 	exit 1
 fi
 
+#windows
+case "$(uname)" in
+*MINGW* | *WIN32* | *CYGWIN*)
+	rm -fr ~/vimfiles
+	cp -fr `pwd`/config/.vim ~/vimfiles
+	rm -fr ~/_vimrc
+	cp -fr `pwd`/config/.vimrc ~/_vimrc
+	cp -fr `pwd`/config/.gitconfig ~
+	exit 0
+	;;
+esac
+
 #test the necessary tool
 git --version >/dev/null
 if [[ $? -ne 0 ]]; then
