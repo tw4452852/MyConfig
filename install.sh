@@ -31,16 +31,16 @@ if [[ -d ~/.vim ]]; then
 	echo 'rm -fr ~/.vim' 1 >&2
 	rm -fr ~/.vim
 fi
-ln -sf `pwd`/.vim ~
-ln -sf `pwd`/.vimrc ~
-ln -sf `pwd`/.gitconfig ~
-ln -sf `pwd`/.tmux.conf ~
+ln -sf `pwd`/config/.vim ~
+ln -sf `pwd`/config/.vimrc ~
+ln -sf `pwd`/config/.gitconfig ~
+ln -sf `pwd`/config/.tmux.conf ~
 if [[ -d ~/.oh-my-zsh ]]; then
 	echo 'rm -fr ~/.oh-my-zsh' 1 >&2
-	rm -fr ~/.oh-my-zsh
+	rm -fr ~/config/.oh-my-zsh
 fi
-ln -sf `pwd`/.oh-my-zsh ~
-ln -sf `pwd`/.zshrc ~
+ln -sf `pwd`/config/.oh-my-zsh ~
+ln -sf `pwd`/config/.zshrc ~
 
 #tw_cscope
 ln -sf `pwd`/bin/tw_cscope ~/MyRoot/bin/
@@ -56,7 +56,7 @@ git sm init
 pkg-config --exists libevent
 if [[ $? -ne 0 ]]; then
 	git sm update libevent
-	cd libevent
+	cd submodules/libevent
 	git co master
 	./autogen.sh &&
 	./configure --prefix=$BASE/MyRoot/ &&
@@ -73,7 +73,7 @@ fi
 which tmux
 if [[ $? -ne 0 ]]; then
 	git sm update tmux
-	cd tmux
+	cd submodules/tmux
 	git co master
 	./autogen.sh &&
 	./configure --prefix=$BASE/MyRoot/ &&
@@ -102,7 +102,7 @@ cd -
 which zsh
 if [[ $? -ne 0 ]]; then
 	git sm update zsh
-	cd zsh
+	cd submodules/zsh
 	git co master
 	./Util/preconfig;
 	./configure --prefix=$BASE/MyRoot/;

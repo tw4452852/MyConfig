@@ -1,0 +1,23 @@
+diff --git a/local/proxy.ini b/local/proxy.ini
+index 8a93a75..97811cf 100644
+--- a/local/proxy.ini
++++ b/local/proxy.ini
+@@ -5,7 +5,7 @@ visible = 1
+ debuginfo = 0
+ 
+ [gae]
+-appid = goagent
++appid = tw4452852
+ password = 
+ path = /2
+ profile = google_cn
+diff --git a/server/python/app.yaml b/server/python/app.yaml
+index 7f73a7d..24a2bdc 100644
+--- a/server/python/app.yaml
++++ b/server/python/app.yaml
+@@ -1,4 +1,4 @@
+-application: your_appid
++application: tw4452852
+ version: 1
+ runtime: python27
+ api_version: 1

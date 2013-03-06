@@ -1,12 +1,12 @@
-[submodule "tmux"]
-	path = tmux
+[submodule "submodules/tmux"]
+	path = submodules/tmux
 	url = git://tmux.git.sourceforge.net/gitroot/tmux/tmux
-[submodule "libevent"]
-	path = libevent
+[submodule "submodules/libevent"]
+	path = submodules/libevent
 	url = git://levent.git.sourceforge.net/gitroot/levent/libevent
-[submodule "zsh"]
-	path = zsh
+[submodule "submodules/zsh"]
+	path = submodules/zsh
 	url = git://github.com/zsh-users/zsh.git
-[submodule "goagent"]
-	path = goagent
+[submodule "submodules/goagent"]
+	path = submodules/goagent
 	url = git://github.com/goagent/goagent.git
