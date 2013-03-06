@@ -80,7 +80,7 @@ nnore <leader>[ viw<esc>a]<esc>hbi;<esc>lel
 nnore <leader>; mqA;<esc>`q
 
 "Quickfix
-nnore <f2> :call QickfixToggle()<cr>
+nnore <leader>qf :call QickfixToggle()<cr>
 
 let g:quickfix_is_open = 0
 function! QickfixToggle()
