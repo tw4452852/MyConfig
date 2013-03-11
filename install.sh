@@ -1,7 +1,7 @@
 #!/bin/bash
 set +e
 if [[ ! -f install.sh ]]; then
-	echo 'install.sh must be run in where it locates' 1 >&2
+	echo 'install.sh must be run in where it locates'
 	exit 1
 fi
 
@@ -18,19 +18,24 @@ case "$(uname)" in
 esac
 
 #test the necessary tool
+echo ">>> test necessary tools ..."
 git --version >/dev/null
 if [[ $? -ne 0 ]]; then
-	echo 'You must install git before install the environment' 1 >&2
+	echo 'You must install git before install the environment' 
+	echo "<<< git doesn't exis"
 	exit 1
 fi
 hg --version >/dev/null
 if [[ $? -ne 0 ]]; then
-	echo 'You must install mercurial before install the environment' 1 >&2
+	echo 'You must install mercurial before install the environment' 
+	echo "<<< mercurial doesn't exis"
 	exit 1
 fi
+echo "<<< test necessary tools done"
 
 BASE="$(cd ~ && pwd)"
 
+echo ">>> restore myself config ..."
 #mkdir myself dirs
 mkdir -p ~/MyRoot/bin
 mkdir -p ~/goroot
@@ -40,7 +45,6 @@ mkdir -p ~/golib/src
 
 #config files
 if [[ -d ~/.vim ]]; then
-	echo 'rm -fr ~/.vim' 1 >&2
 	rm -fr ~/.vim
 fi
 ln -sf `pwd`/config/.vim ~
@@ -48,8 +52,7 @@ ln -sf `pwd`/config/.vimrc ~
 ln -sf `pwd`/config/.gitconfig ~
 ln -sf `pwd`/config/.tmux.conf ~
 if [[ -d ~/.oh-my-zsh ]]; then
-	echo 'rm -fr ~/.oh-my-zsh' 1 >&2
-	rm -fr ~/config/.oh-my-zsh
+	rm -fr ~/.oh-my-zsh
 fi
 ln -sf `pwd`/config/.oh-my-zsh ~
 ln -sf `pwd`/config/.zshrc ~
@@ -61,12 +64,14 @@ ln -sf `pwd`/bin/tw_cscope ~/MyRoot/bin/
 
 export PKG_CONFIG_PATH=~/MyRoot/lib/pkgconfig/:$PKG_CONFIG_PATH
 export PATH=~/MyRoot/bin/:$PATH
+echo "<<< restore myself config done"
 
 #fetch the submodule src
 git sm init
 
 #build the software
 #libevent (needed by tmux)
+echo ">>> install libevent ..."
 pkg-config --exists libevent
 if [[ $? -ne 0 ]]; then
 	git sm update libevent
@@ -77,13 +82,17 @@ if [[ $? -ne 0 ]]; then
 	make &&
 	make install
 	if [[ $? -ne 0 ]]; then
-		echo 'install libevent failed' 1 >&2
+		echo 'install libevent failed' 
 		exit 1
 	fi
 	cd -
+else
+	echo "libevent has been installed, skip"
 fi
+echo "<<< install libevent done"
 
 #tmux
+echo ">>> install tmux ..."
 which tmux
 if [[ $? -ne 0 ]]; then
 	git sm update tmux
@@ -94,25 +103,51 @@ if [[ $? -ne 0 ]]; then
 	make &&
 	make install
 	if [[ $? -ne 0 ]]; then
-		echo 'install tmux failed' 1 >&2
+		echo 'install tmux failed' 
 		exit 1
 	fi
 	cd -
+else
+	echo "tmux has been installed, skip"
 fi
+echo "<<< install tmux done"
 
 #go
-export GOROOT=
-export GOPATH=
-hg clone http://code.google.com/p/go ~/goroot &&
-cd ~/goroot/src &&
-./all.bash
+echo ">>> install go ..."
+which go
 if [[ $? -ne 0 ]]; then
-	echo "install go failed" 1 >&2
-	exit 1
+	export GOROOT=
+	export GOPATH=
+	hg clone http://code.google.com/p/go ~/goroot &&
+	cd ~/goroot/src &&
+	./all.bash
+	if [[ $? -ne 0 ]]; then
+		echo "install go failed" 
+		exit 1
+	fi
+	cd -
+else
+	echo "go has been installed, just update"
+	cd $GOROOT &&
+	hg pull
+	if [[ $? -ne 0 ]]; then
+		echo "update go failed"
+		exit 1
+	fi
+	hg update | grep "0 files updated, 0 files merged, 0 files removed, 0 files unresolved"
+	if [[ $? -ne 0 ]]; then
+		cd ./src &&
+		./all.bash
+		if [[ $? -ne 0 ]]; then
+			echo "build go failed"
+			exit 1
+		fi
+	fi
 fi
-cd -
+echo "<<< install go done"
 
 #zsh
+echo ">>> install zsh ..."
 which zsh
 if [[ $? -ne 0 ]]; then
 	git sm update zsh
@@ -123,16 +158,19 @@ if [[ $? -ne 0 ]]; then
 	make;
 	make install;
 	cd -
+else
+	echo "zsh has been install, skip"
 fi
 #change default shell
 if [[ $USER != root ]]; then
 	sudo echo `which zsh` >> /etc/shells
 	chsh -s `which zsh`
 	if [[ $? -ne 0 ]]; then
-		echo 'changing default shell failed' 1 >&2
+		echo 'changing default shell failed' 
 		exit 1
 	fi
 fi
+echo "<<< install zsh done"
 
 #use zsh
-echo 'Well done, Reboot now' 1 >&2
+echo 'Well done, please reboot now'
