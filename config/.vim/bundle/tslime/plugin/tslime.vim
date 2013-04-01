@@ -57,7 +57,7 @@ endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-vmap <leader>ll "ry :call Send_to_Tmux(@r)<CR>
-nmap <leader>ll vip<leader>ll
+vmap <leader>tl "ry :call Send_to_Tmux(@r)<CR>
+nmap <leader>tl vip<leader>ll
 
-nmap <leader>lv :call <SID>Tmux_Vars()<CR>
+nmap <leader>tv :call <SID>Tmux_Vars()<CR>
