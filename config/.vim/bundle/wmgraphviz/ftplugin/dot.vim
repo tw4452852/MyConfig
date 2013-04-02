@@ -35,7 +35,7 @@ if !exists('g:WMGraphviz_circo')
 endif
 
 if !exists('g:WMGraphviz_output')
-	let g:WMGraphviz_output = 'pdf'
+	let g:WMGraphviz_output = 'png'
 endif
 
 if !exists('g:WMGraphviz_viewer')
@@ -139,10 +139,10 @@ com! -nargs=0 GraphvizShow : call GraphvizShow()
 com! -nargs=0 GraphvizInteractive : call GraphvizInteractive()
 
 " Mappings
-nmap <silent> <buffer> <LocalLeader>ll :GraphvizCompile<CR>
-nmap <silent> <buffer> <LocalLeader>lt :GraphvizCompileToLaTeX<CR>
-nmap <silent> <buffer> <LocalLeader>lv :GraphvizShow<CR>
-nmap <silent> <buffer> <LocalLeader>li :GraphvizInteractive<CR>
+nmap <silent> <buffer> <leader>ll :GraphvizCompile<CR>
+nmap <silent> <buffer> <leader>lt :GraphvizCompileToLaTeX<CR>
+nmap <silent> <buffer> <leader>lv :GraphvizShow<CR>
+nmap <silent> <buffer> <leader>li :GraphvizInteractive<CR>
 
 " Completion
 let s:completion_type = ''
