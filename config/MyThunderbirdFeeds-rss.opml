@@ -1,7 +1,7 @@
 <opml version="1.0" xmlns:fz="urn:forumzilla:">
   <head>
     <title>Thunderbird OPML Export - RSS</title>
-    <dateCreated>Mon, 11 Mar 2013 00:44:07 GMT</dateCreated>
+    <dateCreated>Tue, 02 Apr 2013 04:17:08 GMT</dateCreated>
   </head>
   <body>
     <outline title="A Geek's Page">
@@ -39,6 +39,8 @@
     <outline title="我的迦南地">
       <outline type="rss" title="我的迦南地" text="我的迦南地" version="RSS" fz:quickMode="false" xmlUrl="http://blog.sina.com.cn/rss/2615392497.xml" htmlUrl="http://blog.sina.com.cn/u/2615392497"/></outline>
     <outline title="golang中文社区_golang中国_golang源码分析_golang - Go源码分析">
-      <outline type="rss" title="golang中文社区_golang中国_golang源码分析_golang - Go源码分析" text="golang中文社区_golang中国_golang源码分析_golang - Go源码分析" version="RSS" fz:quickMode="false" xmlUrl="http://bbs.gocn.im/forum.php?mod=rss&amp;fid=37&amp;auth=0" htmlUrl="http://bbs.gocn.im/forum-37-1.html"/></outline>
+      <outline type="rss" title="golang中文社区_golang中国_golang源码分析_golang - Go源码分析" text="golang中文社区_golang中国_golang源码分析_golang - Go源码分析" version="RSS" fz:quickMode="false" xmlUrl="http://bbs.gocn.im/forum.php?mod=rss&amp;fid=37&amp;auth=0" htmlUrl="http://bbs.mygolang.com/forum-37-1.html"/></outline>
+    <outline title="Chaos Ashs">
+      <outline type="rss" title="Chaos Ashs" text="Chaos Ashs" version="RSS" fz:quickMode="false" xmlUrl="http://www.tech4cloud.com/atom.xml" htmlUrl="http://www.tech4cloud.com"/></outline>
   </body>
 </opml>
