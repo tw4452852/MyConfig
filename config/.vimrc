@@ -173,3 +173,13 @@ augroup END
 "youdao-traslation
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnor <leader>tr :YoudaoTranslate <C-R>=expand("<cword>")<cr><cr>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"wmgraphviz
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+augroup dotgroup
+	au!
+	au FileType dot nmap <leader>ll :GraphvizCompile<CR>
+	au FileType dot nmap <leader>lt :GraphvizCompileToLaTeX<CR>
+	au FileType dot nmap <leader>lv :GraphvizShow<CR>
+	au FileType dot nmap <leader>li :GraphvizInteractive<CR>
+augroup END
