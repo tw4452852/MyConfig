@@ -138,12 +138,6 @@ com! -nargs=0 GraphvizCompileToLaTeX :call GraphvizCompileToLaTeX()
 com! -nargs=0 GraphvizShow : call GraphvizShow()
 com! -nargs=0 GraphvizInteractive : call GraphvizInteractive()
 
-" Mappings
-nmap <silent> <buffer> <leader>ll :GraphvizCompile<CR>
-nmap <silent> <buffer> <leader>lt :GraphvizCompileToLaTeX<CR>
-nmap <silent> <buffer> <leader>lv :GraphvizShow<CR>
-nmap <silent> <buffer> <leader>li :GraphvizInteractive<CR>
-
 " Completion
 let s:completion_type = ''
 
