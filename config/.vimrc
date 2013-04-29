@@ -3,6 +3,8 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set t_Co=256
 colorscheme tw
+set encoding=utf-8
+set guifont=Lucida\ Console:h10
 filetype off
 call pathogen#runtime_append_all_bundles()
 filetype plugin on
