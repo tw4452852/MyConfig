@@ -1,7 +1,7 @@
 <opml version="1.0" xmlns:fz="urn:forumzilla:">
   <head>
     <title>Thunderbird OPML Export - RSS</title>
-    <dateCreated>Tue, 02 Apr 2013 04:17:08 GMT</dateCreated>
+    <dateCreated>Thu, 02 May 2013 05:45:03 GMT</dateCreated>
   </head>
   <body>
     <outline title="A Geek's Page">
@@ -42,5 +42,9 @@
       <outline type="rss" title="golang中文社区_golang中国_golang源码分析_golang - Go源码分析" text="golang中文社区_golang中国_golang源码分析_golang - Go源码分析" version="RSS" fz:quickMode="false" xmlUrl="http://bbs.gocn.im/forum.php?mod=rss&amp;fid=37&amp;auth=0" htmlUrl="http://bbs.mygolang.com/forum-37-1.html"/></outline>
     <outline title="Chaos Ashs">
       <outline type="rss" title="Chaos Ashs" text="Chaos Ashs" version="RSS" fz:quickMode="false" xmlUrl="http://www.tech4cloud.com/atom.xml" htmlUrl="http://www.tech4cloud.com"/></outline>
+    <outline title="Tw's blog">
+      <outline type="rss" title="Tw's blog" text="Tw's blog" version="RSS" fz:quickMode="true" xmlUrl="http://totorow.herokuapp.com/rss" htmlUrl="http://totorow.herokuapp.com/rss"/></outline>
+    <outline title="Labix Blog">
+      <outline type="rss" title="Labix Blog" text="Labix Blog" version="RSS" fz:quickMode="false" xmlUrl="http://blog.labix.org/feed" htmlUrl="http://blog.labix.org"/></outline>
   </body>
 </opml>
