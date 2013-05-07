@@ -1,0 +1,3 @@
+Host git_heroku
+	Hostname 50.16.215.20
+	User git
