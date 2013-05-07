@@ -13,6 +13,7 @@ case "$(uname)" in
 	rm -fr ~/_vimrc
 	cp -fr `pwd`/config/.vimrc ~/_vimrc
 	cp -fr `pwd`/config/.gitconfig ~
+	cp -fr `pwd`/config/ssh_config ~/.ssh/config
 	exit 0
 	;;
 esac
@@ -50,6 +51,7 @@ fi
 ln -sf `pwd`/config/.vim ~
 ln -sf `pwd`/config/.vimrc ~
 ln -sf `pwd`/config/.gitconfig ~
+ln -sf `pwd`/config/ssh_config ~/.ssh/config
 ln -sf `pwd`/config/.tmux.conf ~
 if [[ -d ~/.oh-my-zsh ]]; then
 	rm -fr ~/.oh-my-zsh
