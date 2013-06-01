@@ -81,6 +81,9 @@ nnore <leader>{ viw<esc>a}<esc>hbi{<esc>lel
 nnore <leader>[ viw<esc>a]<esc>hbi;<esc>lel
 nnore <leader>; mqA;<esc>`q
 
+"tw's self cmd
+nnore <leader>f :%s/；/;/ge<cr>:%s/。/./ge<cr>:%s/，/,/ge<cr>:%s/：/:/ge<cr>:%s/（/(/ge<cr>:%s/）/)/ge<cr>
+
 "Quickfix
 nnore <leader>qf :call QickfixToggle()<cr>
 
