@@ -1,7 +1,7 @@
 <opml version="1.0" xmlns:fz="urn:forumzilla:">
   <head>
     <title>Thunderbird OPML Export - RSS</title>
-    <dateCreated>Thu, 02 May 2013 05:45:03 GMT</dateCreated>
+    <dateCreated>Sat, 01 Jun 2013 06:53:22 GMT</dateCreated>
   </head>
   <body>
     <outline title="A Geek's Page">
@@ -25,7 +25,7 @@
     <outline title="The Go Programming Language Blog">
       <outline type="rss" title="The Go Programming Language Blog" text="The Go Programming Language Blog" version="RSS" fz:quickMode="false" xmlUrl="http://blog.golang.org/feeds/posts/default" htmlUrl="http://blog.golang.org/"/></outline>
     <outline title="《程序员》杂志官网">
-      <outline type="rss" title="《程序员》杂志官网" text="《程序员》杂志官网" version="RSS" fz:quickMode="false" xmlUrl="http://feed.feedsky.com/programmer" htmlUrl="http://www.programmer.com.cn"/></outline>
+      <outline type="rss" title="《程序员》杂志官网" text="《程序员》杂志官网" version="RSS" fz:quickMode="false" xmlUrl="http://feed.feedsky.com/programmer" htmlUrl="http://programmer.csdn.net"/></outline>
     <outline title="牧碼志">
       <outline type="rss" title="牧碼志" text="牧碼志" version="RSS" fz:quickMode="false" xmlUrl="http://0x3f.org/atom.xml" htmlUrl="http://0x3f.org/"/></outline>
     <outline title="豆蔻 - 让分享自由自在！">
@@ -46,5 +46,7 @@
       <outline type="rss" title="Tw's blog" text="Tw's blog" version="RSS" fz:quickMode="true" xmlUrl="http://totorow.herokuapp.com/rss" htmlUrl="http://totorow.herokuapp.com/rss"/></outline>
     <outline title="Labix Blog">
       <outline type="rss" title="Labix Blog" text="Labix Blog" version="RSS" fz:quickMode="false" xmlUrl="http://blog.labix.org/feed" htmlUrl="http://blog.labix.org"/></outline>
+    <outline title="Startup News">
+      <outline type="rss" title="Startup News" text="Startup News" version="RSS" fz:quickMode="false" xmlUrl="http://news.dbanotes.net/rss" htmlUrl="http://news.dbanotes.net/"/></outline>
   </body>
 </opml>
