@@ -122,7 +122,7 @@ if [[ $? -ne 0 ]]; then
 	export GOPATH=
 	hg clone http://code.google.com/p/go ~/goroot &&
 	cd ~/goroot/src &&
-	./all.bash
+	./make.bash
 	if [[ $? -ne 0 ]]; then
 		echo "install go failed" 
 		exit 1
@@ -139,7 +139,7 @@ else
 	hg update | grep "0 files updated, 0 files merged, 0 files removed, 0 files unresolved"
 	if [[ $? -ne 0 ]]; then
 		cd ./src &&
-		./all.bash
+		./make.bash
 		if [[ $? -ne 0 ]]; then
 			echo "build go failed"
 			exit 1
