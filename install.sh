@@ -76,7 +76,7 @@ git sm init
 echo ">>> install libevent ..."
 pkg-config --exists libevent
 if [[ $? -ne 0 ]]; then
-	git sm update libevent
+	git sm update submodules/libevent
 	cd submodules/libevent
 	git co master
 	./autogen.sh &&
@@ -97,7 +97,7 @@ echo "<<< install libevent done"
 echo ">>> install tmux ..."
 which tmux
 if [[ $? -ne 0 ]]; then
-	git sm update tmux
+	git sm update submodules/tmux
 	cd submodules/tmux
 	git co master
 	./autogen.sh &&
@@ -152,7 +152,7 @@ echo "<<< install go done"
 echo ">>> install zsh ..."
 which zsh
 if [[ $? -ne 0 ]]; then
-	git sm update zsh
+	git sm update submodules/zsh
 	cd submodules/zsh
 	git co master
 	./Util/preconfig;
