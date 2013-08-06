@@ -166,11 +166,10 @@ else
 fi
 #change default shell
 if [[ $USER != root ]]; then
-	sudo echo `which zsh` >> /etc/shells
+	# sudo echo `which zsh` >> /etc/shells
 	chsh -s `which zsh`
 	if [[ $? -ne 0 ]]; then
 		echo 'changing default shell failed' 
-		exit 1
 	fi
 fi
 echo "<<< install zsh done"
