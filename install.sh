@@ -59,8 +59,11 @@ setup_config() {
 		ln -sf `pwd`/config/.oh-my-zsh ~
 		ln -sf `pwd`/config/.zshrc ~
 		ln -sf `pwd`/config/.autoload.sh ~
-		mkdir -p $HOME/.autoload.d
-		ln -sf `pwd`/config/hello.sh $HOME/.autoload.d/
+		if [[ -d ~/.autoload.d ]]; then
+			rm -fr ~/.autoload.d
+		fi
+		mkdir -p ~/.autoload.d
+		ln -sf `pwd`/config/.autoload.d ~
 
 		#tw_cscope
 		ln -sf `pwd`/bin/tw_cscope ~/MyRoot/bin/
