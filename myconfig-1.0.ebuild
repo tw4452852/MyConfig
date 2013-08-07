@@ -30,6 +30,7 @@ src_compile() {
 src_install() {
 	dodir /opt/${P}
 	cp -R ${S}/* ${D}/opt/${P}/ || die "source install failed"
+	fowners -R root:users /opt/${P}/
 	einfo "install ${P} to /opt/${P}"
 	dodoc README
 }
