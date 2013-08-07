@@ -65,6 +65,10 @@ setup_config() {
 		#tw_cscope
 		ln -sf `pwd`/bin/tw_cscope ~/MyRoot/bin/
 
+		#font
+		mkdir -p ~/.fonts
+		ln -sf `pwd`/font/Lucida\ Console.ttf ~/.fonts/
+
 		export PKG_CONFIG_PATH=~/MyRoot/lib/pkgconfig/:$PKG_CONFIG_PATH
 		export PATH=~/MyRoot/bin/:$PATH
 		;;
