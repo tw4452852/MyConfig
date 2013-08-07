@@ -62,7 +62,6 @@ setup_config() {
 		if [[ -d ~/.autoload.d ]]; then
 			rm -fr ~/.autoload.d
 		fi
-		mkdir -p ~/.autoload.d
 		ln -sf `pwd`/config/.autoload.d ~
 
 		#tw_cscope
