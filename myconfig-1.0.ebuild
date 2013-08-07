@@ -21,7 +21,8 @@ DEPEND=""
 RDEPEND="${DEPEND}
 	app-shells/zsh
 	dev-vcs/git
-	dev-vcs/mercurial"
+	dev-vcs/mercurial
+	x11-wm/dwm"
 
 src_compile() {
 	einfo "Makefile shouldn't be used by emerge"
