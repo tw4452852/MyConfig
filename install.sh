@@ -4,6 +4,7 @@ if [[ ! -f install.sh ]]; then
 	echo 'install.sh must be run in where it locates'
 	exit 1
 fi
+TOP="$(pwd)"
 
 check_tools() {
 	echo ">>> test necessary tools ..."
@@ -30,11 +31,11 @@ setup_config() {
 	case "$(uname)" in
 	*MINGW* | *WIN32* | *CYGWIN*) # Windows
 		rm -fr ~/vimfiles
-		cp -fr `pwd`/config/.vim ~/vimfiles
+		cp -fr ${TOP}/config/.vim ~/vimfiles
 		rm -fr ~/_vimrc
-		cp -fr `pwd`/config/.vimrc ~/_vimrc
-		cp -fr `pwd`/config/.gitconfig ~
-		cp -fr `pwd`/config/ssh_config ~/.ssh/config
+		cp -fr ${TOP}/config/.vimrc ~/_vimrc
+		cp -fr ${TOP}/config/.gitconfig ~
+		cp -fr ${TOP}/config/ssh_config ~/.ssh/config
 		;;
 	*)
 		#mkdir myself dirs
@@ -48,28 +49,30 @@ setup_config() {
 		if [[ -d ~/.vim ]]; then
 			rm -fr ~/.vim
 		fi
-		ln -sf `pwd`/config/.vim ~
-		ln -sf `pwd`/config/.vimrc ~
-		ln -sf `pwd`/config/.gitconfig ~
-		ln -sf `pwd`/config/ssh_config ~/.ssh/config
-		ln -sf `pwd`/config/.tmux.conf ~
+		ln -sf ${TOP}/config/.vim ~
+		ln -sf ${TOP}/config/.vimrc ~
+		ln -sf ${TOP}/config/.gitconfig ~
+		ln -sf ${TOP}/config/ssh_config ~/.ssh/config
+		ln -sf ${TOP}/config/.tmux.conf ~
 		if [[ -d ~/.oh-my-zsh ]]; then
 			rm -fr ~/.oh-my-zsh
 		fi
-		ln -sf `pwd`/config/.oh-my-zsh ~
-		ln -sf `pwd`/config/.zshrc ~
-		ln -sf `pwd`/config/.autoload.sh ~
+		ln -sf ${TOP}/config/.oh-my-zsh ~
+		ln -sf ${TOP}/config/.zshrc ~
+		ln -sf ${TOP}/config/.autoload.sh ~
 		if [[ -d ~/.autoload.d ]]; then
 			rm -fr ~/.autoload.d
 		fi
-		ln -sf `pwd`/config/.autoload.d ~
+		ln -sf ${TOP}/config/.autoload.d ~
 
 		#tw_cscope
-		ln -sf `pwd`/bin/tw_cscope ~/MyRoot/bin/
+		for mybin in $(find ${TOP}/bin/ -type f); do
+			ln -sf ${mybin} ~/MyRoot/bin/
+		done
 
 		#font
 		mkdir -p ~/.fonts
-		ln -sf `pwd`/font/Lucida\ Console.ttf ~/.fonts/
+		ln -sf ${TOP}/font/Lucida\ Console.ttf ~/.fonts/
 
 		export PKG_CONFIG_PATH=~/MyRoot/lib/pkgconfig/:$PKG_CONFIG_PATH
 		export PATH=~/MyRoot/bin/:$PATH
@@ -92,7 +95,7 @@ setup_software() {
 	case "$(uname -r)" in
 		*gentoo*)
 			echo "use the ebuild to setup software in gentoo"
-			exit 0
+			#exit 0
 			;;
 	esac
 
@@ -104,12 +107,34 @@ setup_software() {
 	git sm init
 
 	#build the software
+
+	# dwm
+	echo ">>> install dwm ..."
+	pkg-config --exists x11
+	if [[ $? -ne 0 ]]; then
+		echo "you must install x11 lib firstly"
+		echo "<<< install dwm failed"
+	else
+		git sm update submodules/dwm
+		cd ${TOP}/submodules/dwm
+		# use myself config.h
+		ln -sf ${TOP}/config/dwm.conf.h ./config.h
+		# change install dir
+		sed -i -e "/^PREFIX/c PREFIX = ${BASE}/MyRoot/" config.mk &&
+		make clean install
+		if [[ $? -ne 0 ]]; then
+			echo "install dwm failed"
+			exit 1
+		fi
+	fi
+	echo "<<< install dwm done"
+
 	#libevent (needed by tmux)
 	echo ">>> install libevent ..."
 	pkg-config --exists libevent
 	if [[ $? -ne 0 ]]; then
 		git sm update submodules/libevent
-		cd submodules/libevent
+		cd ${TOP}/submodules/libevent
 		git co master
 		./autogen.sh &&
 		./configure --prefix=$BASE/MyRoot/ &&
@@ -119,7 +144,6 @@ setup_software() {
 			echo 'install libevent failed' 
 			exit 1
 		fi
-		cd -
 	else
 		echo "libevent has been installed, skip"
 	fi
@@ -130,7 +154,7 @@ setup_software() {
 	which tmux
 	if [[ $? -ne 0 ]]; then
 		git sm update submodules/tmux
-		cd submodules/tmux
+		cd ${TOP}/submodules/tmux
 		git co master
 		./autogen.sh &&
 		./configure --prefix=$BASE/MyRoot/ &&
@@ -140,7 +164,6 @@ setup_software() {
 			echo 'install tmux failed' 
 			exit 1
 		fi
-		cd -
 	else
 		echo "tmux has been installed, skip"
 	fi
@@ -159,7 +182,6 @@ setup_software() {
 			echo "install go failed" 
 			exit 1
 		fi
-		cd -
 	else
 		echo "go has been installed, just update"
 		cd $GOROOT &&
@@ -185,13 +207,12 @@ setup_software() {
 	which zsh
 	if [[ $? -ne 0 ]]; then
 		git sm update submodules/zsh
-		cd submodules/zsh
+		cd ${TOP}/submodules/zsh
 		git co master
 		./Util/preconfig;
 		./configure --prefix=$BASE/MyRoot/;
 		make;
 		make install;
-		cd -
 	else
 		echo "zsh has been install, skip"
 	fi
