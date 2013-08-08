@@ -10,3 +10,6 @@
 [submodule "submodules/goagent"]
 	path = submodules/goagent
 	url = git://github.com/goagent/goagent.git
+[submodule "submodules/dwm"]
+	path = submodules/dwm
+	url = git://git.suckless.org/dwm
