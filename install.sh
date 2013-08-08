@@ -95,7 +95,7 @@ setup_software() {
 	case "$(uname -r)" in
 		*gentoo*)
 			echo "use the ebuild to setup software in gentoo"
-			#exit 0
+			exit 0
 			;;
 	esac
 
