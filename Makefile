@@ -1,6 +1,8 @@
 default:
 	./install.sh -cs
 
+.PHONY:config software pkt
+
 config:
 	./install.sh -c
 
