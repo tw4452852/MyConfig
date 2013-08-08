@@ -59,13 +59,15 @@ setup_config() {
 		fi
 		ln -sf ${TOP}/config/.oh-my-zsh ~
 		ln -sf ${TOP}/config/.zshrc ~
+		ln -sf ${TOP}/config/.xinitrc ~
+		ln -sf ${TOP}/config/.Xresources ~
 		ln -sf ${TOP}/config/.autoload.sh ~
 		if [[ -d ~/.autoload.d ]]; then
 			rm -fr ~/.autoload.d
 		fi
 		ln -sf ${TOP}/config/.autoload.d ~
 
-		#tw_cscope
+		#bins
 		for mybin in $(find ${TOP}/bin/ -type f); do
 			ln -sf ${mybin} ~/MyRoot/bin/
 		done
