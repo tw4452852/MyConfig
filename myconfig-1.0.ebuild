@@ -22,7 +22,10 @@ RDEPEND="${DEPEND}
 	app-shells/zsh
 	dev-vcs/git
 	dev-vcs/mercurial
-	x11-wm/dwm"
+	x11-wm/dwm
+	mail-client/mutt
+	mail-filter/procmail
+	net-mail/fetchmail"
 
 src_compile() {
 	einfo "Makefile shouldn't be used by emerge"
