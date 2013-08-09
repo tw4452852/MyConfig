@@ -61,6 +61,9 @@ setup_config() {
 		ln -sf ${TOP}/config/.zshrc ~
 		ln -sf ${TOP}/config/.xinitrc ~
 		ln -sf ${TOP}/config/.Xresources ~
+		ln -Pf ${TOP}/config/.procmailrc ~
+		ln -Pf ${TOP}/config/.muttrc ~
+		ln -Pf ${TOP}/config/.fetchmailrc ~
 		ln -sf ${TOP}/config/.autoload.sh ~
 		if [[ -d ~/.autoload.d ]]; then
 			rm -fr ~/.autoload.d

@@ -1,0 +1,25 @@
+MAILDIR=/var/mail/
+DEFAULT=/var/mail/mbox
+LOGFILE=$HOME/.procmaillog
+LOGABSTRACT=no
+VERBOSE=off
+
+:0
+* ^Mailing-list:.*golang-china@googlegroups.com.*
+golang-china
+
+:0
+* ^Mailing-list:.*golang-nuts@googlegroups.com.*
+golang-nuts
+
+:0
+* ^Mailing-list:.*golang-dev@googlegroups.com.*
+golang-dev
+
+:0
+* ^To:.*tw19881113@gmail.com.*
+gmail
+
+:0
+* ^To:.*tw84452852@hotmail.com.*
+hotmail
