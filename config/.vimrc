@@ -193,6 +193,6 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "snipmate (fix snippet_dir wrong in windows)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if !has('win32') && !has('win64')
+if has('win32') || has('win64')
 	let g:snippets_dir='$HOME/vimfiles/bundle/snipmate/snippets'
 endif
