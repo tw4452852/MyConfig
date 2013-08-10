@@ -3,10 +3,12 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set t_Co=256
 colorscheme tw
-set encoding=utf-8
+if !has('win32') && !has('win64')
+	set encoding=utf-8
+endif
 set guifont=Lucida\ Console:h10
 filetype off
-call pathogen#runtime_append_all_bundles()
+execute pathogen#infect()
 filetype plugin on
 filetype indent on
 set nocompatible
