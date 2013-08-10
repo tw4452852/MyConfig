@@ -190,3 +190,9 @@ augroup dotgroup
 	au FileType dot nmap <leader>lv :GraphvizShow<CR>
 	au FileType dot nmap <leader>li :GraphvizInteractive<CR>
 augroup END
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"snipmate (fix snippet_dir wrong in windows)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if !has('win32') && !has('win64')
+	let g:snippets_dir='$HOME/vimfiles/bundle/snipmate/snippets'
+endif
