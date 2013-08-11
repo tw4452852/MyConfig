@@ -35,6 +35,7 @@ setup_config() {
 		rm -fr ~/_vimrc
 		cp -fr ${TOP}/config/.vimrc ~/_vimrc
 		cp -fr ${TOP}/config/.gitconfig ~
+		mkdir -p ~/.ssh
 		cp -fr ${TOP}/config/ssh_config ~/.ssh/config
 		;;
 	*)
@@ -52,6 +53,7 @@ setup_config() {
 		ln -sf ${TOP}/config/.vim ~
 		ln -sf ${TOP}/config/.vimrc ~
 		ln -sf ${TOP}/config/.gitconfig ~
+		mkdir ~/.ssh
 		ln -sf ${TOP}/config/ssh_config ~/.ssh/config
 		ln -sf ${TOP}/config/.tmux.conf ~
 		if [[ -d ~/.oh-my-zsh ]]; then
