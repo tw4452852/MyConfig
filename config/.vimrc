@@ -153,7 +153,7 @@ augroup gogroup
 	au!
 	au BufWritePre *.go :silent Fmt "gofmt
 	au FileType go inoremap <buffer> <leader>gc <c-x><c-o>
-	au FileType go setlocal makeprg=go\ build
+	au FileType go compiler go
 augroup END
 "}}}
 " Markdown"{{{
