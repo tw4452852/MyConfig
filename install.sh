@@ -4,7 +4,12 @@ if [[ ! -f install.sh ]]; then
 	echo 'install.sh must be run in where it locates'
 	exit 1
 fi
-TOP="$(pwd)"
+
+TOP_DIR="$(pwd)"
+HOME_DIR="$(cd ${HOME_DIR} && pwd)"
+MYROOT=${HOME_DIR}/MyRoot
+GOROOT=${HOME_DIR}/goroot
+GOPATH=${HOME_DIR}/golib
 
 check_tools() {
 	echo ">>> test necessary tools ..."
@@ -30,57 +35,57 @@ setup_config() {
 
 	case "$(uname)" in
 	*MINGW* | *WIN32* | *CYGWIN*) # Windows
-		rm -fr ~/vimfiles
-		cp -fr ${TOP}/config/.vim ~/vimfiles
-		rm -fr ~/_vimrc
-		cp -fr ${TOP}/config/.vimrc ~/_vimrc
-		cp -fr ${TOP}/config/.gitconfig ~
-		cp -fr ${TOP}/config/ssh_config ~/.ssh/config
+		rm -fr ${HOME_DIR}/vimfiles
+		cp -fr ${TOP_DIR}/config/.vim ${HOME_DIR}/vimfiles
+		rm -fr ${HOME_DIR}/_vimrc
+		cp -fr ${TOP_DIR}/config/.vimrc ${HOME_DIR}/_vimrc
+		cp -fr ${TOP_DIR}/config/.gitconfig ${HOME_DIR}
+		cp -fr ${TOP_DIR}/config/ssh_config ${HOME_DIR}/.ssh/config
 		;;
 	*)
 		#mkdir myself dirs
-		mkdir -p ~/MyRoot/bin
-		mkdir -p ~/goroot
-		mkdir -p ~/golib/bin
-		mkdir -p ~/golib/pkg
-		mkdir -p ~/golib/src
+		mkdir -p ${MYROOT}/bin
+		mkdir -p ${GOROOT}
+		mkdir -p ${GOPATH}/bin
+		mkdir -p ${GOPATH}/pkg
+		mkdir -p ${GOPATH}/src
 
 		#config files
-		if [[ -d ~/.vim ]]; then
-			rm -fr ~/.vim
+		if [[ -d ${HOME_DIR}/.vim ]]; then
+			rm -fr ${HOME_DIR}/.vim
 		fi
-		ln -sf ${TOP}/config/.vim ~
-		ln -sf ${TOP}/config/.vimrc ~
-		ln -sf ${TOP}/config/.gitconfig ~
-		ln -sf ${TOP}/config/ssh_config ~/.ssh/config
-		ln -sf ${TOP}/config/.tmux.conf ~
-		if [[ -d ~/.oh-my-zsh ]]; then
-			rm -fr ~/.oh-my-zsh
+		ln -sf ${TOP_DIR}/config/.vim ${HOME_DIR}
+		ln -sf ${TOP_DIR}/config/.vimrc ${HOME_DIR}
+		ln -sf ${TOP_DIR}/config/.gitconfig ${HOME_DIR}
+		ln -sf ${TOP_DIR}/config/ssh_config ${HOME_DIR}/.ssh/config
+		ln -sf ${TOP_DIR}/config/.tmux.conf ${HOME_DIR}
+		if [[ -d ${HOME_DIR}/.oh-my-zsh ]]; then
+			rm -fr ${HOME_DIR}/.oh-my-zsh
 		fi
-		ln -sf ${TOP}/config/.oh-my-zsh ~
-		ln -sf ${TOP}/config/.zshrc ~
-		ln -sf ${TOP}/config/.xinitrc ~
-		ln -sf ${TOP}/config/.Xresources ~
-		ln -Pf ${TOP}/config/.procmailrc ~
-		ln -Pf ${TOP}/config/.muttrc ~
-		ln -Pf ${TOP}/config/.fetchmailrc ~
-		ln -sf ${TOP}/config/.autoload.sh ~
-		if [[ -d ~/.autoload.d ]]; then
-			rm -fr ~/.autoload.d
+		ln -sf ${TOP_DIR}/config/.oh-my-zsh ${HOME_DIR}
+		ln -sf ${TOP_DIR}/config/.zshrc ${HOME_DIR}
+		ln -sf ${TOP_DIR}/config/.xinitrc ${HOME_DIR}
+		ln -sf ${TOP_DIR}/config/.Xresources ${HOME_DIR}
+		ln -Pf ${TOP_DIR}/config/.procmailrc ${HOME_DIR}
+		ln -Pf ${TOP_DIR}/config/.muttrc ${HOME_DIR}
+		ln -Pf ${TOP_DIR}/config/.fetchmailrc ${HOME_DIR}
+		ln -sf ${TOP_DIR}/config/.autoload.sh ${HOME_DIR}
+		if [[ -d ${HOME_DIR}/.autoload.d ]]; then
+			rm -fr ${HOME_DIR}/.autoload.d
 		fi
-		ln -sf ${TOP}/config/.autoload.d ~
+		ln -sf ${TOP_DIR}/config/.autoload.d ${HOME_DIR}
 
 		#bins
-		for mybin in $(find ${TOP}/bin/ -type f); do
-			ln -sf ${mybin} ~/MyRoot/bin/
+		for mybin in $(find ${TOP_DIR}/bin/ -type f); do
+			ln -sf ${mybin} ${MYROOT}/bin/
 		done
 
 		#font
-		mkdir -p ~/.fonts
-		ln -sf ${TOP}/font/Lucida\ Console.ttf ~/.fonts/
+		mkdir -p ${HOME_DIR}/.fonts
+		ln -sf ${TOP_DIR}/font/Lucida\ Console.ttf ${HOME_DIR}/.fonts/
 
-		export PKG_CONFIG_PATH=~/MyRoot/lib/pkgconfig/:$PKG_CONFIG_PATH
-		export PATH=~/MyRoot/bin/:$PATH
+		export PKG_CONFIG_PATH=${MYROOT}/lib/pkgconfig/:$PKG_CONFIG_PATH
+		export PATH=${MYROOT}/bin/:$PATH
 		;;
 	esac
 
@@ -100,13 +105,11 @@ setup_software() {
 	case "$(uname -r)" in
 		*gentoo*)
 			echo "use the ebuild to setup software in gentoo"
-			exit 0
+			#exit 0
 			;;
 	esac
 
 	check_tools
-
-	BASE="$(cd ~ && pwd)"
 
 	#fetch the submodule src
 	git sm init
@@ -121,11 +124,11 @@ setup_software() {
 		echo "<<< install dwm failed"
 	else
 		git sm update submodules/dwm
-		cd ${TOP}/submodules/dwm
+		cd ${TOP_DIR}/submodules/dwm
 		# use myself config.h
-		ln -sf ${TOP}/config/dwm.conf.h ./config.h
+		ln -sf ${TOP_DIR}/config/dwm.conf.h ./config.h
 		# change install dir
-		sed -i -e "/^PREFIX/c PREFIX = ${BASE}/MyRoot/" config.mk &&
+		sed -i -e "/^PREFIX/c PREFIX = ${MYROOT}" config.mk &&
 		make clean install
 		if [[ $? -ne 0 ]]; then
 			echo "install dwm failed"
@@ -139,10 +142,10 @@ setup_software() {
 	pkg-config --exists libevent
 	if [[ $? -ne 0 ]]; then
 		git sm update submodules/libevent
-		cd ${TOP}/submodules/libevent
+		cd ${TOP_DIR}/submodules/libevent
 		git co master
 		./autogen.sh &&
-		./configure --prefix=$BASE/MyRoot/ &&
+		./configure --prefix=${MYROOT} &&
 		make &&
 		make install
 		if [[ $? -ne 0 ]]; then
@@ -159,10 +162,10 @@ setup_software() {
 	which tmux
 	if [[ $? -ne 0 ]]; then
 		git sm update submodules/tmux
-		cd ${TOP}/submodules/tmux
+		cd ${TOP_DIR}/submodules/tmux
 		git co master
 		./autogen.sh &&
-		./configure --prefix=$BASE/MyRoot/ &&
+		./configure --prefix=${MYROOT} &&
 		make &&
 		make install
 		if [[ $? -ne 0 ]]; then
@@ -178,10 +181,8 @@ setup_software() {
 	echo ">>> install go ..."
 	which go
 	if [[ $? -ne 0 ]]; then
-		export GOROOT=
-		export GOPATH=
-		hg clone http://code.google.com/p/go ~/goroot &&
-		cd ~/goroot/src &&
+		hg clone http://code.google.com/p/go ${GOROOT} &&
+		cd ${GOROOT}/src &&
 		./make.bash
 		if [[ $? -ne 0 ]]; then
 			echo "install go failed" 
@@ -189,7 +190,7 @@ setup_software() {
 		fi
 	else
 		echo "go has been installed, just update"
-		cd $GOROOT &&
+		cd ${GOROOT} &&
 		hg pull
 		if [[ $? -ne 0 ]]; then
 			echo "update go failed"
@@ -212,10 +213,10 @@ setup_software() {
 	which zsh
 	if [[ $? -ne 0 ]]; then
 		git sm update submodules/zsh
-		cd ${TOP}/submodules/zsh
+		cd ${TOP_DIR}/submodules/zsh
 		git co master
 		./Util/preconfig;
-		./configure --prefix=$BASE/MyRoot/;
+		./configure --prefix=${MYROOT};
 		make;
 		make install;
 	else
