@@ -7,5 +7,6 @@ find -L `pwd` -iname "*.cc"		>>cscope.files
 find -L `pwd` -iname "*.cpp"	>>cscope.files
 find -L `pwd` -iname "*.go"		>>cscope.files
 find -L `pwd` -iname "*.goc"	>>cscope.files
+find -L `pwd` -iname "*.ld"		>>cscope.files
 
 cscope -bq
