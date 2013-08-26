@@ -2,10 +2,10 @@
 
 rm -fr cscope.*
 
-find `pwd` -iname "*.[chs]"	>cscope.files
-find `pwd` -iname "*.cc"	>>cscope.files
-find `pwd` -iname "*.cpp"	>>cscope.files
-find `pwd` -iname "*.go"	>>cscope.files
-find `pwd` -iname "*.goc"	>>cscope.files
+find -L `pwd` -iname "*.[chs]"	>cscope.files
+find -L `pwd` -iname "*.cc"		>>cscope.files
+find -L `pwd` -iname "*.cpp"	>>cscope.files
+find -L `pwd` -iname "*.go"		>>cscope.files
+find -L `pwd` -iname "*.goc"	>>cscope.files
 
 cscope -bq
