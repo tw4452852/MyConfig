@@ -54,6 +54,8 @@ set statusline=%F\ -\ %m%r%h%y%=[%l/%L]
 "}}}
 " Global keymaps"{{{
 let mapleader = ","
+nnoremap <tab> %
+vnoremap <tab> %
 nnoremap / /\v
 vnoremap / /\v
 inoremap <f1> <esc>
@@ -61,6 +63,10 @@ nnoremap <f1> <esc>
 vnoremap <f1> <esc>
 nnoremap ; :
 inoremap jj <esc>
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+nnoremap <c-h> <c-w>h
 nnoremap <leader>mk :w<cr>:make<cr>
 inoremap <leader>mk <esc>:w<cr>:make<cr>
 nnoremap <leader>mi :w<cr>:make install<cr>
@@ -70,8 +76,6 @@ inoremap <leader>ms <esc>:w<cr>:make strip<cr>
 nnoremap <leader>w :update<cr>
 inoremap <leader>w <esc>:update<cr>
 nnoremap <leader><space> :noh<cr>
-nnoremap <tab> %
-vnoremap <tab> %
 nnoremap <leader>at Vat
 nnoremap <leader>ev <c-w><c-v><c-l>:e $MYVIMRC<cr>
 nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
