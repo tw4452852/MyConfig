@@ -46,6 +46,7 @@ export EDITOR=vim
 export GOROOT=~/goroot
 export GOPATH=~/golib
 
+export CDPATH=.:$GOPATH/src:$GOROOT/src/pkg:$CDPATH
 export PATH=~/MyRoot/bin:$PATH:$GOROOT/bin:$GOPATH/bin
 export PKG_CONFIG_PATH=~/MyRoot/lib/pkgconfig/:$PKG_CONFIG_PATH
 export LD_LIBRARY_PATH=~/MyRoot/lib:$LD_LIBRARY_PATH
