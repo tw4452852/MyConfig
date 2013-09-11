@@ -87,7 +87,23 @@ nnoremap <leader>{ viw<esc>a}<esc>hbi{<esc>lel
 nnoremap <leader>[ viw<esc>a]<esc>hbi;<esc>lel
 nnoremap <leader>; mqA;<esc>`q
 "tw's self cmd
-nnoremap <leader>f :%s/；/;/ge<cr>:%s/。/./ge<cr>:%s/，/,/ge<cr>:%s/：/:/ge<cr>:%s/（/(/ge<cr>:%s/）/)/ge<cr>
+nnoremap <leader>f :call <SID>TwFormat()<cr>
+
+function! s:TwFormat()
+	let linenum = 1
+	for line in getline(1, line('$'))
+		let repl = substitute(line, "；", ";", "g")
+		let repl = substitute(repl, "。", ".", "g")
+		let repl = substitute(repl, "，", ",", "g")
+		let repl = substitute(repl, "：", ":", "g")
+		let repl = substitute(repl, "（", "(", "g")
+		let repl = substitute(repl, "）", ")", "g")
+		let repl = substitute(repl, "“", "\"", "g")
+		let repl = substitute(repl, "”", "\"", "g")
+		call setline(linenum, repl)
+		let linenum += 1
+	endfor
+endfunction
 "Quickfix
 nnoremap <leader>qf :call QickfixToggle()<cr>
 let g:quickfix_is_open = 0
