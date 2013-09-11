@@ -64,7 +64,8 @@ vnoremap <f1> <esc>
 nnoremap ; :
 inoremap jj <esc>
 nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
+"overlay <c-k>
+nmap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
 nnoremap <c-h> <c-w>h
 nnoremap <leader>mk :w<cr>:make<cr>
