@@ -50,7 +50,7 @@ augroup vimgroup
 augroup END
 "}}}
 " Status Line setting"{{{
-set statusline=%F\ -\ %m%r%h%y%=[%l/%L]
+set statusline=%F\ -\ %m%r%h[%Y-%{&fileformat}]%=[%B,%c][%l/%L]
 "}}}
 " Global keymaps"{{{
 let mapleader = ","
