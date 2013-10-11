@@ -1,7 +1,7 @@
 <opml version="1.0" xmlns:fz="urn:forumzilla:">
   <head>
-    <title>导出 Thunderbird OPML - 博客和新闻收取点</title>
-    <dateCreated>Sat, 31 Aug 2013 01:52:12 GMT</dateCreated>
+    <title>导出 Thunderbird OPML - rss</title>
+    <dateCreated>Fri, 11 Oct 2013 04:41:39 GMT</dateCreated>
   </head>
   <body>
     <outline title="A Geek's Page">
@@ -10,6 +10,8 @@
       <outline type="rss" title="Chaos Ashs" text="Chaos Ashs" version="RSS" fz:quickMode="false" xmlUrl="http://www.tech4cloud.com/atom.xml" htmlUrl="http://www.tech4cloud.com"/></outline>
     <outline title="delectate's blog">
       <outline type="rss" title="delectate's blog" text="delectate's blog" version="RSS" fz:quickMode="false" xmlUrl="http://www.deleak.com/blog/feed/" htmlUrl="http://www.deleak.com/blog"/></outline>
+    <outline title="Dominik Honnef">
+      <outline type="rss" title="Dominik Honnef" text="Dominik Honnef" version="RSS" fz:quickMode="true" xmlUrl="http://dominik.honnef.co/atom.xml" htmlUrl="http://dominik.honnef.co/"/></outline>
     <outline title="Dutor">
       <outline type="rss" title="Dutor" text="Dutor" version="RSS" fz:quickMode="false" xmlUrl="http://feeds.feedburner.com/dutor" htmlUrl="http://www.dutor.net"/></outline>
     <outline title="go with confidence">
@@ -29,9 +31,9 @@
     <outline title="Mort Yao">
       <outline type="rss" title="Mort Yao" text="Mort Yao" version="RSS" fz:quickMode="false" xmlUrl="http://www.soimort.org/atom.xml" htmlUrl="http://www.soimort.org"/></outline>
     <outline title="Posts of golangpatterns Updates">
-      <outline type="rss" title="Posts of golangpatterns Updates" text="Posts of golangpatterns Updates" version="RSS" fz:quickMode="false" xmlUrl="http://sites.google.com/site/gopatterns/home/updates/posts.xml" htmlUrl=""/></outline>
+      <outline type="rss" title="Posts of golangpatterns Updates" text="Posts of golangpatterns Updates" version="RSS" fz:quickMode="false" xmlUrl="http://sites.google.com/site/gopatterns/home/updates/posts.xml" htmlUrl="null"/></outline>
     <outline title="Preshing on Programming">
-      <outline type="rss" title="Preshing on Programming" text="Preshing on Programming" version="RSS" fz:quickMode="false" xmlUrl="http://preshing.com/feed" htmlUrl="http://preshing.com"/></outline>
+      <outline type="rss" title="Preshing on Programming" text="Preshing on Programming" version="RSS" fz:quickMode="false" xmlUrl="http://preshing.com/feed" htmlUrl="http://preshing.com/"/></outline>
     <outline title="Savoury Morsels">
       <outline type="rss" title="Savoury Morsels" text="Savoury Morsels" version="RSS" fz:quickMode="false" xmlUrl="http://rogpeppe.wordpress.com/feed/" htmlUrl="http://rogpeppe.wordpress.com"/></outline>
     <outline title="Startup News">
@@ -39,7 +41,7 @@
     <outline title="The Go Programming Language Blog">
       <outline type="rss" title="The Go Programming Language Blog" text="The Go Programming Language Blog" version="RSS" fz:quickMode="false" xmlUrl="http://blog.golang.org/feeds/posts/default" htmlUrl="http://blog.golang.org/"/></outline>
     <outline title="Tw's blog">
-      <outline type="rss" title="Tw's blog" text="Tw's blog" version="RSS" fz:quickMode="true" xmlUrl="http://totorow.herokuapp.com/rss" htmlUrl="http://totorow.herokuapp.com/rss"/></outline>
+      <outline type="rss" title="Tw's blog" text="Tw's blog" version="RSS" fz:quickMode="false" xmlUrl="http://totorow.herokuapp.com/rss" htmlUrl="http://totorow.herokuapp.com/rss"/></outline>
     <outline title="《程序员》杂志官网">
       <outline type="rss" title="《程序员》杂志官网" text="《程序员》杂志官网" version="RSS" fz:quickMode="false" xmlUrl="http://feed.feedsky.com/programmer" htmlUrl="http://programmer.csdn.net"/></outline>
     <outline title="我的迦南地">
@@ -52,7 +54,7 @@
       <outline type="rss" title="酷壳 - CoolShell.cn" text="酷壳 - CoolShell.cn" version="RSS" fz:quickMode="false" xmlUrl="http://coolshell.cn/feed" htmlUrl="http://coolshell.cn"/></outline>
     <outline title="黑客志">
       <outline type="rss" title="黑客志" text="黑客志" version="RSS" fz:quickMode="false" xmlUrl="http://feed.feedsky.com/heikezhi" htmlUrl="http://heikezhi.com"/></outline>
-    <outline title="Dominik Honnef">
-      <outline type="rss" title="Dominik Honnef" text="Dominik Honnef" version="RSS" fz:quickMode="true" xmlUrl="http://dominik.honnef.co/atom.xml" htmlUrl="http://dominik.honnef.co/"/></outline>
+    <outline title="Going Go Programming">
+      <outline type="rss" title="Going Go Programming" text="Going Go Programming" version="RSS" fz:quickMode="false" xmlUrl="http://www.goinggo.net/feeds/posts/default" htmlUrl="http://www.goinggo.net/"/></outline>
   </body>
 </opml>
