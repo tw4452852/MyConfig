@@ -1,7 +1,7 @@
 <opml version="1.0" xmlns:fz="urn:forumzilla:">
   <head>
     <title>导出 Thunderbird OPML - rss</title>
-    <dateCreated>Fri, 11 Oct 2013 04:41:39 GMT</dateCreated>
+    <dateCreated>Sat, 19 Oct 2013 03:11:15 GMT</dateCreated>
   </head>
   <body>
     <outline title="A Geek's Page">
@@ -16,6 +16,8 @@
       <outline type="rss" title="Dutor" text="Dutor" version="RSS" fz:quickMode="false" xmlUrl="http://feeds.feedburner.com/dutor" htmlUrl="http://www.dutor.net"/></outline>
     <outline title="go with confidence">
       <outline type="rss" title="go with confidence" text="go with confidence" version="RSS" fz:quickMode="false" xmlUrl="http://gowithconfidence.tumblr.com/rss" htmlUrl="http://gowithconfidence.tumblr.com/"/></outline>
+    <outline title="Going Go Programming">
+      <outline type="rss" title="Going Go Programming" text="Going Go Programming" version="RSS" fz:quickMode="false" xmlUrl="http://www.goinggo.net/feeds/posts/default" htmlUrl="http://www.goinggo.net/"/></outline>
     <outline title="golang中文社区_golang中国_golang源码分析_golang - Go源码分析">
       <outline type="rss" title="golang中文社区_golang中国_golang源码分析_golang - Go源码分析" text="golang中文社区_golang中国_golang源码分析_golang - Go源码分析" version="RSS" fz:quickMode="false" xmlUrl="http://bbs.gocn.im/forum.php?mod=rss&amp;fid=37&amp;auth=0" htmlUrl="http://bbs.mygolang.com/forum-37-1.html"/></outline>
     <outline title="Heiher's Blog">
@@ -54,7 +56,7 @@
       <outline type="rss" title="酷壳 - CoolShell.cn" text="酷壳 - CoolShell.cn" version="RSS" fz:quickMode="false" xmlUrl="http://coolshell.cn/feed" htmlUrl="http://coolshell.cn"/></outline>
     <outline title="黑客志">
       <outline type="rss" title="黑客志" text="黑客志" version="RSS" fz:quickMode="false" xmlUrl="http://feed.feedsky.com/heikezhi" htmlUrl="http://heikezhi.com"/></outline>
-    <outline title="Going Go Programming">
-      <outline type="rss" title="Going Go Programming" text="Going Go Programming" version="RSS" fz:quickMode="false" xmlUrl="http://www.goinggo.net/feeds/posts/default" htmlUrl="http://www.goinggo.net/"/></outline>
+    <outline title="Dave Cheney">
+      <outline type="rss" title="Dave Cheney" text="Dave Cheney" version="RSS" fz:quickMode="false" xmlUrl="http://dave.cheney.net/feed" htmlUrl="http://dave.cheney.net"/></outline>
   </body>
 </opml>
