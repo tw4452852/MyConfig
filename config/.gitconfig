@@ -26,4 +26,4 @@
 [apply]
 	whitespace = fix
 [push]
-	default = simple
+	default = tracking

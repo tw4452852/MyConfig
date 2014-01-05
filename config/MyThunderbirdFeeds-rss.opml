@@ -1,13 +1,15 @@
 <opml version="1.0" xmlns:fz="urn:forumzilla:">
   <head>
     <title>导出 Thunderbird OPML - rss</title>
-    <dateCreated>Sat, 19 Oct 2013 03:11:15 GMT</dateCreated>
+    <dateCreated>Sun, 05 Jan 2014 06:15:06 GMT</dateCreated>
   </head>
   <body>
     <outline title="A Geek's Page">
       <outline type="rss" title="A Geek's Page" text="A Geek's Page" version="RSS" fz:quickMode="false" xmlUrl="http://wangcong.org/blog/?feed=rss2" htmlUrl="http://wangcong.org/blog"/></outline>
     <outline title="Chaos Ashs">
       <outline type="rss" title="Chaos Ashs" text="Chaos Ashs" version="RSS" fz:quickMode="false" xmlUrl="http://www.tech4cloud.com/atom.xml" htmlUrl="http://www.tech4cloud.com"/></outline>
+    <outline title="Dave Cheney">
+      <outline type="rss" title="Dave Cheney" text="Dave Cheney" version="RSS" fz:quickMode="false" xmlUrl="http://dave.cheney.net/feed" htmlUrl="http://dave.cheney.net"/></outline>
     <outline title="delectate's blog">
       <outline type="rss" title="delectate's blog" text="delectate's blog" version="RSS" fz:quickMode="false" xmlUrl="http://www.deleak.com/blog/feed/" htmlUrl="http://www.deleak.com/blog"/></outline>
     <outline title="Dominik Honnef">
@@ -29,7 +31,7 @@
     <outline title="Labix Blog">
       <outline type="rss" title="Labix Blog" text="Labix Blog" version="RSS" fz:quickMode="false" xmlUrl="http://blog.labix.org/feed" htmlUrl="http://blog.labix.org"/></outline>
     <outline title="LinuxTOY">
-      <outline type="rss" title="LinuxTOY" text="LinuxTOY" version="RSS" fz:quickMode="false" xmlUrl="http://linuxtoy.org/feed/" htmlUrl="http://linuxtoy.org"/></outline>
+      <outline type="rss" title="LinuxTOY" text="LinuxTOY" version="RSS" fz:quickMode="false" xmlUrl="http://linuxtoy.org/feed/" htmlUrl="https://linuxtoy.org"/></outline>
     <outline title="Mort Yao">
       <outline type="rss" title="Mort Yao" text="Mort Yao" version="RSS" fz:quickMode="false" xmlUrl="http://www.soimort.org/atom.xml" htmlUrl="http://www.soimort.org"/></outline>
     <outline title="Posts of golangpatterns Updates">
@@ -56,7 +58,7 @@
       <outline type="rss" title="酷壳 - CoolShell.cn" text="酷壳 - CoolShell.cn" version="RSS" fz:quickMode="false" xmlUrl="http://coolshell.cn/feed" htmlUrl="http://coolshell.cn"/></outline>
     <outline title="黑客志">
       <outline type="rss" title="黑客志" text="黑客志" version="RSS" fz:quickMode="false" xmlUrl="http://feed.feedsky.com/heikezhi" htmlUrl="http://heikezhi.com"/></outline>
-    <outline title="Dave Cheney">
-      <outline type="rss" title="Dave Cheney" text="Dave Cheney" version="RSS" fz:quickMode="false" xmlUrl="http://dave.cheney.net/feed" htmlUrl="http://dave.cheney.net"/></outline>
+    <outline title="Golang 中国博客">
+      <outline type="rss" title="Golang 中国博客" text="Golang 中国博客" version="RSS" fz:quickMode="false" xmlUrl="http://blog.go-china.org/feed.atom" htmlUrl="http://blog.go-china.org"/></outline>
   </body>
 </opml>

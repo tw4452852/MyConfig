@@ -34,7 +34,7 @@ setup_config() {
 	echo ">>> restore myself config ..."
 
 	case "$(uname)" in
-	*MINGW* | *WIN32* | *CYGWIN*) # Windows
+	*MINGW* | *WIN32* ) # Windows
 		rm -fr ${HOME_DIR}/vimfiles
 		cp -fr ${TOP_DIR}/config/.vim ${HOME_DIR}/vimfiles
 		rm -fr ${HOME_DIR}/_vimrc
@@ -97,7 +97,7 @@ setup_config() {
 setup_software() {
 	# Windows
 	case "$(uname)" in
-		*MINGW* | *WIN32* | *CYGWIN*)
+		*MINGW* | *WIN32* )
 			echo "nothing to do in windows"
 			exit 0
 			;;
