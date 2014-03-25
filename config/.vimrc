@@ -87,6 +87,8 @@ nnoremap <leader>[ viw<esc>a]<esc>hbi;<esc>lel
 nnoremap <leader>; mqA;<esc>`q
 "tw's self cmd
 nnoremap <leader>f :call <SID>TwFormat()<cr>
+" select last paste in visual mode
+nnoremap <expr> gb '`[' . strpart(getregtype(), 0, 1) . '`]'
 
 function! s:TwFormat()
 	let linenum = 1
