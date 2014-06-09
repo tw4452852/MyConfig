@@ -10,6 +10,7 @@ HOME_DIR="$(cd ${HOME_DIR} && pwd)"
 MYROOT=${HOME_DIR}/MyRoot
 GOROOT=${HOME_DIR}/goroot
 GOPATH=${HOME_DIR}/golib
+FONTS_DIR=${HOME_DIR}/.fonts
 
 check_tools() {
 	echo ">>> test necessary tools ..."
@@ -83,8 +84,10 @@ setup_config() {
 		done
 
 		#font
+		ln -sf ${TOP_DIR}/config/.fonts.conf ${HOME_DIR}
 		mkdir -p ${HOME_DIR}/.fonts
-		ln -sf ${TOP_DIR}/font/Lucida\ Console.ttf ${HOME_DIR}/.fonts/
+		ln -sf ${TOP_DIR}/font/Lucida\ Console.ttf ${FONTS_DIR}
+		ln -sf ${TOP_DIR}/font/SourceCodePro ${FONTS_DIR}
 
 		export PKG_CONFIG_PATH=${MYROOT}/lib/pkgconfig/:$PKG_CONFIG_PATH
 		export PATH=${MYROOT}/bin/:$PATH
