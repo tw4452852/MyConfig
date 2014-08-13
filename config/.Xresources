@@ -1,5 +1,5 @@
 ! uxterm normal font
-UXTerm*faceName: Lucida Console:size=10
+UXTerm*faceName: Source Code Pro:size=10
 
 ! fix alt key input
 xterm*eightBitInput: false
