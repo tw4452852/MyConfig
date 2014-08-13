@@ -13,7 +13,7 @@
 	sm = submodule
 	srb = svn rebase
 	rb = rebase
-	ci = commit
+	ci = commit -s
 	sci = svn dcommit
 	co = checkout
 	di = diff
