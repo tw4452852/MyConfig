@@ -11,6 +11,7 @@ MYROOT=${HOME_DIR}/MyRoot
 GOROOT=${HOME_DIR}/goroot
 GOPATH=${HOME_DIR}/golib
 FONTS_DIR=${HOME_DIR}/.fonts
+FONTS_CONF_DIR=${HOME_DIR}/.config/fonconfig
 
 check_tools() {
 	echo ">>> test necessary tools ..."
@@ -84,8 +85,9 @@ setup_config() {
 		done
 
 		#font
-		ln -sf ${TOP_DIR}/config/.fonts.conf ${HOME_DIR}
-		mkdir -p ${HOME_DIR}/.fonts
+		mkdir -p ${FONTS_CONF_DIR}
+		ln -sf ${TOP_DIR}/config/.fonts.conf ${FONTS_CONF_DIR}
+		mkdir -p ${FONTS_DIR}
 		ln -sf ${TOP_DIR}/font/Lucida\ Console.ttf ${FONTS_DIR}
 		ln -sf ${TOP_DIR}/font/SourceCodePro ${FONTS_DIR}
 
