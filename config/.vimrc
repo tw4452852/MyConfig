@@ -1,7 +1,7 @@
 " Basic settings"{{{
 set t_Co=256
 colorscheme tw
-set guifont=Lucida\ Console:h10
+set guifont=Droid\ Sans\ Mono\ 11
 filetype off
 execute pathogen#infect()
 filetype plugin on
