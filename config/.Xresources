@@ -1,5 +1,7 @@
 ! uxterm normal font
 UXTerm*faceName: Source Code Pro:size=10
+! Chinese font
+UXTerm*faceNameDoublesize: WenQuanYi Micro Hei:size=10
 
 ! fix alt key input
 xterm*eightBitInput: false
