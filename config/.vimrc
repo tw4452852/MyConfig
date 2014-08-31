@@ -1,7 +1,7 @@
 " Basic settings"{{{
 set t_Co=256
 colorscheme tw
-set guifont=Droid\ Sans\ Mono\ 11
+set guifont=Source\ Code\ Pro\ 10
 filetype off
 execute pathogen#infect()
 filetype plugin on
