@@ -1,3 +1,5 @@
+# cache to tmp
+export XDG_CACHE_HOME="/tmp/.cache"
 # Update fonts cache
 fc-cache -vf
 # Load myself config
