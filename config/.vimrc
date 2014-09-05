@@ -1,7 +1,11 @@
 " Basic settings"{{{
 set t_Co=256
 colorscheme tw
-set guifont=Source\ Code\ Pro\ 10
+if !has('win32') && !has('win64')
+	set guifont=Source\ Code\ Pro\ 10
+else
+	set guifont=Source_Code_Pro:h10
+endif
 filetype off
 execute pathogen#infect()
 filetype plugin on
