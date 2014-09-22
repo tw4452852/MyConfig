@@ -27,3 +27,5 @@
 	whitespace = fix
 [push]
 	default = tracking
+[init]
+	templatedir = ~/.git-template

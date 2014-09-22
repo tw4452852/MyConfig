@@ -60,6 +60,7 @@ setup_config() {
 		ln -sf ${TOP_DIR}/config/.vim ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.vimrc ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.gitconfig ${HOME_DIR}
+		ln -sf ${TOP_DIR}/config/.git-template ${HOME_DIR}
 		mkdir -p ${HOME_DIR}/.ssh
 		ln -sf ${TOP_DIR}/config/ssh_config ${HOME_DIR}/.ssh/config
 		ln -sf ${TOP_DIR}/config/.tmux.conf ${HOME_DIR}
