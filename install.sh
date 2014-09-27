@@ -79,6 +79,10 @@ setup_config() {
 			rm -fr ${HOME_DIR}/.autoload.d
 		fi
 		ln -sf ${TOP_DIR}/config/.autoload.d ${HOME_DIR}
+		if [[ -d ${HOME_DIR}/.dwm ]]; then
+			rm -fr ${HOME_DIR}/.dwm
+		fi
+		ln -sf ${TOP_DIR}/config/.dwm ${HOME_DIR}
 
 		#bins
 		for mybin in $(find ${TOP_DIR}/bin/ -type f); do
