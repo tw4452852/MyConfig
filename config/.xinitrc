@@ -4,11 +4,6 @@ export XDG_CACHE_HOME="/tmp/.cache"
 fc-cache -vf
 # Load myself config
 xrdb ~/.Xresources
-# Update time every second in dwm toolbar
-while true; do
-	xsetroot -name "`date`"
-	sleep 1
-done &
 
 # ibus
 export XMODIFIERS="@im=fcitx"
