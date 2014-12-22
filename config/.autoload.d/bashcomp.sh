@@ -2,4 +2,4 @@
 autoload bashcompinit
 bashcompinit
 
-echo "bash complete init done"
+echo "autoload: bash complete init done"
