@@ -53,11 +53,11 @@ export PATH=~/MyRoot/bin:$PATH:$GOROOT/bin:$GOPATH/bin
 source $HOME/.autoload.sh
 
 #tmux
-if which test 2>&1 >/dev/null;then
-	if test -z ${TMUX};then
-		tmux -2
-	fi
+#if which test 2>&1 >/dev/null;then
+	#if test -z ${TMUX};then
+		#tmux -2
+	#fi
 	#while test -z ${TMUX};do
 		#tmux -2 attach || break
 	#done
-fi
+#fi
