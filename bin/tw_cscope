@@ -2,12 +2,6 @@
 
 rm -fr cscope.*
 
-find -L `pwd` -iname "*.[chs]"	>cscope.files
-find -L `pwd` -iname "*.cc"		>>cscope.files
-find -L `pwd` -iname "*.cpp"	>>cscope.files
-find -L `pwd` -iname "*.go"		>>cscope.files
-find -L `pwd` -iname "*.goc"	>>cscope.files
-find -L `pwd` -iname "*.ld"		>>cscope.files
-find -L `pwd` -iname "*.java"	>>cscope.files
+pt -f -g '(?i).*\.(h|c|s|cpp|cc|go|goc|java|asm)$' >cscope.files
 
 cscope -bq
