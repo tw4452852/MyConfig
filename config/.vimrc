@@ -89,11 +89,11 @@ nnoremap <leader>< viw<esc>a><esc>hbi<<esc>lel
 nnoremap <leader>{ viw<esc>a}<esc>hbi{<esc>lel
 nnoremap <leader>[ viw<esc>a]<esc>hbi;<esc>lel
 nnoremap <leader>; mqA;<esc>`q
-"tw's self cmd
-nnoremap <leader>f :call <SID>TwFormat()<cr>
 " select last paste in visual mode
 nnoremap <expr> gb '`[' . strpart(getregtype(), 0, 1) . '`]'
 
+"tw's self cmd
+nnoremap <leader>f :call <SID>TwFormat()<cr>
 function! s:TwFormat()
 	let linenum = 1
 	for line in getline(1, line('$'))
@@ -109,6 +109,9 @@ function! s:TwFormat()
 		let linenum += 1
 	endfor
 endfunction
+
+nnoremap <leader>gb :execute "!tw_blame -l " . line(".") . " -p " . expand("%:p")<cr>
+
 "Quickfix
 nnoremap <leader>qf :call QickfixToggle()<cr>
 let g:quickfix_is_open = 0
