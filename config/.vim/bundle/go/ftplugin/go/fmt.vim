@@ -29,8 +29,16 @@ endif
 
 
 if g:go_fmt_commands
-    command! -buffer Fmt call s:GoFormat()
+    command! -buffer Fmt call s:GoFormatWrapper()
 endif
+
+function! s:GoFormatWrapper()
+	try
+		execute "undojoin"
+		call s:GoFormat()
+	catch
+	endtry
+endf
 
 function! s:GoFormat()
     let view = winsaveview()
