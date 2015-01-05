@@ -5,7 +5,7 @@ if !exists("g:godef_command")
 endif
 
 if !exists("g:godef_split")
-    let g:godef_split = 1
+    let g:godef_split = 0
 endif
 
 function! GodefUnderCursor()
