@@ -1,14 +1,14 @@
-# Setup fzf
-# ---------
-unalias fzf 2> /dev/null
-unset fzf 2> /dev/null
-if [[ ! "$PATH" =~ "/root/golib/src/github.com/tw4452852/fzf/bin" ]]; then
-  export PATH="/root/golib/src/github.com/tw4452852/fzf/bin:$PATH"
-fi
+## Setup fzf
+## ---------
+#unalias fzf 2> /dev/null
+#unset fzf 2> /dev/null
+#if [[ ! "$PATH" =~ "/root/golib/src/github.com/tw4452852/fzf/bin" ]]; then
+  #export PATH="/root/golib/src/github.com/tw4452852/fzf/bin:$PATH"
+#fi
 
-# Auto-completion
-# ---------------
-[[ $- =~ i ]] && source /root/golib/src/github.com/tw4452852/fzf/fzf-completion.zsh
+## Auto-completion
+## ---------------
+#[[ $- =~ i ]] && source /root/golib/src/github.com/tw4452852/fzf/fzf-completion.zsh
 
 # Key bindings
 # ------------
