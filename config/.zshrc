@@ -61,3 +61,4 @@ source $HOME/.autoload.sh
 		#tmux -2 attach || break
 	#done
 #fi
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
