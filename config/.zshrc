@@ -61,4 +61,7 @@ source $HOME/.autoload.sh
 		#tmux -2 attach || break
 	#done
 #fi
+
+# fzf
+export FZF_DEFAULT_COMMAND='pt -l -g ".*"'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
