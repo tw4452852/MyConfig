@@ -111,6 +111,7 @@ function! s:TwFormat()
 endfunction
 
 nnoremap <leader>gb :execute "!tw_blame -l " . line(".") . " -p " . expand("%:p")<cr>
+nnoremap <leader>z :FZF<cr>
 
 "Quickfix
 nnoremap <leader>qf :call QickfixToggle()<cr>
