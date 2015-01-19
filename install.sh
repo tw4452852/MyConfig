@@ -69,6 +69,7 @@ setup_config() {
 		fi
 		ln -sf ${TOP_DIR}/config/.oh-my-zsh ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.zshrc ${HOME_DIR}
+		ln -sf ${TOP_DIR}/config/.fzf.zsh ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.xinitrc ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.Xresources ${HOME_DIR}
 		ln -Pf ${TOP_DIR}/config/.procmailrc ${HOME_DIR}
