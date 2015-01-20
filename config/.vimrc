@@ -57,6 +57,7 @@ augroup END
 set statusline=%F\ -\ %m%r%h[%Y-%{&fileformat}]%=[%B,%c][%l/%L]
 "}}}
 " Global keymaps"{{{
+" General"{{{
 let mapleader = ","
 nnoremap <tab> %
 vnoremap <tab> %
@@ -91,8 +92,20 @@ nnoremap <leader>[ viw<esc>a]<esc>hbi;<esc>lel
 nnoremap <leader>; mqA;<esc>`q
 " select last paste in visual mode
 nnoremap <expr> gb '`[' . strpart(getregtype(), 0, 1) . '`]'
-
-"tw's self cmd
+"Quickfix
+nnoremap <leader>qf :call QickfixToggle()<cr>
+let g:quickfix_is_open = 0
+function! QickfixToggle()
+	if g:quickfix_is_open
+		cclose
+		let g:quickfix_is_open = 0
+	else
+		copen
+		let g:quickfix_is_open = 1
+	endif
+endfunction
+"}}}
+"tw's self cmd"{{{
 nnoremap <leader>f :call <SID>TwFormat()<cr>
 function! s:TwFormat()
 	let linenum = 1
@@ -111,22 +124,30 @@ function! s:TwFormat()
 endfunction
 
 nnoremap <leader>gb :execute "!tw_blame -l " . line(".") . " -p " . expand("%:p")<cr>
-nnoremap <leader>z :FZF<cr>
-
-"Quickfix
-nnoremap <leader>qf :call QickfixToggle()<cr>
-let g:quickfix_is_open = 0
-function! QickfixToggle()
-	if g:quickfix_is_open
-		cclose
-		let g:quickfix_is_open = 0
-	else
-		copen
-		let g:quickfix_is_open = 1
-	endif
-endfunction
+"}}}
 "}}}
 " Plugin-specific settings
+" FZF"{{{
+nnoremap <leader>zf :FZF<cr>
+" List of buffers
+function! BufList()
+	redir => ls
+	silent ls
+	redir END
+	return split(ls, '\n')
+endfunction
+
+function! BufOpen(e)
+	execute 'buffer '. matchstr(a:e, '^[ 0-9]*')
+endfunction
+
+nnoremap <silent> <Leader>zb :call fzf#run({
+		  \   'source':      reverse(BufList()),
+		  \   'sink':        function('BufOpen'),
+		  \   'options':     '+m',
+		  \   'tmux_height': '40%'
+		  \ })<CR>
+"}}}
 " Taglist"{{{
 set tags+=tags
 set noautochdir
