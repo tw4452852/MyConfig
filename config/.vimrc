@@ -232,3 +232,9 @@ if has('win32') || has('win64')
 	let g:snippets_dir='$HOME/vimfiles/bundle/snipmate/snippets'
 endif
 "}}}
+" Help"{{{
+augroup helpgroup
+	au!
+	autocmd FileType help wincmd L
+augroup END
+"}}}
