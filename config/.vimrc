@@ -206,6 +206,7 @@ augroup gogroup
 	au FileType go compiler go
 	au FileType go nnoremap <buffer> <c-]> :call GodefUnderCursor()<cr>
 	au FileType go nnoremap <buffer> <c-t> :call GodefBack()<cr>
+	au FileType go nnoremap <buffer> K :Godoc<cr>
 augroup END
 "}}}
 " Markdown"{{{
