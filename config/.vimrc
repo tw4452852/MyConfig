@@ -197,7 +197,6 @@ nnoremap <leader>se :cs find e <c-r>=expand("<cword>")<cr><cr>
 nnoremap <leader>sf :cs find f <c-r>=expand("<cfile>")<cr><cr>
 nnoremap <leader>si :cs find i ^<c-r>=expand("<cfile>")<cr><cr>
 nnoremap <leader>sd :cs find d <c-r>=expand("<cword>")<cr><cr>
-nnoremap <c-]> :cs find g <c-r>=expand("<cword>")<cr><cr>
 "}}}
 " Go"{{{
 augroup gogroup
