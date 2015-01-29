@@ -205,6 +205,8 @@ augroup gogroup
 	au BufWritePre *.go :silent Fmt "gofmt
 	au FileType go inoremap <buffer> <leader>gc <c-x><c-o>
 	au FileType go compiler go
+	au FileType go nnoremap <buffer> <c-]> :call GodefUnderCursor()<cr>
+	au FileType go nnoremap <buffer> <c-t> :call GodefBack()<cr>
 augroup END
 "}}}
 " Markdown"{{{

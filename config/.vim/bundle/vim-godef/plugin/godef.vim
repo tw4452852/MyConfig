@@ -8,6 +8,8 @@ if !exists("g:godef_split")
     let g:godef_split = 0
 endif
 
+let s:positons_stack = []
+
 function! GodefUnderCursor()
     let pos = getpos(".")[1:2]
     if &encoding == 'utf-8'
@@ -22,6 +24,8 @@ function! GodefUnderCursor()
 endfunction
 
 function! Godef(arg)
+	let old_efm = &errorformat
+	let &errorformat = "%f:%l:%c"
 
     if &modified
         " XXX not ideal, but I couldn't find a good way
@@ -45,9 +49,28 @@ function! Godef(arg)
         elseif g:godef_split == 2
             tabnew
         endif
+
+		let pos = getpos(".")[1:2]
+		let now_position = filename . ":" . pos[0] . ":" . pos[1]
+		call add(s:positons_stack, now_position)
         lexpr out
     end
+
+	let &errorformat = old_efm
 endfunction
 
-autocmd FileType go nnoremap <buffer> gd :call GodefUnderCursor()<cr>
+function! GodefBack()
+	let old_efm = &errorformat
+	let &errorformat = "%f:%l:%c"
+
+	let size = len(s:positons_stack)
+	if size == 0
+		echom "the stack is empty"
+	else
+		lexpr remove(s:positons_stack, size-1)
+	endif
+
+	let &errorformat = old_efm
+endfunction
+
 command! -range -nargs=1 Godef :call Godef(<q-args>)
