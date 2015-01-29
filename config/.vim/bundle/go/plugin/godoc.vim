@@ -38,11 +38,11 @@ nnoremap <silent> <Plug>(godoc-keyword) :<C-u>call <SID>Godoc('')<CR>
 
 function! s:GodocView()
   if !bufexists(s:buf_nr)
-    leftabove new
+    vertical rightbelow new
     file `="[Godoc]"`
     let s:buf_nr = bufnr('%')
   elseif bufwinnr(s:buf_nr) == -1
-    leftabove split
+    vertical rightbelow split
     execute s:buf_nr . 'buffer'
     delete _
   elseif bufwinnr(s:buf_nr) != bufwinnr('%')
