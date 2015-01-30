@@ -53,10 +53,16 @@ function! Godef(arg)
             tabnew
         endif
 
-		let pos = getpos(".")[1:2]
-		let now_position = filename . ":" . pos[0] . ":" . pos[1]
 		call add(s:positons_stack, now_position)
-        lexpr out
+
+		cgetexpr out
+		let num = len(getqflist())
+		if num > 1
+			copen
+			let g:quickfix_is_open = 1
+		else
+			cc 1
+		endif
     end
 
 	let &errorformat = old_efm
