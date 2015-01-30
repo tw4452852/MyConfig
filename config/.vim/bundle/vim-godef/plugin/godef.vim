@@ -27,6 +27,9 @@ function! Godef(arg)
 	let old_efm = &errorformat
 	let &errorformat = "%f:%l:%c"
 
+	let pos = getpos(".")[1:2]
+	let now_position = bufname("%") . ":" . pos[0] . ":" . pos[1]
+
     if &modified
         " XXX not ideal, but I couldn't find a good way
         "     to create a temporary buffer for use with
