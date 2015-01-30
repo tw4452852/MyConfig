@@ -11,5 +11,4 @@ export GTK_IM_MODULE="fcitx"
 export QT_IM_MODULE="fcitx"
 fcitx &
 
-# Start dwm in a loop
-exec startdwm
+exec twwm
