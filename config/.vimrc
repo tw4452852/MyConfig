@@ -47,7 +47,7 @@ if !has('win32') && !has('win64')
 	set listchars=tab:»\ ,eol:¬,trail:▲,nbsp:▲
 endif
 "}}}
-" FileType-specific settings"{{{
+" vimrc"{{{
 augroup vimgroup
 	au!
 	au FileType vim setlocal foldmethod=marker
@@ -238,4 +238,10 @@ augroup helpgroup
 	au!
 	autocmd FileType help wincmd L
 augroup END
+"}}}
+" gtags"{{{
+if filereadable("GTAGS")
+	set cscopeprg=gtags-cscope
+	cs add GTAGS
+endif
 "}}}
