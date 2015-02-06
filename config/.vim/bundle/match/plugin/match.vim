@@ -5,7 +5,6 @@ let s:matches = [
 			\]
 
 function! TwMatchClearall()
-	echo s:matches
 	for mt in s:matches
 		if mt.pattern != ''
 			let mt.pattern = ''
