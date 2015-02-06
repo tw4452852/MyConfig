@@ -80,7 +80,7 @@ nnoremap <leader>ms :w<cr>:make strip<cr>
 inoremap <leader>ms <esc>:w<cr>:make strip<cr>
 nnoremap <leader>w :update<cr>
 inoremap <leader>w <esc>:update<cr>
-nnoremap <leader><space> :noh<cr>
+nnoremap <leader><space> :noh<cr>:call TwMatchClearall()<cr>
 nnoremap <leader>at Vat
 nnoremap <leader>ev <c-w><c-v><c-l>:e $MYVIMRC<cr>
 nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
@@ -244,4 +244,7 @@ if filereadable("GTAGS")
 	set cscopeprg=gtags-cscope
 	cs add GTAGS
 endif
+"}}}
+" match"{{{
+nnoremap ? :call TwMatchToggle(expand("<cword>"))<cr>
 "}}}
