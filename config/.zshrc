@@ -65,15 +65,3 @@ source $HOME/.autoload.sh
 # fzf
 export FZF_DEFAULT_COMMAND='pt -l -g ".*"'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# vi mode
-bindkey -v
-VIMODE='-- INSERT --'
-function zle-line-init zle-keymap-select {
-	VIMODE="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
-	zle reset-prompt
-}
-zle -N zle-line-init
-zle -N zle-keymap-select
-RPROMPT='%{$fg[green]%}${VIMODE}%{$reset_color%}'
-
