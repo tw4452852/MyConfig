@@ -33,9 +33,12 @@ zstyle :omz:plugins:ssh-agent identities id_rsa
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(ssh-agent history-substring-search)
+plugins=(ssh-agent vi-mode)
 
 source $ZSH/oh-my-zsh.sh
+
+# vi mode
+set -o vi
 
 # Customize to your needs...
 export LC_ALL="en_US.UTF-8"
