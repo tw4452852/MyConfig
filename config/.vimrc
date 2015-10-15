@@ -68,10 +68,10 @@ nnoremap <f1> <esc>
 vnoremap <f1> <esc>
 nnoremap ; :
 inoremap jj <esc>
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-l> <c-w>l
-nnoremap <c-h> <c-w>h
+nnoremap <A-j> <c-w>j
+nnoremap <A-k> <c-w>k
+nnoremap <A-l> <c-w>l
+nnoremap <A-h> <c-w>h
 nnoremap <leader>mk :w<cr>:make<cr>
 inoremap <leader>mk <esc>:w<cr>:make<cr>
 nnoremap <leader>mi :w<cr>:make install<cr>
