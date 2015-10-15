@@ -72,6 +72,13 @@ nnoremap <A-j> <c-w>j
 nnoremap <A-k> <c-w>k
 nnoremap <A-l> <c-w>l
 nnoremap <A-h> <c-w>h
+if has('nvim')
+    tnoremap <Esc> <C-\><C-n>
+    tnoremap <A-h> <C-\><C-n><C-w>h
+    tnoremap <A-j> <C-\><C-n><C-w>j
+    tnoremap <A-k> <C-\><C-n><C-w>k
+    tnoremap <A-l> <C-\><C-n><C-w>l
+endif
 nnoremap <leader>mk :w<cr>:make<cr>
 inoremap <leader>mk <esc>:w<cr>:make<cr>
 nnoremap <leader>mi :w<cr>:make install<cr>
