@@ -255,3 +255,8 @@ endif
 " match"{{{
 nnoremap ? :call TwMatchToggle(expand("<cword>"))<cr>
 "}}}
+"terminal"{{{
+if exists(':terminal')
+	let g:terminal_scrollback_buffer_size = 100000
+endif
+"}}}
