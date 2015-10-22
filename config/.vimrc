@@ -131,6 +131,7 @@ function! s:TwFormat()
 endfunction
 
 nnoremap <leader>gb :execute "!tw_blame -l " . line(".") . " -p " . expand("%:p")<cr>
+cnoremap w!! w !sudo tee % >/dev/null
 "}}}
 "}}}
 " Plugin-specific settings
