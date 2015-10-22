@@ -39,6 +39,7 @@ set incsearch
 set showmatch
 set hlsearch
 set mouse=a
+set relativenumber
 " On Windows it use gb* encoding,
 " it doesn't recognize these chars
 if !has('win32') && !has('win64')
