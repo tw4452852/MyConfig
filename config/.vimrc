@@ -166,10 +166,6 @@ let Tlist_Show_One_File=1
 let Tlist_Exit_OnlyWindow = 1
 nnoremap <leader>t :TlistToggle<cr>
 inoremap <leader>t <esc>:TlistToggle<cr>"}}}
-" NERDTree"{{{
-nnoremap <leader>n :NERDTreeToggle<cr>
-inoremap <leader>n <esc>:NERDTreeToggle<cr>
-"}}}
 " Doxygen"{{{
 nnoremap <leader>da :DoxAuthor<cr>
 inoremap <leader>da <esc>:DoxAuthor<cr>
