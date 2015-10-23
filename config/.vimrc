@@ -166,24 +166,6 @@ let Tlist_Show_One_File=1
 let Tlist_Exit_OnlyWindow = 1
 nnoremap <leader>t :TlistToggle<cr>
 inoremap <leader>t <esc>:TlistToggle<cr>"}}}
-" Doxygen"{{{
-nnoremap <leader>da :DoxAuthor<cr>
-inoremap <leader>da <esc>:DoxAuthor<cr>
-nnoremap <leader>dl :DoxLic<cr>
-inoremap <leader>dl <esc>:DoxLic<cr>
-nnoremap <leader>df :Dox<cr>
-inoremap <leader>df <esc>:Dox<cr>
-nnoremap <leader>db :DoxBlock<cr>
-inoremap <leader>db <esc>:DoxBlock<cr>
-let g:DoxygenToolkit_authorName = "wtan"
-let g:DoxygenToolkit_briefTag_funcName = "yes"
-let g:DoxygenToolkit_licenseTag = "Copyright (c) 2006-2013 Hillstone Networks, Inc. \<enter>\<enter>"
-let g:DoxygenToolkit_licenseTag = g:DoxygenToolkit_licenseTag . "PROPRIETARY RIGHTS of Hillstone Networks are involved in the\<enter>"
-let g:DoxygenToolkit_licenseTag = g:DoxygenToolkit_licenseTag . "subject matter of this material.  All manufacturing, reproduction,\<enter>"
-let g:DoxygenToolkit_licenseTag = g:DoxygenToolkit_licenseTag . "use, and sales rights pertaining to this subject matter are governed\<enter>"
-let g:DoxygenToolkit_licenseTag = g:DoxygenToolkit_licenseTag . "by the license agreement.  The recipient of this software implicitly\<enter>"
-let g:DoxygenToolkit_licenseTag = g:DoxygenToolkit_licenseTag . "accepts the terms of the license.\<enter>"
-"}}}
 " Cscope"{{{
 if has("cscope")
     set csto=1
