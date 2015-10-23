@@ -40,6 +40,8 @@ set showmatch
 set hlsearch
 set mouse=a
 set relativenumber
+set tags+=tags
+set noautochdir
 " On Windows it use gb* encoding,
 " it doesn't recognize these chars
 if !has('win32') && !has('win64')
@@ -157,15 +159,9 @@ nnoremap <silent> <Leader>zb :call fzf#run({
 		  \   'tmux_height': '40%'
 		  \ })<CR>
 "}}}
-" Taglist"{{{
-set tags+=tags
-set noautochdir
-let Tlist_Sort_Type = "name"
-let Tlist_Show_Menu = 0
-let Tlist_Show_One_File=1
-let Tlist_Exit_OnlyWindow = 1
-nnoremap <leader>t :TlistToggle<cr>
-inoremap <leader>t <esc>:TlistToggle<cr>"}}}
+" tagbar"{{{
+nnoremap <leader>t :TagbarToggle<CR>
+"}}}
 " Cscope"{{{
 if has("cscope")
     set csto=1
