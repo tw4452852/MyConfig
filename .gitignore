@@ -1,4 +1,4 @@
-*.swp
+*.sw[op]
 *.~
 config/.oh-my-zsh/cache/
 config/.vim/.netrwhist
