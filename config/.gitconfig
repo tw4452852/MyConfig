@@ -23,9 +23,19 @@
 	ds = diff --staged
 	amend = commit --amend -C HEAD
 	undo = reset --soft HEAD^
+	;golang stuff
+	change = codereview change
+	gofmt = codereview gofmt
+	mail = codereview mail
+	pending = codereview pending
+	submit = codereview submit
+	sync = codereview sync
 [apply]
 	whitespace = fix
 [push]
 	default = tracking
 [init]
 	templatedir = ~/.git-template
+[http]
+	;golang stuff
+	cookiefile = /home/tw/.gitcookies
