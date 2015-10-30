@@ -60,6 +60,8 @@ setup_config() {
 		ln -sf ${TOP_DIR}/config/.vim ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.vim ${HOME_DIR}/.nvim
 		ln -sf ${TOP_DIR}/config/.vimrc ${HOME_DIR}/.nvimrc
+		mkdir -p ${XDG_CONFIG_HOME:=$HOME/.config}
+		ln -s ${TOP_DIR}/config/.vim $XDG_CONFIG_HOME/nvim
 		ln -sf ${TOP_DIR}/config/.gitconfig ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.git-template ${HOME_DIR}
 		mkdir -p ${HOME_DIR}/.ssh
