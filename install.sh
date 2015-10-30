@@ -58,7 +58,6 @@ setup_config() {
 			rm -fr ${HOME_DIR}/.vim
 		fi
 		ln -sf ${TOP_DIR}/config/.vim ${HOME_DIR}
-		ln -sf ${TOP_DIR}/config/.vimrc ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.vim ${HOME_DIR}/.nvim
 		ln -sf ${TOP_DIR}/config/.vimrc ${HOME_DIR}/.nvimrc
 		ln -sf ${TOP_DIR}/config/.gitconfig ${HOME_DIR}
