@@ -164,22 +164,20 @@ nnoremap <leader>t :TagbarToggle<CR>
 "}}}
 " Cscope"{{{
 if has("cscope")
-    set csto=1
-    set cst
     set nocsverb
     if filereadable("cscope.out")
         cs add cscope.out
     endif
     set csverb
+	nnoremap <leader>ss :cs find s <c-r>=expand("<cword>")<cr><cr>
+	nnoremap <leader>sg :cs find g <c-r>=expand("<cword>")<cr><cr>
+	nnoremap <leader>sc :cs find c <c-r>=expand("<cword>")<cr><cr>
+	nnoremap <leader>st :cs find t <c-r>=expand("<cword>")<cr><cr>
+	nnoremap <leader>se :cs find e <c-r>=expand("<cword>")<cr><cr>
+	nnoremap <leader>sf :cs find f <c-r>=expand("<cfile>")<cr><cr>
+	nnoremap <leader>si :cs find i ^<c-r>=expand("<cfile>")<cr><cr>
+	nnoremap <leader>sd :cs find d <c-r>=expand("<cword>")<cr><cr>
 endif
-nnoremap <leader>ss :cs find s <c-r>=expand("<cword>")<cr><cr>
-nnoremap <leader>sg :cs find g <c-r>=expand("<cword>")<cr><cr>
-nnoremap <leader>sc :cs find c <c-r>=expand("<cword>")<cr><cr>
-nnoremap <leader>st :cs find t <c-r>=expand("<cword>")<cr><cr>
-nnoremap <leader>se :cs find e <c-r>=expand("<cword>")<cr><cr>
-nnoremap <leader>sf :cs find f <c-r>=expand("<cfile>")<cr><cr>
-nnoremap <leader>si :cs find i ^<c-r>=expand("<cfile>")<cr><cr>
-nnoremap <leader>sd :cs find d <c-r>=expand("<cword>")<cr><cr>
 "}}}
 " Go"{{{
 augroup gogroup
