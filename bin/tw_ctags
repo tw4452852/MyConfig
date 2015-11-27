@@ -4,4 +4,4 @@ rm -fr tags
 
 pt -f -g '(?i).*\.(h|c|s|cpp|cc|go|goc|java|asm)$' > ctags.files
 
-ctags -R -L ctags.files
+ctags -R -L ctags.files --fields=+ianS --extra=+q
