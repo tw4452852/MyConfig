@@ -54,14 +54,19 @@ setup_config() {
 		mkdir -p ${GOPATH}/src
 
 		#config files
+		if [[ -d ${HOME_DIR}/.emacs.d ]]; then
+			rm -fr ${HOME_DIR}/.emacs.d
+		fi
+		ln -sf ${TOP_DIR}/config/.emacs.d ${HOME_DIR}
 		if [[ -d ${HOME_DIR}/.vim ]]; then
 			rm -fr ${HOME_DIR}/.vim
 		fi
 		ln -sf ${TOP_DIR}/config/.vim ${HOME_DIR}
-		ln -sf ${TOP_DIR}/config/.vim ${HOME_DIR}/.nvim
-		ln -sf ${TOP_DIR}/config/.vimrc ${HOME_DIR}/.nvimrc
 		mkdir -p ${XDG_CONFIG_HOME:=$HOME/.config}
-		ln -s ${TOP_DIR}/config/.vim $XDG_CONFIG_HOME/nvim
+		if [[ -d ${XDG_CONFIG_HOME}/nvim ]]; then
+		    rm -fr ${XDG_CONFIG_HOME}/nvim
+		fi
+		ln -sf ${TOP_DIR}/config/.vim $XDG_CONFIG_HOME/nvim
 		ln -sf ${TOP_DIR}/config/.gitconfig ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.git-template ${HOME_DIR}
 		mkdir -p ${HOME_DIR}/.ssh
