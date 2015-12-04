@@ -68,3 +68,5 @@ source $HOME/.autoload.sh
 		#tmux -2 attach || break
 	#done
 #fi
+
+alias em="emacs -nw"
