@@ -1,11 +1,24 @@
+(require 'package)
+(push '("melpa" . "http://melpa.milkbox.net/packages/")
+      package-archives)
+(package-initialize)
+
 ;; global keymap
 (global-set-key (kbd "C-x C-m") 'execute-extended-command)
 (global-set-key (kbd "C-c C-m") 'execute-extended-command)
 (global-set-key (kbd "C-w")     'backward-kill-word)
-(global-set-key (kbd "C-x C-k") 'kill-region)
-(global-set-key (kbd "C-c C-k") 'kill-region)
 (global-set-key (kbd "M-s")	'isearch-forward-regexp)
 (global-set-key (kbd "M-r")	'isearch-backward-regexp)
+
+;; evil mode
+(setq evil-want-C-u-scroll t)
+(require 'evil)
+(evil-mode 1)
+
+;; make `jj` as `esc`
+(require 'key-chord)
+(key-chord-mode 1)
+(key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
