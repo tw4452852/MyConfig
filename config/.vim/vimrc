@@ -53,8 +53,8 @@ endif
 "}}}
 " vimrc"{{{
 augroup vimgroup
-	au!
-	au FileType vim setlocal foldmethod=marker
+	autocmd!
+	autocmd FileType vim setlocal foldmethod=marker
 augroup END
 "}}}
 " Status Line setting"{{{
@@ -183,18 +183,18 @@ endif
 "}}}
 " Go"{{{
 augroup gogroup
-	au!
-	au BufWritePre *.go :silent Fmt "gofmt
-	au FileType go compiler go
-	au FileType go nnoremap <buffer> <c-]> :call GodefUnderCursor()<cr>
-	au FileType go nnoremap <buffer> <c-t> :call GodefBack()<cr>
-	au FileType go nnoremap <buffer> K :Godoc<cr>
+	autocmd!
+	autocmd BufWritePre *.go :silent Fmt "gofmt
+	autocmd FileType go compiler go
+	autocmd FileType go nnoremap <buffer> <c-]> :call GodefUnderCursor()<cr>
+	autocmd FileType go nnoremap <buffer> <c-t> :call GodefBack()<cr>
+	autocmd FileType go nnoremap <buffer> K :Godoc<cr>
 augroup END
 "}}}
 " Markdown"{{{
 augroup mdgroup
-	au!
-	au FileType mkd setlocal spell
+	autocmd!
+	autocmd FileType mkd setlocal spell
 augroup END
 "}}}
 " Youdao-traslation"{{{
@@ -202,11 +202,11 @@ nnoremap <leader>tr :YoudaoTranslate <c-r>=expand("<cword>")<cr><cr>
 "}}}
 " Wmgraphviz"{{{
 augroup dotgroup
-	au!
-	au FileType dot nnoremap <buffer> <leader>ll :GraphvizCompile<cr>
-	au FileType dot nnoremap <buffer> <leader>lt :GraphvizCompileToLaTeX<cr>
-	au FileType dot nnoremap <buffer> <leader>lv :GraphvizShow<cr>
-	au FileType dot nnoremap <buffer> <leader>li :GraphvizInteractive<cr>
+	autocmd!
+	autocmd FileType dot nnoremap <buffer> <leader>ll :GraphvizCompile<cr>
+	autocmd FileType dot nnoremap <buffer> <leader>lt :GraphvizCompileToLaTeX<cr>
+	autocmd FileType dot nnoremap <buffer> <leader>lv :GraphvizShow<cr>
+	autocmd FileType dot nnoremap <buffer> <leader>li :GraphvizInteractive<cr>
 augroup END
 "}}}
 " Snipmate"{{{
@@ -217,7 +217,7 @@ endif
 "}}}
 " Help"{{{
 augroup helpgroup
-	au!
+	autocmd!
 	autocmd FileType help wincmd L
 augroup END
 "}}}
@@ -233,8 +233,11 @@ nnoremap ? :call TwMatchToggle(expand("<cword>"))<cr>
 "terminal"{{{
 if exists(':terminal')
 	let g:terminal_scrollback_buffer_size = 100000
-	autocmd BufWinEnter,WinEnter term://* startinsert
-	autocmd BufLeave term://* stopinsert
+	augroup terminalgroup
+		autocmd!
+		autocmd BufWinEnter,WinEnter term://* startinsert
+		autocmd BufLeave term://* stopinsert
+	augroup END
 endif
 "}}}
 "grep"{{{
