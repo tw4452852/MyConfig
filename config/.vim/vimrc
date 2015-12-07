@@ -101,6 +101,7 @@ nnoremap <leader>< viw<esc>a><esc>hbi<<esc>lel
 nnoremap <leader>{ viw<esc>a}<esc>hbi{<esc>lel
 nnoremap <leader>[ viw<esc>a]<esc>hbi;<esc>lel
 nnoremap <leader>; mqA;<esc>`q
+nnoremap <c-w>m <c-w>_<c-w>\|
 " select last paste in visual mode
 nnoremap <expr> gb '`[' . strpart(getregtype(), 0, 1) . '`]'
 "Quickfix
