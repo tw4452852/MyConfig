@@ -237,10 +237,12 @@ if exists(':terminal')
 	autocmd BufLeave term://* stopinsert
 endif
 "}}}
-
 "grep"{{{
 if executable('pt')
 	set grepprg=pt
-	autocmd QuickFixCmdPost [^l]* copen
 endif
+augroup grepgroup
+	autocmd!
+	autocmd QuickFixCmdPost [^l]* copen | let g:quickfix_is_open=1
+augroup END
 "}}}
