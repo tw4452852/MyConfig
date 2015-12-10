@@ -1,3 +1,8 @@
+if exists("g:match_load")
+  finish
+endif
+let g:match_load = 1
+
 let s:matches = [
 			\{'group': 'WildMenu', 'pattern': '', 'id': 4},
 			\{'group': 'Cursor', 'pattern': '', 'id': 5},
