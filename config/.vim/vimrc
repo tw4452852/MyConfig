@@ -252,3 +252,6 @@ augroup grepgroup
 	autocmd QuickFixCmdPost [^l]* cw | let g:quickfix_is_open=1
 augroup END
 "}}}
+"netrw"{{{
+let g:netrw_http_xcmd= "-dump >"
+"}}}
