@@ -44,8 +44,8 @@ bindkey '^N' history-substring-search-down
 # Customize to your needs...
 export LC_ALL="en_US.UTF-8"
 
-export CSCOPE_EDITOR=vim
-export EDITOR=vim
+export CSCOPE_EDITOR=nvim
+export EDITOR=nvim
 
 export GOROOT=~/goroot
 export GOPATH=~/golib
