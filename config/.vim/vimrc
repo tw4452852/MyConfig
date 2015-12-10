@@ -106,6 +106,8 @@ nnoremap <c-w>m <c-w>_<c-w>\|
 nnoremap <expr> gb '`[' . strpart(getregtype(), 0, 1) . '`]'
 "Quickfix
 nnoremap <leader>qf :call QickfixToggle()<cr>
+nnoremap <F4> :cp<cr>
+nnoremap <F5> :cn<cr>
 let g:quickfix_is_open = 0
 function! QickfixToggle()
 	if g:quickfix_is_open
@@ -247,6 +249,6 @@ if executable('pt')
 endif
 augroup grepgroup
 	autocmd!
-	autocmd QuickFixCmdPost [^l]* copen | let g:quickfix_is_open=1
+	autocmd QuickFixCmdPost [^l]* cw | let g:quickfix_is_open=1
 augroup END
 "}}}
