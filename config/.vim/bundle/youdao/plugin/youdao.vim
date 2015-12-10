@@ -1,3 +1,8 @@
+if exists("g:youdao_load")
+  finish
+endif
+let g:youdao_load = 1
+
 if has('nvim')
 	function! s:WorkHandler(job_id, data, event)
 		if a:event == 'stdout'
@@ -19,8 +24,7 @@ if has('nvim')
 	endfunction
 else
 	function! s:YoudaoTranslate(...)
-		let result=system("youdao-translation" . ' ' . join(a:000, " "))
-		echo result
+		echo system("youdao-translation" . ' ' . join(a:000, " "))
 	endfunction
 endif
 
