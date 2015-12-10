@@ -5,7 +5,7 @@ filetype plugin on
 filetype indent on
 set t_Co=256
 set background=dark
-colorscheme hybrid
+colorscheme mirodark
 if !has('win32') && !has('win64')
 	set guifont=Source\ Code\ Pro\ 10
 else
