@@ -227,7 +227,7 @@ augroup END
 "}}}
 " gtags"{{{
 if executable('gtags-cscope')
-	set cscopeprg=gtags-cscope\ -a
+	set cscopeprg=gtags-cscope\ -aC
 	if filereadable("GTAGS")
 		cs add GTAGS
 	endif
