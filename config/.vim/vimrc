@@ -169,6 +169,7 @@ nnoremap <leader>t :TagbarToggle<CR>
 " Cscope"{{{
 if has("cscope")
     set nocsverb
+	set cst
     set csto=1
     if filereadable("cscope.out")
         cs add cscope.out
@@ -225,9 +226,11 @@ augroup helpgroup
 augroup END
 "}}}
 " gtags"{{{
-if filereadable("GTAGS") && executable('gtags-cscope')
+if executable('gtags-cscope')
 	set cscopeprg=gtags-cscope\ -a
-	cs add GTAGS
+	if filereadable("GTAGS")
+		cs add GTAGS
+	endif
 endif
 "}}}
 " match"{{{
