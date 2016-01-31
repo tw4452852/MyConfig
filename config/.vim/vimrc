@@ -63,6 +63,8 @@ set statusline=%F\ -\ %m%r%h[%Y-%{&fileformat}]%=[%B,%c][%l/%L]
 " Global keymaps"{{{
 " General"{{{
 let mapleader = ","
+nnoremap j gj
+nnoremap k gk
 nnoremap <tab> %
 vnoremap <tab> %
 nnoremap / /\v
