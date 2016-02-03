@@ -98,9 +98,11 @@ function! s:Godoc(...)
     setlocal iskeyword+=.
     let word = expand('<cword>')
     let &iskeyword = oldiskeyword
+    let word = substitute(word, '[^a-zA-Z0-9\\/._~-]', '', 'g')
+    let words = split(word, '\.')
+  else
+    let words = a:000
   endif
-  let word = substitute(word, '[^a-zA-Z0-9\\/._~-]', '', 'g')
-  let words = split(word, '\.')
   if !len(words)
     return
   endif
