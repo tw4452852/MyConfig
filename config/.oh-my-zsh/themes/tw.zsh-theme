@@ -1,6 +1,6 @@
 PROMPT=$'
-%{$FG[032]%}%/%{$reset_color%} %{$fg[white]%}[%n@%m]%{$reset_color%} %{$fg[white]%}[%T]%{$reset_color%}
-%{$fg_bold[white]%}%?>%{$reset_color%} '
+%{$reset_color%}%/ [%n@%m] [%T]
+%?> '
 
 PROMPT2="%{$fg_blod[black]%}%_> %{$reset_color%}"
 
