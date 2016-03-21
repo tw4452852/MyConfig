@@ -3,6 +3,11 @@ UXTerm*faceName: Source Code Pro:size=10
 ! Chinese font
 UXTerm*faceNameDoublesize: WenQuanYi Micro Hei:size=10
 
+Rxvt*font: xft:Source Code Pro:pixelsize=13
+Rxvt*scrollBar: False
+Rxvt*foreground: Black
+Rxvt*background: rgba:ffff/ffff/d700/ffff
+
 ! fix alt key input
 xterm*eightBitInput: false
 xterm*altSendsEscape: true
