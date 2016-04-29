@@ -65,6 +65,16 @@ set statusline=%F\ -\ %m%r%h[%Y-%{&fileformat}]%=[%B,%c][%l/%L]
 let mapleader = ","
 nnoremap j gj
 nnoremap k gk
+nnoremap L $
+nnoremap <silent> H :call FirstCharOrFirstCol()<cr>
+function! FirstCharOrFirstCol()
+  let current_col = virtcol('.')
+  normal ^
+  let first_char = virtcol('.')
+  if current_col == first_char
+    normal 0
+  endif
+endfunction
 nnoremap <tab> %
 vnoremap <tab> %
 nnoremap / /\v
