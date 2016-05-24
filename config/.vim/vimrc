@@ -47,6 +47,7 @@ set noautochdir
 " it doesn't recognize these chars
 if !has('win32') && !has('win64')
 	set encoding=utf-8
+	set fileencodings=utf8,gbk
 	set list
 	set listchars=tab:»\ ,eol:¬,trail:▲,nbsp:▲
 endif
