@@ -1,3 +1,7 @@
 Host git_heroku
 	Hostname 107.21.95.3
 	User git
+
+Host do
+	Hostname 104.131.134.96
+	User root
