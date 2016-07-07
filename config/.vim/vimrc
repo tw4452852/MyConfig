@@ -64,6 +64,7 @@ set statusline=%F\ -\ %m%r%h[%Y-%{&fileformat}]%=[0x%B,%c][%l/%L]
 " Global keymaps"{{{
 " General"{{{
 let mapleader = ","
+noremap \ ,
 nnoremap j gj
 nnoremap k gk
 nnoremap L $
@@ -84,6 +85,7 @@ inoremap <f1> <esc>
 nnoremap <f1> <esc>
 vnoremap <f1> <esc>
 nnoremap ; :
+nnoremap : ;
 inoremap jj <esc>
 nnoremap <A-j> <c-w>j
 nnoremap <A-k> <c-w>k
