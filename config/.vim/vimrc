@@ -96,6 +96,8 @@ if has('nvim')
     tnoremap <A-k> <C-\><C-n><C-w>k
     tnoremap <A-l> <C-\><C-n><C-w>l
 endif
+cnoremap <c-p> <up>
+cnoremap <c-n> <down>
 nnoremap <leader>mk :w<cr>:make<cr>
 inoremap <leader>mk <esc>:w<cr>:make<cr>
 nnoremap <leader>mi :w<cr>:make install<cr>
