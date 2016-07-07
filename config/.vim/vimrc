@@ -77,8 +77,6 @@ function! FirstCharOrFirstCol()
     normal 0
   endif
 endfunction
-nnoremap <tab> %
-vnoremap <tab> %
 nnoremap / /\v
 vnoremap / /\v
 inoremap <f1> <esc>
