@@ -46,7 +46,11 @@ set noautochdir
 " On Windows it use gb* encoding,
 " it doesn't recognize these chars
 if !has('win32') && !has('win64')
-	set encoding=utf-8
+	" Neovim disallow changing 'enconding' option after initialization
+	" see https://github.com/neovim/neovim/pull/2929 for more details
+	if !has('nvim')
+		set encoding=utf-8  " Set default encoding to UTF-8
+	endif
 	set fileencodings=utf8,gbk
 	set list
 	set listchars=tab:»\ ,eol:¬,trail:▲,nbsp:▲
