@@ -109,8 +109,6 @@ nnoremap <leader>; mqA;<esc>`q
 nnoremap <c-w>m <c-w>_<c-w>\|
 "Quickfix
 nnoremap <leader>qf :call QickfixToggle()<cr>
-nnoremap <F4> :cp<cr>
-nnoremap <F5> :cn<cr>
 let g:quickfix_is_open = 0
 function! QickfixToggle()
 	if g:quickfix_is_open
