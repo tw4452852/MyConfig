@@ -66,6 +66,18 @@ augroup END
 " Status Line setting"{{{
 set statusline=%F\ -\ %m%r%h[%Y-%{&fileformat}]%=[0x%B,%c][%l/%L]
 "}}}
+" abbreviation"{{{
+iabbrev ； ;
+iabbrev 。 .
+iabbrev ， ,
+iabbrev ： :
+iabbrev （ (
+iabbrev ） )
+iabbrev “ "
+iabbrev ” "
+iabbrev ？ ?
+iabbrev ！ !
+" }}}
 " Global keymaps"{{{
 " General"{{{
 let mapleader = ","
@@ -125,23 +137,6 @@ function! QickfixToggle()
 endfunction
 "}}}
 "tw's self cmd"{{{
-nnoremap <leader>f :call <SID>TwFormat()<cr>
-function! s:TwFormat()
-	let linenum = 1
-	for line in getline(1, line('$'))
-		let repl = substitute(line, "；", ";", "g")
-		let repl = substitute(repl, "。", ".", "g")
-		let repl = substitute(repl, "，", ",", "g")
-		let repl = substitute(repl, "：", ":", "g")
-		let repl = substitute(repl, "（", "(", "g")
-		let repl = substitute(repl, "）", ")", "g")
-		let repl = substitute(repl, "“", "\"", "g")
-		let repl = substitute(repl, "”", "\"", "g")
-		call setline(linenum, repl)
-		let linenum += 1
-	endfor
-endfunction
-
 nnoremap <leader>gb :execute "!tw_blame -l " . line(".") . " -p " . expand("%:p")<cr>
 cnoremap w!! w !sudo tee % >/dev/null
 "}}}
