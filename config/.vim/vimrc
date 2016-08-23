@@ -193,6 +193,7 @@ augroup gogroup
 	autocmd FileType go nnoremap <buffer> <c-]> :call GodefUnderCursor()<cr>
 	autocmd FileType go nnoremap <buffer> <c-t> :call GodefBack()<cr>
 	autocmd FileType go nnoremap <buffer> K :Godoc<cr>
+	autocmd BufRead *_test.go setlocal makeprg=go\ test\ -c
 augroup END
 "}}}
 " Markdown"{{{
