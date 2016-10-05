@@ -13,7 +13,6 @@ else
 endif
 syntax off
 set nocompatible
-set modelines=0
 set linebreak
 set textwidth=80
 set tabstop=4
