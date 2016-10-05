@@ -42,7 +42,7 @@ endf
 
 function! s:GoFormat()
     let view = winsaveview()
-    silent %!gofmt
+    silent %!gofmt -s
     if v:shell_error
         let errors = []
         for line in getline(1, line('$'))
