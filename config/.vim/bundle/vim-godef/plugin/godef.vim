@@ -4,14 +4,11 @@ if !exists("g:godef_command")
     let g:godef_command = "godef"
 endif
 
-if !exists("g:godef_split")
-    let g:godef_split = 0
-endif
-
 let s:positons_stack = []
 
-function! GodefUnderCursor()
+function! GodefUnderCursor(mode)
     let pos = getpos(".")[1:2]
+	let b:godef_split = a:mode
     if &encoding == 'utf-8'
         let offs = line2byte(pos[0]) + pos[1]
     else
@@ -47,9 +44,9 @@ function! Godef(arg)
         let out=substitute(out, '\n$', '', '')
         echom out
     else
-        if g:godef_split == 1
-            split
-        elseif g:godef_split == 2
+        if b:godef_split == 1
+            vsplit
+        elseif b:godef_split == 2
             tabnew
         endif
 
