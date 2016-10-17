@@ -182,6 +182,7 @@ if has("cscope")
 	nnoremap <leader>sf :cs find f <c-r>=expand("<cfile>")<cr><cr>
 	nnoremap <leader>si :cs find i ^<c-r>=expand("<cfile>")<cr><cr>
 	nnoremap <leader>sd :cs find d <c-r>=expand("<cword>")<cr><cr>
+	nnoremap <c-w><c-]> :silent vsplit<cr><c-]>
 endif
 "}}}
 " Go"{{{
