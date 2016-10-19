@@ -46,6 +46,7 @@ export LC_ALL="en_US.UTF-8"
 
 export CSCOPE_EDITOR=nvim
 export EDITOR=nvim
+export MANPAGER="nvim -c 'set ft=man' -"
 
 export GOROOT=~/goroot
 export GOPATH=~/golib
