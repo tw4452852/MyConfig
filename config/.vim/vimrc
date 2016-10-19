@@ -18,7 +18,7 @@ set textwidth=80
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
-set scrolloff=3
+set scrolloff=9999
 set autoindent
 set showmode
 set showcmd
