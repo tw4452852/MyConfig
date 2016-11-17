@@ -102,8 +102,9 @@ setup_config() {
 		mkdir -p ${FONTS_CONF_DIR}
 		ln -sf ${TOP_DIR}/config/.fonts.conf ${FONTS_CONF_DIR}
 		mkdir -p ${FONTS_DIR}
-		ln -sf ${TOP_DIR}/font/Lucida\ Console.ttf ${FONTS_DIR}
-		ln -sf ${TOP_DIR}/font/SourceCodePro ${FONTS_DIR}
+		for f in "${TOP_DIR}/font/*"; do
+			ln -sf $f ${FONTS_DIR}
+		done
 
 		export PKG_CONFIG_PATH=${MYROOT}/lib/pkgconfig/:$PKG_CONFIG_PATH
 		export PATH=${MYROOT}/bin/:$PATH
