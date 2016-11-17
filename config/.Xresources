@@ -3,7 +3,7 @@ UXTerm*faceName: Source Code Pro:size=10
 ! Chinese font
 UXTerm*faceNameDoublesize: WenQuanYi Micro Hei:size=10
 
-Rxvt*font: xft:Source Code Pro:size=10,xft:WenQuanYi Micro Hei:size=10
+Rxvt*font: xft:Go Mono:size=10,xft:WenQuanYi Micro Hei:size=10
 Rxvt*scrollBar: False
 Rxvt*foreground: Black
 Rxvt*background: rgba:ffff/ffff/d700/ffff
