@@ -37,10 +37,6 @@ plugins=(ssh-agent per-directory-history history-substring-search sudo)
 
 source $ZSH/oh-my-zsh.sh
 
-# rebind vi history key to history-substring-search
-bindkey '^P' history-substring-search-up
-bindkey '^N' history-substring-search-down
-
 # Customize to your needs...
 export LC_ALL="en_US.UTF-8"
 
