@@ -81,8 +81,8 @@ iabbrev ！ !
 " General"{{{
 let mapleader = ","
 noremap \ ,
-noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
-noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
+nnoremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
+nnoremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap L $
 nnoremap <silent> H :call FirstCharOrFirstCol()<cr>
 function! FirstCharOrFirstCol()
