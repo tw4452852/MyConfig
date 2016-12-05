@@ -47,8 +47,9 @@ export MANPAGER="nvim -c 'set ft=man' -"
 export GOROOT=~/goroot
 export GOPATH=~/golib
 
-export CDPATH=.:$GOPATH/src:$GOROOT/src/pkg:$CDPATH
-export PATH=~/MyRoot/bin:$PATH:$GOROOT/bin:$GOPATH/bin
+typeset -U cdpath path
+cdpath=(${GOPATH}/src ${GOROOT}/src . $cdpath)
+path=(~/MyRoot/bin ${GOROOT}/bin ${GOPATH}/bin $path)
 
 #autoload
 source $HOME/.autoload.sh
