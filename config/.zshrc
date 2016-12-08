@@ -33,7 +33,7 @@ zstyle :omz:plugins:ssh-agent identities id_rsa
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(ssh-agent per-directory-history history-substring-search sudo)
+plugins=(ssh-agent per-directory-history sudo)
 
 source $ZSH/oh-my-zsh.sh
 
