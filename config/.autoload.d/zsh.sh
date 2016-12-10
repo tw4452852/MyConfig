@@ -37,8 +37,10 @@ zle -N history-beginning-search-forward-end \
 bindkey '\ep' history-beginning-search-backward-end
 bindkey '\en' history-beginning-search-forward-end
 
-# <alt-=> for copy-prev-shell-word
-bindkey '\e=' copy-prev-shell-word
+# <alt-=> for copy-earlier-word
+autoload -Uz copy-earlier-word
+zle -N copy-earlier-word
+bindkey '\e=' copy-earlier-word
 
 # no need to surround url with single quotation
 autoload -U url-quote-magic
