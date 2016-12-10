@@ -48,4 +48,30 @@ zle -N self-insert url-quote-magic
 autoload -Uz bracketed-paste-magic
 zle -N bracketed-paste bracketed-paste-magic
 
+# move by shell word
+zsh-word-movement () {
+	# see select-word-style for more
+	local -a word_functions
+	local f
+
+	word_functions=(backward-kill-word backward-word
+	capitalize-word down-case-word
+	forward-word kill-word
+	transpose-words up-case-word)
+
+	if ! zle -l $word_functions[1]; then
+		for f in $word_functions; do
+			autoload -Uz $f-match
+			zle -N zsh-$f $f-match
+		done
+	fi
+	# set the style to shell
+	zstyle ':zle:zsh-*' word-style shell
+}
+zsh-word-movement
+unfunction zsh-word-movement
+bindkey "\eB" zsh-backward-word
+bindkey "\eF" zsh-forward-word
+bindkey "\eW" zsh-backward-kill-word
+
 echo "zsh stuff init done"
