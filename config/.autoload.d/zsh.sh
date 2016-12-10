@@ -1,3 +1,6 @@
+_zdir=${ZDOTDIR:-$HOME}
+fpath=($_zdir/.zsh/functions $fpath)
+
 setopt multios
 setopt correctall
 setopt extendedglob
@@ -73,5 +76,10 @@ unfunction zsh-word-movement
 bindkey "\eB" zsh-backward-word
 bindkey "\eF" zsh-forward-word
 bindkey "\eW" zsh-backward-kill-word
+
+# <alt-j> for jump-target
+autoload -Uz jump-target
+zle -N jump-target
+bindkey '\ej' jump-target
 
 echo "zsh stuff init done"
