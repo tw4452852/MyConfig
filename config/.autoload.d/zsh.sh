@@ -24,9 +24,14 @@ bindkey "\e;" pound-insert
 # use <alt-,> for "$ANDROID_BUILD_TOP/" literally
 bindkey -s "\e," '$ANDROID_BUILD_TOP/out/target/product/x86_64/system'
 
-# use <ctrl-x>p/n for history-beginning-search
-bindkey '^xp' history-beginning-search-backward
-bindkey '^xn' history-beginning-search-forward
+# use <alt-p/n> for history-search-end
+autoload -Uz history-search-end
+zle -N history-beginning-search-backward-end \
+	history-search-end
+zle -N history-beginning-search-forward-end \
+	history-search-end
+bindkey '\ep' history-beginning-search-backward-end
+bindkey '\en' history-beginning-search-forward-end
 
 # <alt-=> for copy-prev-shell-word
 bindkey '\e=' copy-prev-shell-word
