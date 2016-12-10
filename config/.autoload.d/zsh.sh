@@ -2,6 +2,10 @@ setopt multios
 setopt correctall
 setopt extendedglob
 
+# also support builtin and function
+unalias run-help
+autoload run-help
+
 # no duplicate history
 setopt EXTENDED_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
