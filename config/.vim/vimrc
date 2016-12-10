@@ -58,7 +58,6 @@ endif
 " vimrc"{{{
 augroup vimgroup
 	autocmd!
-	autocmd FileType vim setlocal foldmethod=marker
 	autocmd BufWritePost $MYVIMRC source $MYVIMRC
 augroup END
 "}}}
@@ -263,3 +262,5 @@ augroup END
 "netrw"{{{
 let g:netrw_http_xcmd= "-dump >"
 "}}}
+
+" vim: foldmethod=marker:
