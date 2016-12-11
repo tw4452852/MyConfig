@@ -6,7 +6,7 @@ setopt correctall
 setopt extendedglob
 
 # also support builtin and function
-unalias run-help
+alias run-help >&/dev/null && unalias run-help
 autoload run-help
 
 # no duplicate history
