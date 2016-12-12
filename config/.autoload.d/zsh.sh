@@ -1,13 +1,21 @@
+# environment {{{
 _zdir=${ZDOTDIR:-$HOME}
-fpath=($_zdir/.zsh/functions $fpath)
 
+# autoload functions
+[[ -d $_zdir/.zsh/functions ]] &&
+	fpath=($_zdir/.zsh/functions $fpath) &&
+	autoload -U $_zdir/.zsh/functions/*(:t)
+
+# modules
+module_path=($_zdir/.zsh/modules $module_path)
+
+#}}}
+
+# options {{{
 setopt multios
-setopt correctall
 setopt extendedglob
-
-# also support builtin and function
-alias run-help >&/dev/null && unalias run-help
-autoload run-help
+# regard '' as '
+setopt rc_quotes
 
 # no duplicate history
 setopt EXTENDED_HISTORY
@@ -19,6 +27,9 @@ setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_BEEP
 
+#}}}
+
+# keymaps {{{
 # use emacs mode by default
 bindkey -e
 
@@ -78,8 +89,23 @@ bindkey "\eF" zsh-forward-word
 bindkey "\eW" zsh-backward-kill-word
 
 # <alt-j> for jump-target
-autoload -Uz jump-target
 zle -N jump-target
 bindkey '\ej' jump-target
+#}}}
+
+# alias {{{
+alias -s pdf=zathura
+#}}}
+
+# misc {{{
+# use more advanced run-help to support builtin and function
+alias run-help >&/dev/null && unalias run-help
+autoload run-help
+
+# subreap
+zmodload subreap 2>/dev/null && subreap
+
+#}}}
 
 echo "zsh stuff init done"
+# vim: fdm=marker
