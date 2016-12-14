@@ -112,7 +112,15 @@ bindkey " " my-expand-abbrev
 #}}}
 
 # alias {{{
+# suffix
 alias -s pdf=zathura
+
+# directory
+hash -d A=~/code/android/5.1
+hash -d V=~/.vim
+hash -d T=~/tmp
+hash -d Z=~/.zsh
+
 #}}}
 
 # misc {{{
