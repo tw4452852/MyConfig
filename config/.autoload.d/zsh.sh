@@ -91,6 +91,24 @@ bindkey "\eW" zsh-backward-kill-word
 # <alt-j> for jump-target
 zle -N jump-target
 bindkey '\ej' jump-target
+
+# <space> for expanding abbreviation like 'iab' with Vim
+typeset -A myiabs
+myiabs=(
+	"Ig"    "| grep"
+	"Ip"    "| $PAGER"
+	"Ih"    "| head"
+	"It"    "| tail"
+	"Iv"    "| $EDITOR -R -"
+)
+my-expand-abbrev() {
+	local MATCH
+	LBUFFER=${LBUFFER%%(#m)[_a-zA-Z0-9]#}
+	LBUFFER+=${myiabs[$MATCH]:-$MATCH}
+	zle self-insert
+}
+zle -N my-expand-abbrev
+bindkey " " my-expand-abbrev
 #}}}
 
 # alias {{{
