@@ -131,6 +131,26 @@ my-expand-abbrev() {
 }
 zle -N my-expand-abbrev
 bindkey " " my-expand-abbrev
+
+# <alt-A> for android-dir-previous-wold
+android-dir-previous-word() {
+	integer posword
+	zle .end-of-line
+
+	autoload -Uz split-shell-arguments
+	split-shell-arguments
+
+	(( posword = REPLY ))
+	(( posword < 2 )) && return
+	(( posword & 1 )) && (( posword-- ))
+
+	local match mbegin mend
+	if [[ ${reply[posword]} == (#b)*(/system/*)## ]]; then
+		LBUFFER+="${match[1]:h}"
+	fi
+}
+zle -N android-dir-previous-word
+bindkey '\eA' android-dir-previous-word
 #}}}
 
 # alias {{{
