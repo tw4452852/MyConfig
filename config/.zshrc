@@ -36,32 +36,3 @@ zstyle :omz:plugins:ssh-agent identities id_rsa
 plugins=(ssh-agent per-directory-history sudo)
 
 source $ZSH/oh-my-zsh.sh
-
-# Customize to your needs...
-export LC_ALL="en_US.UTF-8"
-
-export CSCOPE_EDITOR=nvim
-export EDITOR=nvim
-export MANPAGER="nvim -c 'set ft=man' -"
-
-export GOROOT=~/goroot
-export GOPATH=~/golib
-
-typeset -U cdpath path
-cdpath=(${GOPATH}/src ${GOROOT}/src . $cdpath)
-path=(~/MyRoot/bin ${GOROOT}/bin ${GOPATH}/bin $path)
-
-#autoload
-source $HOME/.autoload.sh
-
-#tmux
-#if which test 2>&1 >/dev/null;then
-	#if test -z ${TMUX};then
-		#tmux -2
-	#fi
-	#while test -z ${TMUX};do
-		#tmux -2 attach || break
-	#done
-#fi
-
-alias em="emacs -nw"
