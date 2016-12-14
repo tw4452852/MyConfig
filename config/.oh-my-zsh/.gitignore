@@ -2,7 +2,10 @@
 custom/
 !custom/plugins/example
 !custom/example.zsh
-
+!custom/tw.zsh
+!custom/tw.zsh-theme
+*.swp
+!custom/example.zshcache
 # temp files directories
 cache/
 log/
