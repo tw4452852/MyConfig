@@ -35,6 +35,11 @@ path=(~/MyRoot/bin ${GOROOT}/bin ${GOPATH}/bin $path)
 
 # options {{{
 setopt multios
+# Treat the '#', '~' and '^' characters as part of patterns 
+# for filename generation, etc. (An initial unquoted '~'
+# always produces named directory expansion.)
+# | $ grep word *~(*.gz|*.bz|*.bz2|*.zip|*.Z)
+# searches for word not in compressed files
 setopt extendedglob
 # regard '' as '
 setopt rc_quotes
@@ -48,6 +53,13 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_BEEP
+
+# do *not* run all background jobs at a lower priority
+unsetopt bgnice
+
+# If this option is unset, output flow control via start/stop characters
+# (usually assigned to ^S/^Q) disabled in the shell's editor.
+unsetopt flow_control
 
 #}}}
 
@@ -176,6 +188,11 @@ autoload -Uz run-help
 
 # subreap
 zmodload subreap 2>/dev/null && subreap
+
+# watch login
+watch=(all)
+WATCHFMT='%n has %a %l from %M'
+LOGCHECK=60
 
 #}}}
 
