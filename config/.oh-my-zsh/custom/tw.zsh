@@ -55,6 +55,10 @@ setopt HIST_BEEP
 # use emacs mode by default
 bindkey -e
 
+# use <ctrl-r/s> for history-increases-search
+bindkey "^r" history-incremental-search-backward
+bindkey "^s" history-incremental-search-forward
+
 # overwrite <alt-q> with push-line-or-edit
 bindkey "\eq" push-line-or-edit
 
