@@ -194,6 +194,30 @@ watch=(all)
 WATCHFMT='%n has %a %l from %M'
 LOGCHECK=60
 
+# set tmux window's name and pannel's title
+_title() {
+	case "$TERM" in
+		(screen*|tmux*)
+			# window's name
+			[[ -n ${1} ]] && print -Pn "\033k${1}\033\\"
+			# pannel's title
+			[[ -n ${2} ]] && print -Pn "\033]2;${2}\033\\"
+			;;
+		(*)
+			# do nothing
+	esac
+}
+_precmd() {
+	_title "zsh"
+}
+_preexec() {
+	cmds=(${(z)2})
+	_title "${cmds[1]}" "${3}"
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook -Uz precmd _precmd
+add-zsh-hook -Uz preexec _preexec
+
 #}}}
 
 echo "tw's zsh stuff init done"
