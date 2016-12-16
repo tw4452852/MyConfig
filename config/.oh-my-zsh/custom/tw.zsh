@@ -220,8 +220,17 @@ _precmd() {
 	_title "zsh"
 }
 _preexec() {
-	cmds=(${(z)2})
-	_title "${cmds[1]}" "${3}"
+	local cmdline=${3}
+	local cmds=(${(z)2})
+	local cmd=${cmds[1]}
+
+	# if `fg', retrieve the actual cmdline
+	if [[ ${cmd} == fg ]]; then
+		cmdline=${jobtexts[${cmds[2]:-%+}]}
+		cmds=(${(z)cmdline})
+		cmd=${cmds[1]}
+	fi
+	_title "${cmd}" "${cmdline}"
 }
 autoload -Uz add-zsh-hook
 add-zsh-hook -Uz precmd _precmd
