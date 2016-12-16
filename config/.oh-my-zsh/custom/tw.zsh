@@ -167,6 +167,13 @@ android-dir-previous-word() {
 }
 zle -N android-dir-previous-word
 bindkey '\eA' android-dir-previous-word
+
+# <alt-c> for my-vi-change
+my-vi-change() {
+	zle .vi-change -K vicmd
+}
+zle -N my-vi-change
+bindkey '\ec' my-vi-change
 #}}}
 
 # alias {{{
