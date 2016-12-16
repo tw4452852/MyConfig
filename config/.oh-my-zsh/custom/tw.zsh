@@ -193,6 +193,7 @@ hash -d Z=~/.oh-my-zsh/custom
 # use more advanced run-help to support builtin and function
 (( ${+aliases[run-help]} )) && unalias run-help
 autoload -Uz run-help
+autoload -Uz run-help-git
 
 # subreap
 zmodload subreap 2>/dev/null && subreap
