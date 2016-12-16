@@ -182,8 +182,9 @@ alias -s pdf=zathura
 
 # directory
 hash -d A=~/code/android/5.1
-hash -d V=~/.vim
+hash -d P=~/public/android/5.1
 hash -d T=~/tmp
+hash -d V=~/.vim
 hash -d Z=~/.oh-my-zsh/custom
 
 #}}}
