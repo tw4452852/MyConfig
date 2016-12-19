@@ -11,7 +11,7 @@ fi
 devices=("${(f)$(command adb devices)}")
 devices[1]=()
 
-if (( ${#devices} == 1 )); then
+if (( ${#devices} <= 1 )); then
 	command adb $args
 	return
 fi
