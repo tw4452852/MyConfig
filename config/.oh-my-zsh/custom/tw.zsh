@@ -67,9 +67,20 @@ unsetopt flow_control
 # use emacs mode by default
 bindkey -e
 
-# use <ctrl-r/s> for history-increases-search
-bindkey "^r" history-incremental-search-backward
-bindkey "^s" history-incremental-search-forward
+# use <ctrl-r/s> for history-incremental-pattern-search
+autoload -Uz narrow-to-region
+_history-incremental-preserving-pattern-search-backward () {
+  local state
+  MARK=CURSOR  # magick, else multiple ^R don't work
+  narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
+  zle end-of-history
+  zle history-incremental-pattern-search-backward
+  narrow-to-region -R state
+}
+zle -N _history-incremental-preserving-pattern-search-backward
+bindkey "^r" _history-incremental-preserving-pattern-search-backward
+bindkey -M isearch "^r" history-incremental-pattern-search-backward
+bindkey "^s" history-incremental-pattern-search-forward
 
 # overwrite <alt-q> with push-line-or-edit
 bindkey "\eq" push-line-or-edit
