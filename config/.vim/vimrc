@@ -113,6 +113,8 @@ if has('nvim')
 endif
 cnoremap <c-p> <up>
 cnoremap <c-n> <down>
+cnoremap <A-b> <C-Left>
+cnoremap <A-f> <C-Right>
 nnoremap <leader>mk :w<cr>:make<cr>
 inoremap <leader>mk <esc>:w<cr>:make<cr>
 nnoremap <leader>w :update<cr>
