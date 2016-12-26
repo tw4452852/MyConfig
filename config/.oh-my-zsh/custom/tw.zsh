@@ -61,6 +61,12 @@ unsetopt BG_NICE
 # (usually assigned to ^S/^Q) disabled in the shell's editor.
 unsetopt FLOW_CONTROL
 
+# Don't push multiple copies of the same directory onto the directory stack.
+setopt PUSHD_IGNORE_DUPS
+
+# Do not print the directory stack after pushd or popd.
+setopt PUSHD_SILENT
+
 #}}}
 
 # keymaps {{{
