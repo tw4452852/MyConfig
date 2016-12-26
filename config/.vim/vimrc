@@ -7,9 +7,9 @@ set t_Co=256
 "set background=dark
 colorscheme nofrils-sepia
 if !has('win32') && !has('win64')
-	set guifont=Source\ Code\ Pro\ 10
+  set guifont=Source\ Code\ Pro\ 10
 else
-	set guifont=Source_Code_Pro:h10
+  set guifont=Source_Code_Pro:h10
 endif
 syntax off
 set nocompatible
@@ -45,20 +45,20 @@ set noautochdir
 " On Windows it use gb* encoding,
 " it doesn't recognize these chars
 if !has('win32') && !has('win64')
-	" Neovim disallow changing 'enconding' option after initialization
-	" see https://github.com/neovim/neovim/pull/2929 for more details
-	if !has('nvim')
-		set encoding=utf-8  " Set default encoding to UTF-8
-	endif
-	set fileencodings=utf8,gbk
-	set list
-	set listchars=tab:»\ ,eol:¬,trail:▲,nbsp:▲
+  " Neovim disallow changing 'enconding' option after initialization
+  " see https://github.com/neovim/neovim/pull/2929 for more details
+  if !has('nvim')
+    set encoding=utf-8  " Set default encoding to UTF-8
+  endif
+  set fileencodings=utf8,gbk
+  set list
+  set listchars=tab:»\ ,eol:¬,trail:▲,nbsp:▲
 endif
 "}}}
 " vimrc"{{{
 augroup vimgroup
-	autocmd!
-	autocmd BufWritePost $MYVIMRC source $MYVIMRC
+  autocmd!
+  autocmd BufWritePost $MYVIMRC source $MYVIMRC
 augroup END
 "}}}
 " Status Line setting"{{{
@@ -130,13 +130,13 @@ nnoremap gV `[v`]
 nnoremap <leader>qf :call QickfixToggle()<cr>
 let g:quickfix_is_open = 0
 function! QickfixToggle()
-	if g:quickfix_is_open
-		cclose
-		let g:quickfix_is_open = 0
-	else
-		copen
-		let g:quickfix_is_open = 1
-	endif
+  if g:quickfix_is_open
+    cclose
+    let g:quickfix_is_open = 0
+  else
+    copen
+    let g:quickfix_is_open = 1
+  endif
 endfunction
 "}}}
 "tw's self cmd"{{{
@@ -149,22 +149,22 @@ cnoremap w!! w !sudo tee % >/dev/null
 nnoremap <leader>zf :FZF<cr>
 " List of buffers
 function! BufList()
-	redir => ls
-	silent ls
-	redir END
-	return split(ls, '\n')
+  redir => ls
+  silent ls
+  redir END
+  return split(ls, '\n')
 endfunction
 
 function! BufOpen(e)
-	execute 'buffer '. matchstr(a:e, '^[ 0-9]*')
+  execute 'buffer '. matchstr(a:e, '^[ 0-9]*')
 endfunction
 
 nnoremap <silent> <Leader>zb :call fzf#run({
-		  \   'source':      reverse(BufList()),
-		  \   'sink':        function('BufOpen'),
-		  \   'options':     '+m',
-		  \   'tmux_height': '40%'
-		  \ })<CR>
+      \   'source':      reverse(BufList()),
+      \   'sink':        function('BufOpen'),
+      \   'options':     '+m',
+      \   'tmux_height': '40%'
+      \ })<CR>
 "}}}
 " tagbar"{{{
 nnoremap <leader>t :TagbarToggle<CR>
@@ -172,39 +172,39 @@ nnoremap <leader>t :TagbarToggle<CR>
 " Cscope"{{{
 if has("cscope")
     set nocsverb
-	set cst
+  set cst
     set csto=1
     if filereadable("cscope.out")
         cs add cscope.out
     endif
     set csverb
-	nnoremap <leader>ss :cs find s <c-r>=expand("<cword>")<cr><cr>
-	nnoremap <leader>sg :cs find g <c-r>=expand("<cword>")<cr><cr>
-	nnoremap <leader>sc :cs find c <c-r>=expand("<cword>")<cr><cr>
-	nnoremap <leader>st :cs find t <c-r>=expand("<cword>")<cr><cr>
-	nnoremap <leader>se :cs find e <c-r>=expand("<cword>")<cr><cr>
-	nnoremap <leader>sf :cs find f <c-r>=expand("<cfile>")<cr><cr>
-	nnoremap <leader>si :cs find i ^<c-r>=expand("<cfile>")<cr><cr>
-	nnoremap <leader>sd :cs find d <c-r>=expand("<cword>")<cr><cr>
-	nnoremap <c-w><c-]> :silent vsplit<cr><c-]>
+  nnoremap <leader>ss :cs find s <c-r>=expand("<cword>")<cr><cr>
+  nnoremap <leader>sg :cs find g <c-r>=expand("<cword>")<cr><cr>
+  nnoremap <leader>sc :cs find c <c-r>=expand("<cword>")<cr><cr>
+  nnoremap <leader>st :cs find t <c-r>=expand("<cword>")<cr><cr>
+  nnoremap <leader>se :cs find e <c-r>=expand("<cword>")<cr><cr>
+  nnoremap <leader>sf :cs find f <c-r>=expand("<cfile>")<cr><cr>
+  nnoremap <leader>si :cs find i ^<c-r>=expand("<cfile>")<cr><cr>
+  nnoremap <leader>sd :cs find d <c-r>=expand("<cword>")<cr><cr>
+  nnoremap <c-w><c-]> :silent vsplit<cr><c-]>
 endif
 "}}}
 " Go"{{{
 augroup gogroup
-	autocmd!
-	autocmd BufWritePre *.go :silent Fmt "gofmt
-	autocmd FileType go compiler go
-	autocmd FileType go nnoremap <buffer> <c-]> :call GodefUnderCursor(0)<cr>
-	autocmd FileType go nnoremap <buffer> <c-w><c-]> :call GodefUnderCursor(1)<cr>
-	autocmd FileType go nnoremap <buffer> <c-t> :call GodefBack()<cr>
-	autocmd FileType go nnoremap <buffer> K :Godoc<cr>
-	autocmd BufReadPost,BufNewFile *_test.go setlocal makeprg=go\ test\ -c
+  autocmd!
+  autocmd BufWritePre *.go :silent Fmt "gofmt
+  autocmd FileType go compiler go
+  autocmd FileType go nnoremap <buffer> <c-]> :call GodefUnderCursor(0)<cr>
+  autocmd FileType go nnoremap <buffer> <c-w><c-]> :call GodefUnderCursor(1)<cr>
+  autocmd FileType go nnoremap <buffer> <c-t> :call GodefBack()<cr>
+  autocmd FileType go nnoremap <buffer> K :Godoc<cr>
+  autocmd BufReadPost,BufNewFile *_test.go setlocal makeprg=go\ test\ -c
 augroup END
 "}}}
 " Markdown"{{{
 augroup mdgroup
-	autocmd!
-	autocmd FileType mkd setlocal spell
+  autocmd!
+  autocmd FileType mkd setlocal spell
 augroup END
 "}}}
 " Youdao-traslation"{{{
@@ -212,31 +212,31 @@ nnoremap <leader>tr :YoudaoTranslate <c-r>=expand("<cword>")<cr><cr>
 "}}}
 " Wmgraphviz"{{{
 augroup dotgroup
-	autocmd!
-	autocmd FileType dot nnoremap <buffer> <leader>ll :GraphvizCompile<cr>
-	autocmd FileType dot nnoremap <buffer> <leader>lt :GraphvizCompileToLaTeX<cr>
-	autocmd FileType dot nnoremap <buffer> <leader>lv :GraphvizShow<cr>
-	autocmd FileType dot nnoremap <buffer> <leader>li :GraphvizInteractive<cr>
+  autocmd!
+  autocmd FileType dot nnoremap <buffer> <leader>ll :GraphvizCompile<cr>
+  autocmd FileType dot nnoremap <buffer> <leader>lt :GraphvizCompileToLaTeX<cr>
+  autocmd FileType dot nnoremap <buffer> <leader>lv :GraphvizShow<cr>
+  autocmd FileType dot nnoremap <buffer> <leader>li :GraphvizInteractive<cr>
 augroup END
 "}}}
 " Snipmate"{{{
 " fix snippet_dir bug in windows
 if has('win32') || has('win64')
-	let g:snippets_dir='$HOME/vimfiles/bundle/snipmate/snippets'
+  let g:snippets_dir='$HOME/vimfiles/bundle/snipmate/snippets'
 endif
 "}}}
 " Help"{{{
 augroup helpgroup
-	autocmd!
-	autocmd FileType help wincmd L
+  autocmd!
+  autocmd FileType help wincmd L
 augroup END
 "}}}
 " gtags"{{{
 if executable('gtags-cscope')
-	set cscopeprg=gtags-cscope\ -aC
-	if filereadable("GTAGS")
-		cs add GTAGS
-	endif
+  set cscopeprg=gtags-cscope\ -aC
+  if filereadable("GTAGS")
+    cs add GTAGS
+  endif
 endif
 "}}}
 " match"{{{
@@ -244,25 +244,25 @@ nnoremap ? :call TwMatchToggle(expand("<cword>"))<cr>
 "}}}
 "terminal"{{{
 if exists(':terminal')
-	let g:terminal_scrollback_buffer_size = 100000
-	augroup terminalgroup
-		autocmd!
-		autocmd BufWinEnter,WinEnter term://* startinsert
-		autocmd BufLeave term://* stopinsert
-	augroup END
+  let g:terminal_scrollback_buffer_size = 100000
+  augroup terminalgroup
+    autocmd!
+    autocmd BufWinEnter,WinEnter term://* startinsert
+    autocmd BufLeave term://* stopinsert
+  augroup END
 endif
 "}}}
 "grep"{{{
 if executable('pt')
-	set grepprg=pt
+  set grepprg=pt
 endif
 augroup grepgroup
-	autocmd!
-	autocmd QuickFixCmdPost [^l]* cw | let g:quickfix_is_open=1
+  autocmd!
+  autocmd QuickFixCmdPost [^l]* cw | let g:quickfix_is_open=1
 augroup END
 "}}}
 "netrw"{{{
 let g:netrw_http_xcmd= "-dump >"
 "}}}
 
-" vim: foldmethod=marker:
+" vim: set foldmethod=marker et ts=2 sw=2:
