@@ -4,8 +4,8 @@ typeset -U cdpath path module_path fpath
 
 # autoload functions
 [[ -d $_zdir/.zsh/functions ]] &&
-	fpath=($_zdir/.zsh/functions $fpath) &&
-	autoload -Uz $_zdir/.zsh/functions/*(:t)
+  fpath=($_zdir/.zsh/functions $fpath) &&
+  autoload -Uz $_zdir/.zsh/functions/*(:t)
 
 # modules
 module_path=($_zdir/.zsh/modules $module_path)
@@ -14,15 +14,15 @@ module_path=($_zdir/.zsh/modules $module_path)
 export LC_ALL="en_US.UTF-8"
 
 if (( ${+commands[nvim]} )) then
-	export CSCOPE_EDITOR=nvim
-	export EDITOR=nvim
-	export MANPAGER="nvim -c 'set ft=man' -"
+  export CSCOPE_EDITOR=nvim
+  export EDITOR=nvim
+  export MANPAGER="nvim -c 'set ft=man' -"
 elif (( ${+commands[vim]} )) then
-	export CSCOPE_EDITOR=vim
-	export EDITOR=vim
-	export MANPAGER="vim -R -"
+  export CSCOPE_EDITOR=vim
+  export EDITOR=vim
+  export MANPAGER="vim -R -"
 else
-	# just leave as it is
+  # just leave as it is
 fi
 
 export GOROOT=~/goroot
@@ -34,15 +34,15 @@ path=(~/MyRoot/bin ${GOROOT}/bin ${GOPATH}/bin $path)
 #}}}
 
 # options {{{
-setopt multios
+setopt MULTIOS
 # Treat the '#', '~' and '^' characters as part of patterns 
 # for filename generation, etc. (An initial unquoted '~'
 # always produces named directory expansion.)
 # | $ grep word *~(*.gz|*.bz|*.bz2|*.zip|*.Z)
 # searches for word not in compressed files
-setopt extendedglob
+setopt EXTENDED_GLOB
 # regard '' as '
-setopt rc_quotes
+setopt RC_QUOTES
 
 # no duplicate history
 setopt EXTENDED_HISTORY
@@ -55,11 +55,11 @@ setopt HIST_SAVE_NO_DUPS
 setopt HIST_BEEP
 
 # do *not* run all background jobs at a lower priority
-unsetopt bgnice
+unsetopt BG_NICE
 
 # If this option is unset, output flow control via start/stop characters
 # (usually assigned to ^S/^Q) disabled in the shell's editor.
-unsetopt flow_control
+unsetopt FLOW_CONTROL
 
 #}}}
 
@@ -94,9 +94,9 @@ bindkey -s "\e," '$ANDROID_BUILD_TOP/out/target/product/x86_64/system'
 # use <alt-p/n> for history-search-end
 autoload -Uz history-search-end
 zle -N history-beginning-search-backward-end \
-	history-search-end
+  history-search-end
 zle -N history-beginning-search-forward-end \
-	history-search-end
+  history-search-end
 bindkey '\ep' history-beginning-search-backward-end
 bindkey '\en' history-beginning-search-forward-end
 
@@ -113,23 +113,23 @@ zle -N bracketed-paste bracketed-paste-magic
 
 # move by shell word
 zsh-word-movement () {
-	# see select-word-style for more
-	local -a word_functions
-	local f
+  # see select-word-style for more
+  local -a word_functions
+  local f
 
-	word_functions=(backward-kill-word backward-word
-	capitalize-word down-case-word
-	forward-word kill-word
-	transpose-words up-case-word)
+  word_functions=(backward-kill-word backward-word
+  capitalize-word down-case-word
+  forward-word kill-word
+  transpose-words up-case-word)
 
-	if ! zle -l $word_functions[1]; then
-		for f in $word_functions; do
-			autoload -Uz $f-match
-			zle -N zsh-$f $f-match
-		done
-	fi
-	# set the style to shell
-	zstyle ':zle:zsh-*' word-style shell
+  if ! zle -l $word_functions[1]; then
+    for f in $word_functions; do
+      autoload -Uz $f-match
+      zle -N zsh-$f $f-match
+    done
+  fi
+  # set the style to shell
+  zstyle ':zle:zsh-*' word-style shell
 }
 zsh-word-movement
 unfunction zsh-word-movement
@@ -144,44 +144,44 @@ bindkey '\ej' jump-target
 # <space> for expanding abbreviation like 'iab' with Vim
 typeset -A myiabs
 myiabs=(
-	"Ig"    "| grep"
-	"Ip"    "| $PAGER"
-	"Ih"    "| head"
-	"It"    "| tail"
-	"Iv"    "| $EDITOR -R -"
+  "Ig"    "| grep"
+  "Ip"    "| $PAGER"
+  "Ih"    "| head"
+  "It"    "| tail"
+  "Iv"    "| $EDITOR -R -"
 )
 my-expand-abbrev() {
-	local MATCH
-	LBUFFER=${LBUFFER%%(#m)[_a-zA-Z0-9]#}
-	LBUFFER+=${myiabs[$MATCH]:-$MATCH}
-	zle self-insert
+  local MATCH
+  LBUFFER=${LBUFFER%%(#m)[_a-zA-Z0-9]#}
+  LBUFFER+=${myiabs[$MATCH]:-$MATCH}
+  zle self-insert
 }
 zle -N my-expand-abbrev
 bindkey " " my-expand-abbrev
 
 # <alt-A> for android-dir-previous-wold
 android-dir-previous-word() {
-	integer posword
-	zle .end-of-line
+  integer posword
+  zle .end-of-line
 
-	autoload -Uz split-shell-arguments
-	split-shell-arguments
+  autoload -Uz split-shell-arguments
+  split-shell-arguments
 
-	(( posword = REPLY ))
-	(( posword < 2 )) && return
-	(( posword & 1 )) && (( posword-- ))
+  (( posword = REPLY ))
+  (( posword < 2 )) && return
+  (( posword & 1 )) && (( posword-- ))
 
-	local match mbegin mend
-	if [[ ${reply[posword]} == (#b)*(/system/*)## ]]; then
-		LBUFFER+="${match[1]:h}"
-	fi
+  local match mbegin mend
+  if [[ ${reply[posword]} == (#b)*(/system/*)## ]]; then
+    LBUFFER+="${match[1]:h}"
+  fi
 }
 zle -N android-dir-previous-word
 bindkey '\eA' android-dir-previous-word
 
 # <alt-c> for my-vi-change
 my-vi-change() {
-	zle .vi-change -K vicmd
+  zle .vi-change -K vicmd
 }
 zle -N my-vi-change
 bindkey '\ec' my-vi-change
@@ -216,32 +216,32 @@ LOGCHECK=60
 
 # set tmux window's name and pannel's title
 _title() {
-	case "$TERM" in
-		(screen*|tmux*)
-			# window's name
-			[[ -n ${1} ]] && print -Pn "\033k${1}\033\\"
-			# pannel's title
-			[[ -n ${2} ]] && print -Pn "\033]2;${2}\033\\"
-			;;
-		(*)
-			# do nothing
-	esac
+  case "$TERM" in
+    (screen*|tmux*)
+      # window's name
+      [[ -n ${1} ]] && print -Pn "\033k${1}\033\\"
+      # pannel's title
+      [[ -n ${2} ]] && print -Pn "\033]2;${2}\033\\"
+      ;;
+    (*)
+      # do nothing
+  esac
 }
 _precmd() {
-	_title "zsh"
+  _title "zsh"
 }
 _preexec() {
-	local cmdline=${3}
-	local cmds=(${(z)2})
-	local cmd=${cmds[1]}
+  local cmdline=${3}
+  local cmds=(${(z)2})
+  local cmd=${cmds[1]}
 
-	# if `fg', retrieve the actual cmdline
-	if [[ ${cmd} == fg ]]; then
-		cmdline=${jobtexts[${cmds[2]:-%+}]}
-		cmds=(${(z)cmdline})
-		cmd=${cmds[1]}
-	fi
-	_title "${cmd}" "${cmdline}"
+  # if `fg', retrieve the actual cmdline
+  if [[ ${cmd} == fg ]]; then
+    cmdline=${jobtexts[${cmds[2]:-%+}]}
+    cmds=(${(z)cmdline})
+    cmd=${cmds[1]}
+  fi
+  _title "${cmd}" "${cmdline}"
 }
 autoload -Uz add-zsh-hook
 add-zsh-hook -Uz precmd _precmd
@@ -249,5 +249,4 @@ add-zsh-hook -Uz preexec _preexec
 
 #}}}
 
-echo "tw's zsh stuff init done"
-# vim: fdm=marker
+# vim: set fdm=marker et sw=2 ts=2 ft=sh:
