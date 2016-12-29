@@ -11,8 +11,8 @@ zparseopts -a opts s:
 # make sure adb server is start
 [[ -z ${args[(r)kill-server]} ]] && command adb start-server
 
-# if we has specify a device with -s or just adb devices, run away
-if [[ -n ${opts[(r)-s]} || -n ${args[(r)devices]} || -n ${args[(r)kill-server]} ]]; then
+# if we has specify a device with -s or just adb [devices|kill-server|connect|disconnect], run away
+if [[ -n ${opts[(r)-s]} || -n ${args[(r)devices]} || -n ${args[(r)kill-server]} || -n ${args[(r)connect]} || -n ${args[(r)disconnect]} ]]; then
 	command adb $args
 	return
 fi
