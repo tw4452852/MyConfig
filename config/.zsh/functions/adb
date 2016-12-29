@@ -13,31 +13,33 @@ zparseopts -a opts s:
 
 # if we has specify a device with -s or just adb [devices|kill-server|connect|disconnect], run away
 if [[ -n ${opts[(r)-s]} || -n ${args[(r)devices]} || -n ${args[(r)kill-server]} || -n ${args[(r)connect]} || -n ${args[(r)disconnect]} ]]; then
-	command adb $args
-	return
+  command adb $args
+  return
 fi
 
 # if push/pull subcommand, add -p if possible
 integer push_i=${args[(I)push]}
 integer pull_i=${args[(I)pull]}
 if (( push_i != 0 )) && [[ ${args[${push_i}+1]} != "-p" ]]; then
-	args[${push_i}]=(push -p)
+  args[${push_i}]=(push -p)
 fi
 if (( pull_i != 0 )) && [[ ${args[${pull_i}+1]} != "-p" ]]; then
-	args[${pull_i}]=(pull -p)
+  args[${pull_i}]=(pull -p)
 fi
 
 devices=("${(f)$(command adb devices)}")
 devices[1]=()
 
 if (( ${#devices} <= 1 )); then
-	command adb $args
-	return
+  command adb $args
+  return
 fi
 
 devices_map=${(z)devices[@]}
 
 select d in ${(k)devices_map}; do
-	command adb -s $d $args
-	return
+  command adb -s $d $args
+  return
 done
+
+# vim: set ft=sh et sw=2 ts=2:
