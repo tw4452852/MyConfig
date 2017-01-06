@@ -146,6 +146,7 @@ bindkey "\eW" zsh-backward-kill-word
 # <alt-j> for jump-target
 zle -N jump-target
 bindkey '\ej' jump-target
+bindkey -a '\ej' jump-target
 
 # <space> for expanding abbreviation like 'iab' with Vim
 typeset -A myiabs
