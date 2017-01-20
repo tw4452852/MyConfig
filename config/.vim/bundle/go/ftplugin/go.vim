@@ -21,9 +21,9 @@ function! s:NextSection(backwards, visual)
 	endif
 
 	if a:backwards
-		let pattern = '\v(^func \S*.*\{$|%^)'
+		let pattern = '\v(^func \_[^{]*\{$|%^)'
 	else
-		let pattern = '\v(^func \S*.*\{$|%$)'
+		let pattern = '\v(^func \_[^{]*\{$|%$)'
 	endif
 	let flags = 'e'
 
