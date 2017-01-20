@@ -11,8 +11,9 @@ let b:did_ftplugin = 1
 
 setlocal comments=s1:/*,mb:*,ex:*/,://
 setlocal commentstring=//\ %s
+setlocal formatoptions=jcroql
 
-let b:undo_ftplugin = "setl com< cms<"
+let b:undo_ftplugin = "setl com< cms< formatoptions<"
 
 function! s:NextSection(backwards, visual)
 	if a:visual
