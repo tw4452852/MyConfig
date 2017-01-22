@@ -54,6 +54,9 @@ if !has('win32') && !has('win64')
   set list
   set listchars=tab:»\ ,eol:¬,trail:▲,nbsp:▲
 endif
+if exists('+inccommand')
+  set inccommand=split
+endif
 "}}}
 " vimrc"{{{
 augroup vimgroup
