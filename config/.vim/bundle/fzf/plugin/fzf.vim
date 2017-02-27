@@ -322,7 +322,7 @@ function! s:execute_term(dict, command, temps)
 
   let fzf = { 'buf': bufnr('%'), 'dict': a:dict, 'temps': a:temps, 'name': 'FZF' }
   let s:command = a:command
-  function! fzf.on_exit(id, code)
+  function! fzf.on_exit(id, code, _event)
     let pos = s:getpos()
     let inplace = pos == s:ppos " {'window': 'enew'}
     if !inplace
