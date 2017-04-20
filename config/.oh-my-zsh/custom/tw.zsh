@@ -27,7 +27,7 @@ fi
 
 export GOROOT=~/goroot
 export GOPATH=~/golib
-cdpath=(${GOPATH}/src ${GOROOT}/src . $cdpath)
+cdpath=(. ${GOPATH}/src ${GOROOT}/src $cdpath)
 path=(~/MyRoot/bin ${GOROOT}/bin ${GOPATH}/bin $path)
 
 (( ${+commands[pt]} )) && export FZF_DEFAULT_COMMAND='pt -l -g ".*"'
