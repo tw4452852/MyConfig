@@ -197,9 +197,9 @@ augroup gogroup
   autocmd!
   autocmd BufWritePre *.go :silent Fmt "gofmt
   autocmd FileType go compiler go
-  autocmd FileType go nnoremap <buffer> <c-]> :call GodefUnderCursor(0)<cr>
-  autocmd FileType go nnoremap <buffer> <c-w><c-]> :call GodefUnderCursor(1)<cr>
-  autocmd FileType go nnoremap <buffer> <c-t> :call GodefBack()<cr>
+  autocmd FileType go nnoremap <buffer> <c-]> :silent call GodefUnderCursor(0)<cr>
+  autocmd FileType go nnoremap <buffer> <c-w><c-]> :silent call GodefUnderCursor(1)<cr>
+  autocmd FileType go nnoremap <buffer> <c-t> :silent call GodefBack()<cr>
   autocmd FileType go nnoremap <buffer> K :Godoc<cr>
   autocmd BufReadPost,BufNewFile *_test.go setlocal makeprg=go\ test\ -c
 augroup END
