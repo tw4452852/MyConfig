@@ -59,6 +59,7 @@ function! Godef(arg)
 			let g:quickfix_is_open = 1
 		else
 			cc 1
+			silent! colder
 		endif
     end
 
