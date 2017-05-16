@@ -29,40 +29,64 @@ endif
 
 
 if g:go_fmt_commands
-    command! -buffer Fmt call s:GoFormatWrapper()
+    command! -buffer Fmt call s:GoFormat()
 endif
 
-function! s:GoFormatWrapper()
-	try
-		execute "undojoin"
-		call s:GoFormat()
-	catch
-	endtry
-endf
+" update_file updates the target file with the given formatted source
+function! s:update_file(source, target)
+  " remove undo point caused via BufWritePre
+  try | silent undojoin | catch | endtry
+
+  let old_fileformat = &fileformat
+
+  call rename(a:source, a:target)
+
+  " reload buffer to reflect latest changes
+  silent! edit!
+
+  let &fileformat = old_fileformat
+  let &syntax = &syntax
+
+endfunction
+
+" parse_errors parses the given errors and returns a list of parsed errors
+function! s:parse_errors(filename, content) abort
+  let splitted = split(a:content, '\n')
+
+  " list of errors to be put into location list
+  let errors = []
+  for line in splitted
+    let tokens = matchlist(line, '^\(.\{-}\):\(\d\+\):\(\d\+\)\s*\(.*\)')
+    if !empty(tokens)
+      call add(errors,{
+            \"filename": a:filename,
+            \"lnum":     tokens[2],
+            \"col":      tokens[3],
+            \"text":     tokens[4],
+            \ })
+    endif
+  endfor
+
+  return errors
+endfunction
 
 function! s:GoFormat()
     let view = winsaveview()
-    silent %!gofmt -s
+    let l:tmpname = tempname()
+    call writefile(getline(1, '$'), l:tmpname)
+    let out = system("gofmt -s -w " . l:tmpname)
     if v:shell_error
-        let errors = []
-        for line in getline(1, line('$'))
-            let tokens = matchlist(line, '^\(.\{-}\):\(\d\+\):\(\d\+\)\s*\(.*\)')
-            if !empty(tokens)
-                call add(errors, {"filename": @%,
-                                 \"lnum":     tokens[2],
-                                 \"col":      tokens[3],
-                                 \"text":     tokens[4]})
-            endif
-        endfor
-        if empty(errors)
-            % | " Couldn't detect gofmt error format, output errors
-        endif
-        undo
+        let errors = s:parse_errors(expand('%'), out)
         if !empty(errors)
             call setloclist(0, errors, 'r')
+            lopen
         endif
         echohl Error | echomsg "Gofmt returned error" | echohl None
+    else
+        lclose
+        call s:update_file(l:tmpname, expand('%'))
     endif
+    call delete(l:tmpname)
     call winrestview(view)
 endfunction
 
