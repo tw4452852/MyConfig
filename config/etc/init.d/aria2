@@ -1,0 +1,7 @@
+#!/sbin/openrc-run
+
+pidfile="/var/run/aria2.pid"
+command="/usr/bin/aria2c"
+command_args="${ARIA2_OPTS}"
+command_background=true
+start_stop_daemon_args="-u tw:tw"
