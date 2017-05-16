@@ -318,7 +318,7 @@ function! scriptease#scriptname(file) abort
 endfunction
 
 function! scriptease#scriptid(filename) abort
-  let filename = fnamemodify(expand(a:filename), ':p')
+  let filename = resolve(fnamemodify(expand(a:filename), ':p'))
   for script in s:names()
     if script.filename ==# filename
       return +script.text
