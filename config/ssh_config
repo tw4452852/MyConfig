@@ -18,3 +18,8 @@ Host do
 Host al
 	Hostname 47.88.100.207
 	User root
+
+Host bw
+	Hostname 172.93.47.251
+	User root
+	Port 26479
