@@ -109,6 +109,7 @@ func! s:after()
   let &l:synmaxcol=s:synmaxcol_orig
   silent! let &l:foldmethod=s:fdm_orig
   silent! let &l:syntax=s:syntax_orig
+  if &l:syntax == '' | syntax clear | endif
   let &l:concealcursor=s:cc_orig
   let &l:conceallevel=s:cl_orig
   call s:restore_conceal_in_other_windows()
