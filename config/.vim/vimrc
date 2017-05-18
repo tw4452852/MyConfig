@@ -269,6 +269,8 @@ let g:netrw_http_xcmd= "-dump >"
 "vim-sneak"{{{
 "enable "clever s"
 let g:sneak#s_next = 1
+"enable label-mode
+let g:sneak#label = 1
 "replace 'f' with 1-char Sneak
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
@@ -283,6 +285,8 @@ xmap t <Plug>Sneak_t
 xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
+hi link Sneak SpellBad
+hi link SneakLabel SpellBad
 "}}}
 
 " vim: set foldmethod=marker et ts=2 sw=2:
