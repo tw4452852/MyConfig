@@ -192,6 +192,49 @@ my-vi-change() {
 }
 zle -N my-vi-change
 bindkey '\ec' my-vi-change
+
+# use <alt-g><alt-f/h> for git file status and commit
+is_in_git_repo() {
+  git rev-parse HEAD > /dev/null 2>&1
+}
+fzf-down() {
+  fzf --height 80% "$@" --border
+}
+gh() {
+  is_in_git_repo || return
+  git lg |
+  fzf-down --ansi --no-sort --reverse --multi \
+    --bind 'alt-j:preview-page-down,alt-k:preview-page-up' \
+    --header 'Press ALT-j/k for preview page down/up' \
+    --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always' |
+  grep -o "[a-f0-9]\{7,\}"
+}
+gf() {
+  is_in_git_repo || return
+  git -c color.status=always status --short |
+  fzf-down -m --ansi --nth 2..,.. \
+    --bind 'alt-j:preview-page-down,alt-k:preview-page-up' \
+    --header 'Press ALT-j/k for preview page down/up' \
+    --preview 'git diff --color=always -- {-1}' |
+  cut -c4- | sed 's/.* -> //'
+}
+join-lines() {
+  local item
+  while read item; do
+    echo -n "${(q)item} "
+  done
+}
+bind-git-helper() {
+  local char
+  for c in $@; do
+    eval "fzf-g$c-widget() { local result=\$(g$c | join-lines); zle reset-prompt; LBUFFER+=\$result }"
+    eval "zle -N fzf-g$c-widget"
+    eval "bindkey \"\eg\e$c\" fzf-g$c-widget"
+  done
+}
+bind-git-helper h f
+unset -f bind-git-helper
+
 #}}}
 
 # alias {{{
