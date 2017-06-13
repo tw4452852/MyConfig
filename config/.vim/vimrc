@@ -33,6 +33,7 @@ set backspace=indent,eol,start
 set laststatus=2
 set number
 set ignorecase
+set infercase
 set smartcase
 set gdefault
 set incsearch
