@@ -8,7 +8,25 @@ edit:history:binding[a-p] = edit:history:up
 edit:history:binding[a-n] = edit:history:down-or-quit
 
 # abbreviates
-edit:abbr['~A'] = ~/code/android/5.1/out/target/product/x86_64/
+edit:abbr['~A'] = ~/code/android/5.1
+edit:abbr['~T'] = ~/tmp
+edit:abbr['~P'] = ~/public/android/5.1
+
+# hooks
+edit:before-readline = [
+	{
+		# window's name
+		print "\033kelvish\033\\"
+	}
+]
+edit:after-readline = [
+	{
+		# window's name
+		print "\033k"(edit:wordify $@ | take 1)"\033\\"
+		# pannel's title
+		print "\033]2;"$@"\033\\"
+	}
+]
 
 # completion
 edit:-matcher[''] = { edit:match-prefix &smart-case=$true $@ }
