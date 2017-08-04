@@ -21,10 +21,24 @@ edit:before-readline = [
 ]
 edit:after-readline = [
 	{
-		# window's name
-		print "\033k"(edit:wordify $@ | take 1)"\033\\"
-		# pannel's title
-		print "\033]2;"$@"\033\\"
+		cmdline = $@
+		cmds = [(edit:wordify $cmdline)]
+		if (> (count $cmds) 0) {
+			cmd = $cmds[0]
+
+			# explore the real cmdline
+			if (==s $cmd fg) {
+				p = $cmds[1]
+				cmdline = (replaces (cat /proc/$p/cmdline)[:-1] "\x00" ' ')
+				cmds = [(edit:wordify $cmdline)]
+				cmd = (cat /proc/$p/comm)
+			}
+
+			# window's name
+			print "\033k"$cmd"\033\\"
+			# pannel's title
+			print "\033]2;"$cmdline"\033\\"
+		}
 	}
 ]
 
