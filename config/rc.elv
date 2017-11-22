@@ -1,3 +1,5 @@
+use re
+
 # key bindings
 edit:insert:binding[c-a] = edit:move-dot-sol
 edit:insert:binding[c-e] = edit:move-dot-eol
@@ -20,8 +22,7 @@ edit:before-readline = [
 	}
 ]
 edit:after-readline = [
-	{
-		cmdline = $@
+	[cmdline]{
 		cmds = [(edit:wordify $cmdline)]
 		if (> (count $cmds) 0) {
 			cmd = $cmds[0]
@@ -43,14 +44,12 @@ edit:after-readline = [
 ]
 
 # completion
-edit:-matcher[''] = { edit:match-prefix &smart-case=$true $@ }
+edit:-matcher[''] = [x]{ edit:match-prefix &smart-case=$true $x }
 
-use re
-edit:arg-completer[adb] = {
+edit:arg-completer[adb] = [@a]{
 	os = [-s -p]
 	cs = [put devices connect disconnect sync shell emu logcat forward help version wait-for-device start-server kill-server get-state get-serialno get-devpath status-window remount reboot reboot-bootloader root usb tcpip ppp reverse jdwp install uninstall bugreport backup restore disable-verity keygen push pull]
 
-	a = [$@]
 	n = (count $a)
 	hasCmd = $false
 
@@ -60,7 +59,7 @@ edit:arg-completer[adb] = {
 		if (==s $a[-1] -) {
 			put $@os
 		} elif (or (==s $a[-2] -s) (==s $a[-2] disconnect)) {
-			e:adb devices | eawk { if (or (==s $1 List) (==s $1 '')) { continue }; put $1 }
+			e:adb devices | eawk [@fields]{ if (or (==s $fields[1] List) (==s $fields[1] '')) { continue }; put $fields[1] }
 		} elif (re:match /system/ $a[-2]) {
 			re:find /system/ $a[-2] | each [x]{ put $a[-2][$x[start]:] }
 		} elif (not $hasCmd) {
@@ -72,3 +71,48 @@ edit:arg-completer[adb] = {
 		edit:complete-filename $@a
 	}
 }
+
+
+# Fetch list of valid git commands and aliases from git itself
+-git-cmds = [
+  ((resolve git) help -a | grep '^  [a-z]' | tr -s "[:blank:]" "\n" | each [x]{ if (> (count $x) 0) { put $x } })
+  ((resolve git) config --list | grep alias | sed 's/^alias\.//; s/=.*$//')
+]
+git-commands = [(echo &sep="\n" $@-git-cmds | sort)]
+
+# This allows $gitcmd to be a multi-word command and still be executed
+# correctly. We cannot simply run "$gitcmd <opts>" because Elvish always
+# interprets the first token (the head) to be the command.
+# One example of a multi-word $gitcmd is "vcsh <repo>", after which
+# any git subcommand is valid.
+fn -run-git-cmd [gitcmd @rest]{
+  gitcmds = [$gitcmd]
+  if (eq (kind-of $gitcmd) string) {
+    gitcmds = [(splits " " $gitcmd)]
+  }
+  if (> (count $gitcmds) 1) {
+    $gitcmds[0] (explode $gitcmds[1:]) $@rest
+  } else {
+    $gitcmds[0] $@rest
+  }
+}
+
+fn git-completer [gitcmd @rest]{
+  n = (count $rest)
+  if (eq $n 1) {
+    put $@git-commands
+  } else {
+    # From https://github.com/occivink/config/blob/master/.elvish/rc.elv
+    subcommand = $rest[0]
+    if (or (eq $subcommand add) (eq $subcommand stage) (eq $subcommand di)) {
+      -run-git-cmd $gitcmd diff --name-only
+      -run-git-cmd $gitcmd ls-files --others --exclude-standard
+    } elif (or (eq $subcommand checkout) (eq $subcommand co)) {
+      -run-git-cmd $gitcmd for-each-ref  --format="%(refname:short)"
+      -run-git-cmd $gitcmd diff --name-only
+    } elif (or (eq $subcommand mv) (eq $subcommand rm) (eq $subcommand diff)) {
+      -run-git-cmd $gitcmd ls-files
+    }
+  }
+}
+edit:arg-completer[git] = [@args]{ git-completer e:git (explode $args[1:]) }
