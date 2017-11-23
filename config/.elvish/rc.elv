@@ -4,8 +4,12 @@ edit:insert:binding[c-e] = edit:move-dot-eol
 edit:insert:binding[c-w] = edit:kill-word-left
 edit:insert:binding[a-w] = edit:kill-small-word-left
 edit:insert:binding[a-p] = edit:history:start
+# Alt-d to delete the word under the cursor
+edit:insert:binding[a-d] = { edit:move-dot-right-word; edit:kill-word-left }
+
 edit:history:binding[a-p] = edit:history:up
 edit:history:binding[a-n] = edit:history:down-or-quit
+
 
 # abbreviates
 edit:abbr['~A'] = /data/code/android/5.1
