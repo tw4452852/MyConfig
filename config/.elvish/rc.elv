@@ -46,3 +46,4 @@ edit:-matcher[''] = [x]{ edit:match-prefix &smart-case=$true $x }
 
 use completer:adb
 use completer:git
+use completer:ssh
