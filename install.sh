@@ -94,6 +94,12 @@ setup_config() {
 		fi
 		ln -sf ${TOP_DIR}/config/.dwm ${HOME_DIR}
 
+		# elvish stuff
+		mkdir -p ${HOME_DIR}/.elvish
+		for p in "${TOP_DIR}/config/.elvish/*" ; do
+			ln -sf ${p} ${HOME_DIR}/.elvish/
+		done
+
 		#bins
 		for mybin in $(find ${TOP_DIR}/bin/ -type f); do
 			ln -sf ${mybin} ${MYROOT}/bin/
