@@ -1,4 +1,32 @@
-# key bindings
+# environment variables#{{{
+E:LC_ALL = en_US.UTF-8
+E:GOROOT = ~/goroot
+E:GOPATH = ~/golib
+paths = [
+	~/MyRoot/bin
+	$E:GOROOT/bin
+	$E:GOPATH/bin
+	/bin
+	/usr/bin
+	/opt/bin
+]
+# prefer neovim
+if (has-external nvim) {
+	E:CSCOPE_EDITOR = nvim
+	E:EDITOR = nvim
+	E:MANPAGER = "nvim -c 'set ft=man' -"
+} elif (has-external vim) {
+	E:CSCOPE_EDITOR = vim
+	E:EDITOR = vim
+	E:MANPAGER = 'vim -R -'
+} else {
+	# leave as it is
+}
+if (has-external pt) {
+	E:FZF_DEFAULT_COMMAND = 'pt -l -g ".*"'
+}
+#}}}
+# key bindings#{{{
 edit:insert:binding[c-a] = edit:move-dot-sol
 edit:insert:binding[c-e] = edit:move-dot-eol
 edit:insert:binding[c-w] = edit:kill-word-left
@@ -9,14 +37,13 @@ edit:insert:binding[a-d] = { edit:move-dot-right-word; edit:kill-word-left }
 
 edit:history:binding[a-p] = edit:history:up
 edit:history:binding[a-n] = edit:history:down-or-quit
-
-
-# abbreviates
+#}}}
+# abbreviates#{{{
 edit:abbr['~A'] = /data/code/android/5.1
 edit:abbr['~T'] = ~/tmp
 edit:abbr['~P'] = ~/public/android/5.1
-
-# hooks
+#}}}
+# hooks#{{{
 edit:before-readline = [
 	{
 		# window's name
@@ -44,10 +71,12 @@ edit:after-readline = [
 		}
 	}
 ]
-
-# completion
+#}}}
+# completion#{{{
 edit:-matcher[''] = [x]{ edit:match-prefix &smart-case=$true $x }
 
 use completer:adb
 use completer:git
 use completer:ssh
+#}}}
+# vim: set fdm=marker sw=4 ts=4 ft=sh:
