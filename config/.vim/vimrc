@@ -201,6 +201,11 @@ augroup gogroup
   autocmd FileType go nnoremap <buffer> <c-w><c-]> :silent call GodefUnderCursor(1)<cr>
   autocmd FileType go nnoremap <buffer> <c-t> :silent call GodefBack()<cr>
   autocmd FileType go nnoremap <buffer> K :Godoc<cr>
+  autocmd FileType go nnoremap <buffer> <leader>gc :silent call Guru("callers")<cr>
+  autocmd FileType go nnoremap <buffer> <leader>gi :silent call Guru("implements")<cr>
+  autocmd FileType go nnoremap <buffer> <leader>gp :silent call Guru("peers")<cr>
+  autocmd FileType go nnoremap <buffer> <leader>gd :silent call Guru("describe")<cr>
+  autocmd FileType go nnoremap <buffer> <leader>gr :silent call Guru("referrers")<cr>
 augroup END
 "}}}
 " Markdown"{{{
