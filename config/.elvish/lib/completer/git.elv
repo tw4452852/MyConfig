@@ -35,7 +35,7 @@ fn -git-completer [gitcmd @rest]{
     } elif (or (eq $subcommand checkout) (eq $subcommand co)) {
       -run-git-cmd $gitcmd for-each-ref  --format="%(refname:short)"
       -run-git-cmd $gitcmd diff --name-only
-    } elif (or (eq $subcommand mv) (eq $subcommand rm) (eq $subcommand diff)) {
+    } elif (or (eq $subcommand mv) (eq $subcommand rm) (eq $subcommand diff) (eq $subcommand lg) (eq $subcommand log)) {
       -run-git-cmd $gitcmd ls-files
     }
   }
