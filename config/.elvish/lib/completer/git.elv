@@ -23,22 +23,35 @@ fn -run-git-cmd [gitcmd @rest]{
 }
 
 fn -git-completer [gitcmd @rest]{
-  n = (count $rest)
-  if (eq $n 1) {
-    put $@-git-commands
-  } else {
-    # From https://github.com/occivink/config/blob/master/.elvish/rc.elv
-    subcommand = $rest[0]
-    if (or (eq $subcommand add) (eq $subcommand stage) (eq $subcommand di)) {
-      -run-git-cmd $gitcmd diff --name-only
-      -run-git-cmd $gitcmd ls-files --others --exclude-standard
-    } elif (or (eq $subcommand checkout) (eq $subcommand co)) {
-      -run-git-cmd $gitcmd for-each-ref  --format="%(refname:short)"
-      -run-git-cmd $gitcmd diff --name-only
-    } elif (or (eq $subcommand mv) (eq $subcommand rm) (eq $subcommand diff) (eq $subcommand lg) (eq $subcommand log)) {
-      -run-git-cmd $gitcmd ls-files
-    }
-  }
+	n = (count $rest)
+	if (eq $n 1) {
+		put $@-git-commands
+	} else {
+		subcommand = $rest[0]
+
+		# only show refs
+		if (or (eq $subcommand push) (eq $subcommand pull) (eq $subcommand rebase) (eq $subcommand rb) (eq $subcommand branch) (eq $subcommand br)) {
+			-run-git-cmd $gitcmd for-each-ref  --format="%(refname:short)"
+			return
+		}
+
+		# only show files
+		if (or (eq $subcommand diff) (eq $subcommand di) (eq $subcommand mv) (eq $subcommand rm) (eq $subcommand add) (eq $subcommand stage) (eq $subcommand sa)) {
+			-run-git-cmd $gitcmd status --porcelain -s | peach [x]{ put [(splits " " $x[3:])][0] }
+			return
+		}
+
+		# only show refs and files
+		if (or (eq $subcommand checkout) (eq $subcommand co) (eq $subcommand log) (eq $subcommand lg)) {
+			-run-git-cmd $gitcmd for-each-ref  --format="%(refname:short)"
+			-run-git-cmd $gitcmd status --porcelain -s | peach [x]{ put [(splits " " $x[3:])][0] }
+			return
+		}
+
+		edit:complete-filename $@rest
+	}
 }
 
 edit:arg-completer[git] = [@args]{ -git-completer e:git (explode $args[1:]) }
+
+# vim: set fdm=marker sw=4 ts=4 ft=sh:
