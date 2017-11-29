@@ -11,4 +11,4 @@ export GTK_IM_MODULE="fcitx"
 export QT_IM_MODULE="fcitx"
 fcitx &
 
-exec twwm
+exec twwm 2>&1 1>~/.twwm.log
