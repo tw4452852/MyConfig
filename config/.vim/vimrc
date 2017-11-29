@@ -208,6 +208,7 @@ augroup gogroup
   autocmd FileType go nnoremap <buffer> <leader>gi :silent call Guru("implements")<cr>
   autocmd FileType go nnoremap <buffer> <leader>gp :silent call Guru("peers")<cr>
   autocmd FileType go nnoremap <buffer> <leader>gd :silent call Guru("describe")<cr>
+  autocmd FileType go nnoremap <buffer> <leader>gs :silent call Guru("callstack")<cr>
   autocmd FileType go nnoremap <buffer> <leader>gr :silent call Guru("referrers")<cr>
 augroup END
 "}}}
