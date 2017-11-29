@@ -57,6 +57,9 @@ endif
 if exists('+inccommand')
   set inccommand=split
 endif
+if &shell =~ "elvish"
+    set shellpipe=2>&1\|\ tee
+endif
 "}}}
 " vimrc"{{{
 augroup vimgroup
