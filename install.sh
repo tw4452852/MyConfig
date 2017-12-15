@@ -9,7 +9,7 @@ TOP_DIR="$(pwd)"
 HOME_DIR="$(cd ${HOME_DIR} && pwd)"
 MYROOT=${HOME_DIR}/MyRoot
 GOROOT=${HOME_DIR}/goroot
-GOPATH=${HOME_DIR}/golib
+GOPATH=${HOME_DIR}/go
 FONTS_DIR=${HOME_DIR}/.fonts
 FONTS_CONF_DIR=${HOME_DIR}/.config/fonconfig
 

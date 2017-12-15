@@ -1,7 +1,7 @@
 # environment variables#{{{
 E:LC_ALL = en_US.UTF-8
 E:GOROOT = ~/goroot
-E:GOPATH = ~/golib
+E:GOPATH = ~/go
 paths = [
 	~/MyRoot/bin
 	$E:GOROOT/bin
