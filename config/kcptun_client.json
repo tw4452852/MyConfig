@@ -1,0 +1,7 @@
+{
+	"localaddr": ":7777",
+	"remoteaddr": "xxx:7777",
+	"mode": "fast2",
+	"quiet": true,
+	"log": "/home/tw/.kcptun_client.log"
+}

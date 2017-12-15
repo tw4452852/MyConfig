@@ -1,0 +1,7 @@
+{
+	"target": "127.0.0.1:1311",
+	"listen": ":7777",
+	"mode": "fast2",
+	"quiet": true,
+	"log": "/root/.kcptun_server.log"
+}
