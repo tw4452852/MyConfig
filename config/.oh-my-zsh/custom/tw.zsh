@@ -26,7 +26,7 @@ else
 fi
 
 export GOROOT=~/goroot
-export GOPATH=~/golib
+export GOPATH=~/go
 cdpath=(. ${GOPATH}/src ${GOROOT}/src $cdpath)
 path=(~/MyRoot/bin ${GOROOT}/bin ${GOPATH}/bin $path)
 
