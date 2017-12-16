@@ -1,0 +1,4 @@
+# /etc/conf.d/kcptun-client: config file for /etc/init.d/kcptun-client
+
+kcptun_client_cmd="/home/tw/go/bin/kcptun_client"
+kcptun_client_opts="-c /home/tw/.config/kcptun/client.json"
