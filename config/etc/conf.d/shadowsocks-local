@@ -1,0 +1,4 @@
+# /etc/conf.d/shadowsocks-local: config file for /etc/init.d/shadowsocks-local
+
+shadowsocks_local_cmd="/home/tw/go/bin/shadowsocks-local"
+shadowsocks_local_opts="-c /home/tw/.config/ss/ss_config"
