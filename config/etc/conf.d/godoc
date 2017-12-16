@@ -1,0 +1,4 @@
+# /etc/conf.d/godoc: config file for /etc/init.d/godoc
+
+godoc_cmd="/home/tw/go/bin/godoc"
+godoc_opts="-http=:6060"
