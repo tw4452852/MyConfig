@@ -1,0 +1,7 @@
+#!/sbin/openrc-run
+
+pidfile="/var/run/godoc.pid"
+command=${godoc_cmd}
+command_args="${godoc_opts}"
+command_background=true
+start_stop_daemon_args="-u tw:tw"
