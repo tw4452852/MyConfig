@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+
+pidfile="/var/run/shadowsocks-local.pid"
+command=${shadowsocks_local_cmd}
+command_args="${shadowsocks_local_opts}"
+command_background=true
+start_stop_daemon_args="-u tw:tw"
+
+depend() {
+  need net
+  use kcptun
+}
