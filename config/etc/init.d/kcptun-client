@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+
+pidfile="/var/run/kcptun-client.pid"
+command=${kcptun_client_cmd}
+command_args="${kcptun_client_opts}"
+command_background=true
+start_stop_daemon_args="-u tw:tw"
+
+depend() {
+  need net
+  provide kcptun
+}
