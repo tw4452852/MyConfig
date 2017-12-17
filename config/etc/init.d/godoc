@@ -4,4 +4,4 @@ pidfile="/var/run/godoc.pid"
 command=${godoc_cmd}
 command_args="${godoc_opts}"
 command_background=true
-start_stop_daemon_args="-u tw:tw"
+start_stop_daemon_args="-u tw:tw -e GOPATH=/home/tw/go -e GOROOT=/home/tw/goroot"
