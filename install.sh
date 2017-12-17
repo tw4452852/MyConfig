@@ -113,7 +113,7 @@ setup_config() {
 
 		# local configs
 		mkdir -p ${LOCAL_CONFIG_DIR}
-		cp -r ${TOP_DIR}/config/.config/* ${LOCAL_CONFIG_DIR}/
+		cp -rn ${TOP_DIR}/config/.config/* ${LOCAL_CONFIG_DIR}/
 
 		export PKG_CONFIG_PATH=${MYROOT}/lib/pkgconfig/:$PKG_CONFIG_PATH
 		export PATH=${MYROOT}/bin/:$PATH
