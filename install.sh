@@ -11,7 +11,7 @@ MYROOT=${HOME_DIR}/MyRoot
 GOROOT=${HOME_DIR}/goroot
 GOPATH=${HOME_DIR}/go
 FONTS_DIR=${HOME_DIR}/.fonts
-FONTS_CONF_DIR=${HOME_DIR}/.config/fonconfig
+LOCAL_CONFIG_DIR=${HOME_DIR}/.config
 
 check_tools() {
 	echo ">>> test necessary tools ..."
@@ -106,12 +106,14 @@ setup_config() {
 		done
 
 		#font
-		mkdir -p ${FONTS_CONF_DIR}
-		ln -sf ${TOP_DIR}/config/.fonts.conf ${FONTS_CONF_DIR}
 		mkdir -p ${FONTS_DIR}
 		for f in "${TOP_DIR}/font/*"; do
 			ln -sf $f ${FONTS_DIR}
 		done
+
+		# local configs
+		mkdir -p ${LOCAL_CONFIG_DIR}
+		cp -r ${TOP_DIR}/config/.config/* ${LOCAL_CONFIG_DIR}/
 
 		export PKG_CONFIG_PATH=${MYROOT}/lib/pkgconfig/:$PKG_CONFIG_PATH
 		export PATH=${MYROOT}/bin/:$PATH
