@@ -1,7 +1,7 @@
 # Fetch list of valid git commands and aliases from git itself
 -git-cmds = [
-  ((resolve git) help -a | grep '^  [a-z]' | tr -s "[:blank:]" "\n" | each [x]{ if (> (count $x) 0) { put $x } })
-  ((resolve git) config --list | grep alias | sed 's/^alias\.//; s/=.*$//')
+  ( e:git help -a | grep '^  [a-z]' | tr -s "[:blank:]" "\n" | each [x]{ if (> (count $x) 0) { put $x } })
+  ( e:git config --list | grep alias | sed 's/^alias\.//; s/=.*$//')
 ]
 -git-commands = [(echo &sep="\n" $@-git-cmds | sort)]
 
@@ -52,6 +52,6 @@ fn -git-completer [gitcmd @rest]{
 	}
 }
 
-edit:arg-completer[git] = [@args]{ -git-completer e:git (explode $args[1:]) }
+edit:completion:arg-completer[git] = [@args]{ -git-completer e:git (explode $args[1:]) }
 
 # vim: set fdm=marker sw=4 ts=4 ft=sh:

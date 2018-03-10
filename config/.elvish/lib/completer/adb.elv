@@ -3,7 +3,7 @@ use re
 -adb-options = [-s -p]
 -adb-cmds = [put devices connect disconnect sync shell emu logcat forward help version wait-for-device start-server kill-server get-state get-serialno get-devpath status-window remount reboot reboot-bootloader root usb tcpip ppp reverse jdwp install uninstall bugreport backup restore disable-verity keygen push pull]
 
-edit:arg-completer[adb] = [@a]{
+edit:completion:arg-completer[adb] = [@a]{
 
 	n = (count $a)
 	hasCmd = $false
