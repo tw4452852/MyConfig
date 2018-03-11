@@ -47,7 +47,7 @@ edit:abbr['~P'] = ~/public/android/5.1
 edit:before-readline = [
 	{
 		# window's name
-		print "\033kelvish\033\\"
+		print "\033kelvish\033\\" > /dev/tty
 	}
 ]
 edit:after-readline = [
@@ -65,9 +65,9 @@ edit:after-readline = [
 			}
 
 			# window's name
-			print "\033k"$cmd"\033\\"
+			print "\033k"$cmd"\033\\" > /dev/tty
 			# pannel's title
-			print "\033]2;"$cmdline"\033\\"
+			print "\033]2;"$cmdline"\033\\" > /dev/tty
 		}
 	}
 ]
