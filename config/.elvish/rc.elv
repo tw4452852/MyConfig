@@ -74,6 +74,7 @@ edit:after-readline = [
 #}}}
 # completion#{{{
 edit:completion:matcher[''] = [x]{ edit:match-prefix &smart-case=$true $x }
+edit:location:matcher = [x]{ edit:location:match-dir-pattern &ignore-case=$true $x }
 
 use completer:adb
 use completer:git
