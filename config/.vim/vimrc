@@ -5,13 +5,14 @@ filetype plugin on
 filetype indent on
 set t_Co=256
 "set background=dark
-colorscheme nofrils-sepia
+let g:nofrils_heavycomments = 1
+colorscheme nofrils-acme
 if !has('win32') && !has('win64')
   set guifont=Source\ Code\ Pro\ 10
 else
   set guifont=Source_Code_Pro:h10
 endif
-syntax off
+syntax on
 set nocompatible
 set linebreak
 set textwidth=80
