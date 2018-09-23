@@ -9,6 +9,9 @@ Rxvt*foreground: Black
 Rxvt*background: rgba:ffff/ffff/d700/ffff
 Rxvt*cursorBlink: true
 
+! sync primary and clipboard section
+URxvt.perl-ext-common: selection-to-clipboard
+
 !! black dark/light
 *color0: #073642
 *color8: #002b36
