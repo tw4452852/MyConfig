@@ -76,8 +76,8 @@ edit:after-readline = [
 edit:completion:matcher[''] = [x]{ edit:match-prefix &smart-case=$true $x }
 edit:location:matcher = [x]{ edit:location:match-dir-pattern &ignore-case=$true $x }
 
-use completer:adb
-use completer:git
-use completer:ssh
+use completer/adb
+use completer/git
+use completer/ssh
 #}}}
 # vim: set fdm=marker sw=4 ts=4 ft=sh:
