@@ -11,4 +11,7 @@ export GTK_IM_MODULE="fcitx"
 export QT_IM_MODULE="fcitx"
 fcitx -r
 
+# screenlocker
+xautolock -locker 'xlock -mode blank' &
+
 exec twwm 1>~/.twwm.log 2>&1
