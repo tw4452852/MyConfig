@@ -60,6 +60,8 @@ function! Godef(arg)
 		else
 			cc 1
 			silent! colder
+			cclose
+			let g:quickfix_is_open = 0
 		endif
     end
 
