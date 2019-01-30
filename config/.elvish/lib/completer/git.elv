@@ -13,19 +13,29 @@ fn -git-completer [@args]{
 		subcommand = $args[1]
 
 		# only show refs
-		if (or (eq $subcommand push) (eq $subcommand pull) (eq $subcommand rebase) (eq $subcommand rb) (eq $subcommand branch) (eq $subcommand br)) {
+		if (or (eq $subcommand push) \
+			(eq $subcommand pull) \
+			(eq $subcommand rebase) (eq $subcommand rb) \
+			(eq $subcommand branch) (eq $subcommand br) \
+			(eq $subcommand cherry) \
+			(eq $subcommand cherry-pick)) {
 			e:git for-each-ref  --format="%(refname:short)"
 			return
 		}
 
 		# only show files
-		if (or (eq $subcommand diff) (eq $subcommand di) (eq $subcommand mv) (eq $subcommand rm) (eq $subcommand add) (eq $subcommand stage) (eq $subcommand sa)) {
+		if (or (eq $subcommand diff) (eq $subcommand di) \
+			(eq $subcommand mv) \
+			(eq $subcommand rm) \
+			(eq $subcommand add) \
+			(eq $subcommand stage) (eq $subcommand sa)) {
 			e:git status --porcelain -s | peach [x]{ put [(splits " " $x[3:])][0] }
 			return
 		}
 
 		# only show refs and files
-		if (or (eq $subcommand checkout) (eq $subcommand co) (eq $subcommand log) (eq $subcommand lg)) {
+		if (or (eq $subcommand checkout) (eq $subcommand co) \
+			(eq $subcommand log) (eq $subcommand lg)) {
 			e:git for-each-ref  --format="%(refname:short)"
 			e:git status --porcelain -s | peach [x]{ put [(splits " " $x[3:])][0] }
 			return
