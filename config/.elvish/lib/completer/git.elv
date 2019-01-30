@@ -38,10 +38,9 @@ fn -git-completer [@args]{
 			(eq $subcommand log) (eq $subcommand lg)) {
 			e:git for-each-ref  --format="%(refname:short)"
 			e:git status --porcelain -s | peach [x]{ put [(splits " " $x[3:])][0] }
-			return
 		}
 
-		edit:complete-filename $@args
+		edit:complete-filename $args[-1]
 	}
 }
 
