@@ -8,3 +8,5 @@ edit:completion:arg-completer[ssh] = [@cmd]{
 		}
 	}
 }
+
+# vim: set fdm=marker sw=4 ts=4 ft=sh:

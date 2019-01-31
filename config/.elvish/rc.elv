@@ -76,6 +76,7 @@ edit:after-readline = [
 edit:completion:matcher[''] = [x]{ edit:match-prefix &ignore-case=$true $x }
 edit:location:matcher = [x]{ edit:location:match-dir-pattern &ignore-case=$true $x }
 
+use completer/common
 use completer/adb
 use completer/git
 use completer/ssh
