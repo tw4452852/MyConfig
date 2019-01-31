@@ -27,3 +27,4 @@ edit:completion:arg-completer[adb] = [@a]{
 	}
 }
 
+# vim: set fdm=marker sw=4 ts=4 ft=sh:
