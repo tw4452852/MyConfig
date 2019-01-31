@@ -40,10 +40,10 @@ fn -git-completer [@args]{
 			e:git status --porcelain -s | peach [x]{ put [(splits " " $x[3:])][0] }
 		}
 
-		edit:complete-filename $args[-1]
+		edit:complete-filename $@args
 	}
 }
 
-edit:completion:arg-completer[git] = [@args]{ -git-completer $@args }
+edit:completion:arg-completer[git] = $-git-completer~
 
 # vim: set fdm=marker sw=4 ts=4 ft=sh:
