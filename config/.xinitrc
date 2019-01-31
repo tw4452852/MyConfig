@@ -14,4 +14,4 @@ fcitx -r
 # screenlocker
 xautolock -locker 'xlock -mode blank' &
 
-exec twwm 1>~/.twwm.log 2>&1
+exec ~/go/bin/twwm 1>~/.twwm.log 2>&1
