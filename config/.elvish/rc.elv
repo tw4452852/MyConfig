@@ -76,11 +76,11 @@ edit:after-readline = [
 edit:completion:matcher[''] = [x]{ edit:match-prefix &ignore-case=$true $x }
 edit:location:matcher = [x]{ edit:location:match-dir-pattern &ignore-case=$true $x }
 
-use completer/common
-use completer/adb
-
 use epm
 epm:install &silent-if-installed=$true github.com/zzamboni/elvish-completions
+
+use completer/common
+use completer/adb
 use github.com/zzamboni/elvish-completions/git
 use github.com/zzamboni/elvish-completions/ssh
 use github.com/zzamboni/elvish-completions/cd
