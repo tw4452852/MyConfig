@@ -78,7 +78,13 @@ edit:location:matcher = [x]{ edit:location:match-dir-pattern &ignore-case=$true 
 
 use completer/common
 use completer/adb
-use completer/git
-use completer/ssh
+
+use epm
+epm:install &silent-if-installed=$true github.com/zzamboni/elvish-completions
+use github.com/zzamboni/elvish-completions/git
+use github.com/zzamboni/elvish-completions/ssh
+use github.com/zzamboni/elvish-completions/cd
+use github.com/zzamboni/elvish-completions/builtins
+
 #}}}
 # vim: set fdm=marker sw=4 ts=4 ft=sh:
