@@ -71,6 +71,13 @@ edit:after-readline = [
 		}
 	}
 ]
+
+# pin previous cwp to facilitate jumping back
+before-chdir = [
+	[_]{
+		edit:location:pinned = [$pwd]
+	}
+]
 #}}}
 # completion#{{{
 edit:completion:matcher[''] = [x]{ edit:match-prefix &ignore-case=$true $x }
