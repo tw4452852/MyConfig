@@ -2,13 +2,15 @@
 E:LC_ALL = en_US.UTF-8
 E:GOROOT = ~/goroot
 E:GOPATH = ~/go
-paths = [
+each [p]{
+	if (not (has-value $paths $p)) {
+		paths = [ $@paths $p ]
+	}
+} [
 	~/MyRoot/bin
 	$E:GOROOT/bin
 	$E:GOPATH/bin
-	/bin
-	/usr/bin
-	/opt/bin
+	~/.local/bin
 ]
 # prefer neovim
 if (has-external nvim) {
