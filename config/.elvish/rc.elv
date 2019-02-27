@@ -45,11 +45,13 @@ edit:abbr['~A'] = /data/code/android/5.1
 edit:abbr['~T'] = ~/tmp
 edit:abbr['~P'] = ~/public/android/5.1
 #}}}
+
+tmux_window_id = (tmux display-message -p '#I')
 # hooks#{{{
 edit:before-readline = [
 	{
 		# window's name
-		tmux rename-window elvish
+		tmux rename-window -t $tmux_window_id elvish
 	}
 ]
 edit:after-readline = [
@@ -67,7 +69,7 @@ edit:after-readline = [
 			}
 
 			# window's name
-			tmux rename-window $cmd
+			tmux rename-window -t $tmux_window_id $cmd
 			# pannel's title
 			tmux select-pane -T $cmdline
 		}
