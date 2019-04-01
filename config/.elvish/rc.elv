@@ -28,6 +28,9 @@ if (has-external pt) {
 	E:FZF_DEFAULT_COMMAND = 'pt -l -g ".*"'
 }
 #}}}
+fn l [@args]{
+	ls --color $@args
+}
 # key bindings#{{{
 edit:insert:binding[c-a] = $edit:move-dot-sol~
 edit:insert:binding[c-e] = $edit:move-dot-eol~
