@@ -82,7 +82,7 @@ setup_config() {
 		ln -sf ${TOP_DIR}/config/.xinitrc ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.Xresources ${HOME_DIR}
 		ln -Pf ${TOP_DIR}/config/.procmailrc ${HOME_DIR}
-		ln -Pf ${TOP_DIR}/config/.muttrc ${HOME_DIR}
+		ln -sf ${TOP_DIR}/config/.mutt ${HOME_DIR}
 		ln -Pf ${TOP_DIR}/config/.fetchmailrc ${HOME_DIR}
 		ln -sf ${TOP_DIR}/config/.autoload.sh ${HOME_DIR}
 		if [[ -d ${HOME_DIR}/.autoload.d ]]; then
