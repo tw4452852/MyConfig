@@ -20,6 +20,6 @@ Host al
 	User root
 
 Host bw
-	Hostname 172.93.47.251
+	Hostname 172.93.47.222
 	User root
 	Port 26479
