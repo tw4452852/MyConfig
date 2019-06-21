@@ -199,6 +199,14 @@ endif
 " Go"{{{
 augroup gogroup
   autocmd!
+  if executable('gopls')
+    autocmd User lsp_setup call lsp#register_server({
+          \ 'name': 'go-lang',
+          \ 'cmd': {server_info->['gopls']},
+          \ 'whitelist': ['go'],
+          \ })
+    autocmd FileType go setlocal omnifunc=lsp#complete
+  endif
   autocmd BufWritePre *.go :silent Fmt "gofmt
   autocmd FileType go compiler go
   autocmd FileType go nnoremap <buffer> <c-]> :silent call GodefUnderCursor(0)<cr>
