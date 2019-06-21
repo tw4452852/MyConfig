@@ -298,5 +298,19 @@ omap T <Plug>Sneak_T
 hi link Sneak SpellBad
 hi link SneakLabel SpellBad
 "}}}
-
+"LspC"{{{
+if executable('ccls')
+  augroup LspC
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+      \ 'initialization_options': {},
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+      \ })
+    autocmd FileType c,cpp setlocal omnifunc=lsp#complete
+  augroup END
+endif
+"}}}
 " vim: set foldmethod=marker et ts=2 sw=2:
