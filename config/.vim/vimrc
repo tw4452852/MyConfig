@@ -152,6 +152,15 @@ cnoremap w!! w !sudo tee % >/dev/null
 "}}}
 "}}}
 " Plugin-specific settings
+" language server{{{
+augroup lsgroup
+  autocmd!
+  autocmd User lsp_setup nmap <leader>ld <plug>(lsp-definition)
+  autocmd User lsp_setup nmap <leader>lr <plug>(lsp-references)
+  autocmd User lsp_setup nmap <leader>lh <plug>(lsp-hover)
+  autocmd User lsp_setup setlocal omnifunc=lsp#complete
+augroup END
+"}}}
 " FZF"{{{
 nnoremap <leader>zf :FZF<cr>
 " List of buffers
@@ -205,7 +214,6 @@ augroup gogroup
           \ 'cmd': {server_info->['gopls']},
           \ 'whitelist': ['go'],
           \ })
-    autocmd FileType go setlocal omnifunc=lsp#complete
   endif
   autocmd BufWritePre *.go :silent Fmt "gofmt
   autocmd FileType go compiler go
@@ -317,7 +325,6 @@ if executable('ccls')
       \ 'initialization_options': {},
       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
       \ })
-    autocmd FileType c,cpp setlocal omnifunc=lsp#complete
   augroup END
 endif
 "}}}
