@@ -145,6 +145,11 @@ function! QickfixToggle()
     let g:quickfix_is_open = 1
   endif
 endfunction
+augroup qf
+  autocmd!
+  autocmd QuickFixCmdPost [^l]* cw | let g:quickfix_is_open=1
+  autocmd BufWinEnter quickfix let g:quickfix_is_open=1
+augroup END
 "}}}
 "tw's self cmd"{{{
 nnoremap <leader>gb :execute "!tw_blame -l " . line(".") . " -p " . expand("%:p")<cr>
@@ -284,10 +289,6 @@ endif
 if executable('pt')
   set grepprg=pt
 endif
-augroup grepgroup
-  autocmd!
-  autocmd QuickFixCmdPost [^l]* cw | let g:quickfix_is_open=1
-augroup END
 "}}}
 "netrw"{{{
 let g:netrw_http_xcmd= "-dump >"
