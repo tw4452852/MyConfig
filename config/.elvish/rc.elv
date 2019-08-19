@@ -8,6 +8,7 @@ each [p]{
 	}
 } [
 	~/MyRoot/bin
+	~/MyRoot/usr/bin
 	$E:GOROOT/bin
 	$E:GOPATH/bin
 	~/.local/bin
