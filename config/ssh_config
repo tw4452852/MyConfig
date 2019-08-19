@@ -23,3 +23,7 @@ Host bw
 	Hostname 172.93.47.222
 	User root
 	Port 26479
+
+Host vm
+	Hostname 107.173.255.134
+	User root
