@@ -1,0 +1,28 @@
+# Show relative line number
+add-highlighter global/number-lines number-lines -relative -hlcursor -separator ' '
+# Show matching paris
+add-highlighter global/show-matching show-matching
+# Wrap on word boundary
+add-highlighter global/wrap wrap -word -indent -marker "↳ "
+# Tabs using 4 spaces by default
+set-option global tabstop 4
+# Shortcut to edit kakrc
+define-command kakrc -docstring "Edit kakrc" %{
+    edit "%val{config}/kakrc"
+}
+# Highlight current search content
+add-highlighter global/ dynregex '%reg{/}' 0:default,+u
+# Pathogen proliferation
+source "%val{config}/pathogen.kak/rc/pathogen.kak"
+# Define ide command for basic IDE layout
+pathogen-infect "%val{config}/ide"
+# Echo mode
+pathogen-infect "%val{config}/echo"
+# Sudo write
+pathogen-infect "%val{config}/sudo"
+# Gtag mode
+pathogen-infect "%val{config}/gtag"
+# Show difference between buf and file
+pathogen-infect "%val{config}/diff"
+# Readline shortcuts in insert mode
+pathogen-infect "%val{config}/readline"

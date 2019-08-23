@@ -13,3 +13,6 @@
 [submodule "submodules/dwm"]
 	path = submodules/dwm
 	url = git://git.suckless.org/dwm
+[submodule "config/.config/kak/pathogen.kak"]
+	path = config/.config/kak/pathogen.kak
+	url = https://github.com/alexherbo2/pathogen.kak
