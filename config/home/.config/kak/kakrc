@@ -28,3 +28,5 @@ pathogen-infect "%val{config}/gtag"
 pathogen-infect "%val{config}/diff"
 # Readline shortcuts in insert mode
 pathogen-infect "%val{config}/readline"
+# Comment mode
+pathogen-infect "%val{config}/comment"
