@@ -12,6 +12,8 @@ set-option global modelinefmt '%val{bufname} %val{cursor_line}/%val{buf_line_cou
 define-command kakrc -docstring "Edit kakrc" %{
     edit "%val{config}/kakrc"
 }
+# Mimic vim's '#' key
+map -docstring "search word under current cursor" global normal <#> <a-i>w*n
 # Highlight current search content
 add-highlighter global/ dynregex '%reg{/}' 0:default,+u
 # Pathogen proliferation
