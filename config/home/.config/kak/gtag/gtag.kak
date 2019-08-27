@@ -15,10 +15,14 @@ define-command -hidden -params 1.. gtag-impl %{ evaluate-commands %sh{
                edit! -fifo ${output} -scroll *gtag*
                set-option buffer filetype gtag
                set-option buffer gtag_current_line 0
-               hook -always -once buffer BufCloseFifo .* %{
-                   nop %sh{ rm -r $(dirname ${output}) }
-                   gtag-next-match
-               }
+               hook -always -once buffer BufCloseFifo .* %{ evaluate-commands %sh{
+                   rm -r $(dirname ${output})
+                   if [ \${kak_buf_line_count} -gt 2 ]; then
+                   		echo nop
+                   else
+                   		echo gtag-next-match
+                   fi
+               }}
            }"
 }}
 
