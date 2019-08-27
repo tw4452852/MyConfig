@@ -48,7 +48,7 @@ define-command -params 1 \
 
 hook -group gtag-highlight global WinSetOption filetype=gtag %{
     add-highlighter window/gtag group
-    add-highlighter window/gtag/ regex "^(\S+)\s+(\d+) (\S+)\s+(.*)$" 1:cyan 2:green 3:green
+    add-highlighter window/gtag/ regex "^\S+\s+(\d+) (\S+)" 1:green 2:cyan
     add-highlighter window/gtag/ line %{%opt{gtag_current_line}} default+b
     hook -once -always window WinSetOption filetype=.* %{ remove-highlighter window/gtag }
 }
