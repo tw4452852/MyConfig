@@ -17,10 +17,10 @@ define-command -hidden -params 1.. gtag-impl %{ evaluate-commands %sh{
                set-option buffer grep_current_line 0
                hook -always -once buffer BufCloseFifo .* %{ evaluate-commands %sh{
                    rm -r $(dirname ${output})
-                   if [ \${kak_buf_line_count} -gt 2 ]; then
-                   		echo nop
-                   else
+                   if [ \${kak_buf_line_count} -eq 2 ]; then
                    		echo grep-next-match
+                   else
+                   		echo nop
                    fi
                }}
            }"
