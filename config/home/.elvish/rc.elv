@@ -14,7 +14,9 @@ each [p]{
 	~/.local/bin
 ]
 # prefer neovim
-if (has-external nvim) {
+if (has-external kak) {
+	E:EDITOR = kak
+} elif (has-external nvim) {
 	E:CSCOPE_EDITOR = nvim
 	E:EDITOR = nvim
 	E:MANPAGER = "nvim -c 'set ft=man' -"
