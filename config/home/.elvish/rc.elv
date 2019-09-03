@@ -30,6 +30,7 @@ if (has-external kak) {
 if (has-external pt) {
 	E:FZF_DEFAULT_COMMAND = 'pt -l -g ".*"'
 }
+E:MANPATH = $E:MANPATH:{~}/MyRoot/usr/share/man
 #}}}
 fn l [@args]{
 	ls --color $@args
