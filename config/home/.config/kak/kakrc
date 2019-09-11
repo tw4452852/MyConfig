@@ -14,6 +14,8 @@ define-command kakrc -docstring "Edit kakrc" %{
 }
 # Mimic vim's '#' key
 map -docstring "search word under current cursor" global normal <#> <a-i>w*n
+# User mappings
+map -docstring "write" global user w ': w<ret>'
 # Highlight current search content
 add-highlighter global/ dynregex '%reg{/}' 0:default,+u
 # Pathogen proliferation
