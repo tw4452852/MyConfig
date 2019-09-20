@@ -38,3 +38,5 @@ pathogen-infect "%val{config}/readline"
 pathogen-infect "%val{config}/comment"
 # Focus mode
 pathogen-infect "%val{config}/focus"
+# youdao-translation
+pathogen-infect "%val{config}/youdao"
