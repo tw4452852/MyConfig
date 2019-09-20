@@ -14,6 +14,8 @@ define-command kakrc -docstring "Edit kakrc" %{
 }
 # Mimic vim's '#' key
 map -docstring "search word under current cursor" global normal <#> <a-i>w*n
+# Clear current search register
+map -docstring "clear current search register" global user <space> ": reg '/' ''<ret>"
 # User mappings
 map -docstring "write" global user w ': w<ret>'
 # Highlight current search content
