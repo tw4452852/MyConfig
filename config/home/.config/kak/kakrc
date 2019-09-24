@@ -40,5 +40,7 @@ pathogen-infect "%val{config}/comment"
 pathogen-infect "%val{config}/focus"
 # youdao-translation
 pathogen-infect "%val{config}/youdao"
+# Golang
+pathogen-infect "%val{config}/go"
 # Makefile mode
 pathogen-infect "%val{config}/make"
