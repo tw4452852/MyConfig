@@ -1,3 +1,4 @@
+set-option global makecmd 'make -j8'
 declare-user-mode make
 
 map global make ] ': make-next-error<ret>'              -docstring 'next error'
