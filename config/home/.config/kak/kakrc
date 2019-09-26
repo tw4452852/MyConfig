@@ -1,5 +1,9 @@
-# Show relative line number
+# Show relative line number for main client
 add-highlighter global/number-lines number-lines -relative -hlcursor -separator ' '
+# absolute line number for tool&doc clients
+hook global WinCreate \*.* %{
+    add-highlighter window/number-lines number-lines -hlcursor -separator ' '
+}
 # Show matching paris
 add-highlighter global/show-matching show-matching
 # Wrap on word boundary
