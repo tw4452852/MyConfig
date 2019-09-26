@@ -13,7 +13,7 @@ define-command kakrc -docstring "Edit kakrc" %{
     edit "%val{config}/kakrc"
 }
 # Mimic vim's '#' key
-map -docstring "search word under current cursor" global normal <#> <a-i>w*n
+map -docstring "search word under current cursor" global normal <#> <a-i>w*
 # Clear current search register
 map -docstring "clear current search register" global user <space> ": reg '/' ''<ret>jk"
 # User mappings
