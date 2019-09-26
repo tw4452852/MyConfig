@@ -48,3 +48,5 @@ pathogen-infect "%val{config}/youdao"
 pathogen-infect "%val{config}/go"
 # Makefile mode
 pathogen-infect "%val{config}/make"
+# Tool client jump
+pathogen-infect "%val{config}/tj"
