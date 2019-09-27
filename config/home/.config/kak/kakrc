@@ -1,8 +1,10 @@
-# Show relative line number for main client
-add-highlighter global/number-lines number-lines -relative -hlcursor -separator ' '
-# absolute line number for tool&doc clients
-hook global WinCreate \*.* %{
-    add-highlighter window/number-lines number-lines -hlcursor -separator ' '
+# Show absolute line number by default
+add-highlighter global/number-lines number-lines -hlcursor -separator ' '
+hook global WinCreate [^*].* %{
+    # Show relative line number for main client
+    add-highlighter window/number-lines number-lines -relative -hlcursor -separator ' '
+    # Highlight trailing space
+    add-highlighter window/space regex \h+$ 0:default,magenta
 }
 # Show matching paris
 add-highlighter global/show-matching show-matching
