@@ -1,3 +1,5 @@
+# No syntax highlight color scheme
+colorscheme nofrils-acme
 # Show absolute line number by default
 add-highlighter global/number-lines number-lines -hlcursor -separator ' '
 hook global WinCreate [^*].* %{
