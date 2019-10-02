@@ -81,7 +81,6 @@ map global guru ] ': guru-next-match<ret>'              -docstring "jump to next
  
 
 hook global BufSetOption filetype=go %{
-    echo -debug "BufferSetOption"
     set-option global make_error_pattern ''
     set-option buffer makecmd 'go build'
     map buffer user g ': enter-user-mode guru<ret>' -docstring 'guru mode'
