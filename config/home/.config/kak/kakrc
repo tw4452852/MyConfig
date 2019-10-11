@@ -26,6 +26,7 @@ map -docstring "search word under current cursor" global normal <#> <a-i>w*
 map -docstring "clear current search register" global user <space> ": reg '/' ''<ret>jk"
 # User mappings
 map -docstring "write" global user w ': w<ret>'
+map -docstring "quit" global user q ': q<ret>'
 # Highlight current search content
 add-highlighter global/search dynregex '%reg{/}' 0:default,+bi
 # Pathogen proliferation
