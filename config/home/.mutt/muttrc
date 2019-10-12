@@ -1,9 +1,17 @@
-set folder = "imap://outlooksh.intel.com/"
+set mbox_type = Maildir
+set folder = ~/Maildir/intel/
 set spoolfile = +INBOX
+set postponed = +Drafts
+set record = +Sent
+#mailboxes +INBOX +INBOX/acrn-user-ml +INBOX/acrn-dev-ml
 
-set imap_check_subscribed
-set imap_user = 'weitan1'
-set imap_pass = '2wsx#EDC'
+# NOTMUCH
+set nm_default_uri = "notmuch:///home/tw/Maildir/intel"
+virtual-mailboxes "inbox"     "notmuch://?query=folder:INBOX"
+virtual-mailboxes "acrn-dev"  "notmuch://?query=tag:acrn-dev"
+virtual-mailboxes "acrn-user" "notmuch://?query=tag:acrn-user"
+macro index c "<change-vfolder>?" "Change to vfolder overview"
+macro index \\\\ "<vfolder-from-query>" "Search mailbox"
 
 # Store message headers locally to speed things up.
 # If hcache is a folder, Mutt will create sub cache folders for each account which may speeds things up even more.
