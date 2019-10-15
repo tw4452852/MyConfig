@@ -55,3 +55,5 @@ pathogen-infect "%val{config}/go"
 pathogen-infect "%val{config}/make"
 # Tool client jump
 pathogen-infect "%val{config}/tj"
+# Notmuch
+pathogen-infect "%val{config}/notmuch"
