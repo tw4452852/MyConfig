@@ -20,15 +20,9 @@ set-option global modelinefmt '%val{bufname} %val{cursor_line}/%val{buf_line_cou
 define-command kakrc -docstring "Edit kakrc" %{
     edit "%val{config}/kakrc"
 }
-# Mimic vim's '#' key
-map -docstring "search word under current cursor" global normal <#> <a-i>w*
-# Clear current search register
-map -docstring "clear current search register" global user <space> ": reg '/' ''<ret>jk"
 # User mappings
 map -docstring "write" global user w ': w<ret>'
 map -docstring "quit" global user q ': q<ret>'
-# Highlight current search content
-add-highlighter global/search dynregex '%reg{/}' 0:default,+bi
 # Pathogen proliferation
 source "%val{config}/pathogen/pathogen.kak"
 # Define ide command for basic IDE layout
@@ -57,3 +51,5 @@ pathogen-infect "%val{config}/make"
 pathogen-infect "%val{config}/tj"
 # Notmuch
 pathogen-infect "%val{config}/notmuch"
+# Search
+pathogen-infect "%val{config}/search"
