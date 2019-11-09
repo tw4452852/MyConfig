@@ -9,11 +9,11 @@ GOPATH="${HOME_DIR}/go"
 
 recursive_link() {
 	# directories first
-	cd "$1" && find -type d -exec sh -c "[ ! -e \"$2/{}\" ] && ln -sv \"$1/{}\" \"$2/{}\"" \;
+	cd "$1" && find . -type d -exec sh -c "[ ! -e \"$2/{}\" ] && ln -sv \"$1/{}\" \"$2/{}\"" \;
 	# links then
-	cd "$1" && find -type l -exec sh -c "[ ! -e \"$2/{}\" ] && ln -sv \"$1/{}\" \"$2/{}\"" \;
+	cd "$1" && find . -type l -exec sh -c "[ ! -e \"$2/{}\" ] && ln -sv \"$1/{}\" \"$2/{}\"" \;
 	# files at last
-	cd "$1" && find -type f -exec sh -c "[ ! -e \"$2/{}\" ] && ln -sv \"$1/{}\" \"$2/{}\"" \;
+	cd "$1" && find . -type f -exec sh -c "[ ! -e \"$2/{}\" ] && ln -sv \"$1/{}\" \"$2/{}\"" \;
 }
 
 echo "install configuration... "
