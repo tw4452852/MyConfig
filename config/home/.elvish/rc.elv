@@ -38,11 +38,11 @@ fn l [@args]{
 # key bindings#{{{
 edit:insert:binding[c-a] = $edit:move-dot-sol~
 edit:insert:binding[c-e] = $edit:move-dot-eol~
-edit:insert:binding[c-w] = $edit:kill-word-left~
 edit:insert:binding[a-w] = $edit:kill-small-word-left~
 edit:insert:binding[a-p] = $edit:history:start~
 # Alt-d to delete the word under the cursor
 edit:insert:binding[a-d] = { edit:move-dot-right-word; edit:kill-word-left }
+edit:insert:binding[c-x] = { edit:-instant:start }
 
 edit:history:binding[a-p] = $edit:history:up~
 edit:history:binding[a-n] = $edit:history:down-or-quit~
@@ -92,7 +92,6 @@ before-chdir = [
 #}}}
 # completion#{{{
 edit:completion:matcher[''] = [x]{ edit:match-prefix &ignore-case=$true $x }
-edit:location:matcher = [x]{ edit:location:match-dir-pattern &ignore-case=$true $x }
 
 use epm
 epm:install &silent-if-installed=$true github.com/zzamboni/elvish-completions
