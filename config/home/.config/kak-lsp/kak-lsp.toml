@@ -61,9 +61,9 @@ offset_encoding = "utf-8"
 
 [language.c_cpp]
 filetypes = ["c", "cpp"]
-roots = ["compile_commands.json", ".cquery"]
-command = "cquery"
-args = ["--init={\"cacheDirectory\":\"/tmp/cquery\",\"highlight\":{\"enabled\":true}}"]
+roots = ["compile_commands.json", ".ccls-root"]
+command = "ccls"
+args = ["--init={\"completion\":{\"detailedLabel\":false}}"]
 
 [language.haskell]
 filetypes = ["haskell"]
