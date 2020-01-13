@@ -98,6 +98,7 @@ epm:install &silent-if-installed=$true github.com/zzamboni/elvish-completions
 
 use completer/common
 use completer/adb
+use completer/sudo
 use github.com/zzamboni/elvish-completions/git
 use github.com/zzamboni/elvish-completions/ssh
 use github.com/zzamboni/elvish-completions/cd
