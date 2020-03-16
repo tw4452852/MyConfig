@@ -1,7 +1,7 @@
 # For Code
 face global attribute rgb:000000
 face global builtin rgb:000000
-face global comment rgb:af8700
+face global comment rgb:005f00
 face global function rgb:000000
 face global keyword rgb:000000
 face global meta rgb:000000
