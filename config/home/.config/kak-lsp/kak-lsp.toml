@@ -86,7 +86,8 @@ args = ["start"]
 [language.dart]
 filetypes = ["dart"]
 roots = ["pubspec.yaml", ".git"]
-command = "dart_language_server"
+command = "sh"
+args = ["-c", "dart $(dirname $(which dart))/snapshots/analysis_server.dart.snapshot --lsp"]
 
 [language.d]
 filetypes = ["d", "di"]

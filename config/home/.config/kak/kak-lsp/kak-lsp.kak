@@ -1,5 +1,5 @@
 eval %sh{kak-lsp --kakoune -s $kak_session}
-hook global WinSetOption filetype=(go|c|cpp) %{
+hook global WinSetOption filetype=(go|c|cpp|dart) %{
         lsp-enable-window
 }
 

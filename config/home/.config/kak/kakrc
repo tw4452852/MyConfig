@@ -57,3 +57,5 @@ pathogen-infect "%val{config}/notmuch"
 pathogen-infect "%val{config}/search"
 # Kak-lsp
 pathogen-infect "%val{config}/kak-lsp"
+# Dart
+pathogen-infect "%val{config}/dart"
