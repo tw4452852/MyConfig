@@ -34,9 +34,16 @@ define-command -hidden flutter-hot-restart %{
 	}
 }
 
+define-command -hidden flutter-format %{
+	nop %sh{
+		flutter format .
+	}
+}
+
 declare-user-mode flutter
 map global flutter r ': flutter-hot-reload<ret>' -docstring "reload"
 map global flutter R ': flutter-hot-restart<ret>' -docstring "restart"
+map global flutter f ': flutter-format<ret>' -docstring "format"
 
 hook global KakBegin .* %{
 	evaluate-commands %sh{
