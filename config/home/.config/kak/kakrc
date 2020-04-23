@@ -41,8 +41,8 @@ pathogen-infect "%val{config}/diff"
 pathogen-infect "%val{config}/readline"
 # Comment mode
 pathogen-infect "%val{config}/comment"
-# Focus mode
-pathogen-infect "%val{config}/focus"
+# Swtich focus
+pathogen-infect "%val{config}/switch"
 # youdao-translation
 pathogen-infect "%val{config}/youdao"
 # Golang
