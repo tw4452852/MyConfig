@@ -59,3 +59,5 @@ pathogen-infect "%val{config}/search"
 pathogen-infect "%val{config}/kak-lsp"
 # Dart
 pathogen-infect "%val{config}/dart"
+# Flutter
+pathogen-infect "%val{config}/flutter"
