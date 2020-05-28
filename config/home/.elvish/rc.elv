@@ -2,6 +2,9 @@
 E:LC_ALL = en_US.UTF-8
 E:GOROOT = ~/goroot
 E:GOPATH = ~/go
+E:FLUTTER_SDK = ~/code/flutter
+E:ANDROID_SDK_ROOT = ~/android-sdk
+E:CHROME_EXECUTABLE = google-chrome-stable
 each [p]{
 	if (not (has-value $paths $p)) {
 		paths = [ $@paths $p ]
@@ -12,6 +15,8 @@ each [p]{
 	$E:GOROOT/bin
 	$E:GOPATH/bin
 	~/.local/bin
+	$E:FLUTTER_SDK/bin
+
 ]
 # prefer neovim
 if (has-external kak) {
