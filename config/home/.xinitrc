@@ -5,11 +5,13 @@ fc-cache -vf
 # Load myself config
 xrdb ~/.Xresources
 
+eval "$(dbus-launch --sh-syntax --exit-with-session)"
+
 # ibus
 export XMODIFIERS="@im=fcitx"
-export GTK_IM_MODULE="fcitx"
-export QT_IM_MODULE="fcitx"
-fcitx -r
+export GTK_IM_MODULE="fcitx5"
+export QT_IM_MODULE="fcitx5"
+fcitx5 -r -d
 
 # screenlocker
 xautolock -locker 'xlock -mode blank' &
