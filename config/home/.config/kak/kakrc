@@ -61,3 +61,5 @@ pathogen-infect "%val{config}/kak-lsp"
 pathogen-infect "%val{config}/dart"
 # Flutter
 pathogen-infect "%val{config}/flutter"
+# Snippets
+pathogen-infect "%val{config}/kak-snippets"

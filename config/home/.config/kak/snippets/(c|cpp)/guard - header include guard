@@ -1,0 +1,4 @@
+#ifndef ${1:__GUARD__}
+#define $1
+${0:/* body */}
+#endif /* $1 */
