@@ -122,9 +122,11 @@ hook global WinSetOption 'snippets_auto_expand=true$' %{
     }
 }
 
+
+
 decl str-list snippets
 # this one must be declared after the hook, otherwise it might not be enabled right away
-decl bool snippets_auto_expand true
+decl bool snippets_auto_expand false
 
 def snippets-impl -hidden -params 1.. %{
     eval %sh{
@@ -383,3 +385,7 @@ def snippets-select-next-placeholders %{
         printf "select %s\n" "$selections"
     }
 }
+
+map global insert <a-ret> '<esc>b: snippets-expand-trigger<ret>'
+map global insert <a-=> '<esc>: snippets-select-next-placeholders<ret>'
+map global normal <a-=> ': snippets-select-next-placeholders<ret>'
