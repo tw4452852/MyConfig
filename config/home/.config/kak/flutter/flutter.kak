@@ -1,11 +1,12 @@
 declare-option -hidden str flutter_dir %sh{ echo "${TMPDIR:-/tmp}/kak-${kak_session}-flutter" }
+declare-option str flutter_device
 
 define-command flutter-run-init %{
 	evaluate-commands %sh{
 		[ -r ${kak_opt_flutter_dir}/pid ] && exit 0;
 		mkdir ${kak_opt_flutter_dir}
 		mkfifo ${kak_opt_flutter_dir}/fifo
-		( flutter run --pid-file=${kak_opt_flutter_dir}/pid > ${kak_opt_flutter_dir}/fifo 2>&1 & ) > /dev/null 2>&1 < /dev/null
+		( flutter -d "${kak_opt_flutter_device}" run --pid-file=${kak_opt_flutter_dir}/pid > ${kak_opt_flutter_dir}/fifo 2>&1 & ) > /dev/null 2>&1 < /dev/null
 		printf %s\\n 'evaluate-commands -try-client "%opt{toolsclient}" %{
 			edit! -fifo "%opt{flutter_dir}/fifo" -scroll *flutter*
 			hook -always -once buffer BufCloseFifo .* %{
