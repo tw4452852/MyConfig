@@ -21,7 +21,7 @@ define-command flutter-run-init %{
 
 define-command -hidden flutter-hot-reload %{
 	flutter-run-init
-	evaluate-commands -try-client %opt{toolsclient} %{ buffer *flutter* }
+	evaluate-commands -try-client %opt{toolsclient} %{ buffer *flutter*; execute-keys 'ge' }
 	nop %sh{
 		kill -USR1 $(cat ${kak_opt_flutter_dir}/pid)
 	}
@@ -29,7 +29,7 @@ define-command -hidden flutter-hot-reload %{
 
 define-command -hidden flutter-hot-restart %{
 	flutter-run-init
-	evaluate-commands -try-client %opt{toolsclient} %{ buffer *flutter* }
+	evaluate-commands -try-client %opt{toolsclient} %{ buffer *flutter*; execute-keys 'ge' }
 	nop %sh{
 		kill -USR2 $(cat ${kak_opt_flutter_dir}/pid)
 	}
