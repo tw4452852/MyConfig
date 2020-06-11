@@ -15,8 +15,8 @@ each [p]{
 	$E:GOROOT/bin
 	$E:GOPATH/bin
 	~/.local/bin
-	$E:FLUTTER_SDK/bin
 	$E:FLUTTER_SDK/bin/cache/dart-sdk/bin
+	$E:FLUTTER_SDK/bin
 
 ]
 # prefer neovim
