@@ -16,6 +16,8 @@ add-highlighter global/wrap wrap -word -indent -marker "↳ "
 set-option global tabstop 4
 # Indent with a tab
 set-option global indentwidth 0
+# Make current line in the middle of screen
+set-option global scrolloff 37,0
 # Status line
 set-option global modelinefmt '%val{bufname} %val{cursor_line}/%val{buf_line_count}:%val{cursor_char_column} {{context_info}} {{mode_info}} - %val{client}@[%val{session}]'
 # Shortcut to edit kakrc
