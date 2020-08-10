@@ -65,3 +65,5 @@ pathogen-infect "%val{config}/dart"
 pathogen-infect "%val{config}/flutter"
 # Snippets
 pathogen-infect "%val{config}/kak-snippets"
+# Clipboard
+pathogen-infect "%val{config}/clipboard"
