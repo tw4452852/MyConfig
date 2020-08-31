@@ -67,3 +67,6 @@ pathogen-infect "%val{config}/flutter"
 pathogen-infect "%val{config}/kak-snippets"
 # Clipboard
 pathogen-infect "%val{config}/clipboard"
+# Current line/column highlight
+pathogen-infect "%val{config}/kak-crosshairs"
+cursorline
