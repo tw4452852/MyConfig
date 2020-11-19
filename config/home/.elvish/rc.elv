@@ -1,6 +1,5 @@
 # environment variables#{{{
 E:LC_ALL = en_US.UTF-8
-E:GOROOT = ~/goroot
 E:GOPATH = ~/go
 E:FLUTTER_SDK = ~/code/flutter
 E:ANDROID_SDK_ROOT = ~/android-sdk
@@ -12,7 +11,6 @@ each [p]{
 } [
 	~/MyRoot/bin
 	~/MyRoot/usr/bin
-	$E:GOROOT/bin
 	$E:GOPATH/bin
 	~/.local/bin
 	$E:FLUTTER_SDK/bin/cache/dart-sdk/bin
