@@ -17,6 +17,6 @@ fcitx5 -r -d
 xautolock -locker 'xlock -mode blank' &
 
 # start PulseAudio if it's not running
-pulseaudio --start
+pulseaudio --start --exit-idle-time=-1
 
 exec cwm 1>~/.twwm.log 2>&1
