@@ -19,4 +19,7 @@ xautolock -locker 'xlock -mode blank' &
 # start PulseAudio if it's not running
 pulseaudio --start --exit-idle-time=-1
 
+# rust
+. ~/.cargo/env
+
 exec cwm 1>~/.twwm.log 2>&1
