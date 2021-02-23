@@ -23,7 +23,7 @@ timeout = 0
 [language.rust]
 filetypes = ["rust"]
 roots = ["Cargo.toml"]
-command = "rls"
+command = "rust-analyzer"
 
 [language.crystal]
 filetypes = ["crystal"]
