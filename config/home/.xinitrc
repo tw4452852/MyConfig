@@ -22,4 +22,6 @@ pulseaudio --start --exit-idle-time=-1
 # rust
 . ~/.cargo/env
 
-exec cwm 1>~/.twwm.log 2>&1
+# status bar
+~/.config/twwm/status.sh &
+exec ~/.cargo/bin/twwm 1>~/.twwm.log 2>&1
