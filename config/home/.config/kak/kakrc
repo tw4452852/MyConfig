@@ -35,8 +35,8 @@ pathogen-infect "%val{config}/ide"
 pathogen-infect "%val{config}/echo"
 # Sudo write
 pathogen-infect "%val{config}/sudo"
-# Gtag mode
-pathogen-infect "%val{config}/gtag"
+# Gtag mode (disabled, keymap conflict with fzf-grep)
+#pathogen-infect "%val{config}/gtag"
 # Show difference between buf and file
 pathogen-infect "%val{config}/diff"
 # Readline shortcuts in insert mode
@@ -70,3 +70,5 @@ pathogen-infect "%val{config}/clipboard"
 # Current line/column highlight
 pathogen-infect "%val{config}/kak-crosshairs"
 cursorline
+# command line integration
+pathogen-infect "%val{config}/cmd"
