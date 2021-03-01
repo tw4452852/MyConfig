@@ -1,0 +1,23 @@
+IMAPAccount intel
+CertificateFile ~/.intel.pem
+SSLType IMAPS
+Host outlook.intel.com
+User xxx
+Pass xxx
+SSLVersions TLSv1.2
+
+MaildirStore intel-local
+Path ~/Maildir/intel/
+Inbox ~/Maildir/intel/Inbox
+SubFolders Verbatim
+
+IMAPStore intel-remote
+Account intel
+
+Channel intel
+Master :intel-remote:
+Slave :intel-local:
+SyncState *
+Patterns *
+Create Slave
+# Expunge Both
