@@ -25,6 +25,11 @@ filetypes = ["rust"]
 roots = ["Cargo.toml"]
 command = "rust-analyzer"
 
+[language.rust.initialization_options]
+procMacro.enable = true
+cargo.loadOutDirsFromCheck = true
+cargo.allFeatures = true
+
 [language.crystal]
 filetypes = ["crystal"]
 roots = ["shard.yml"]
