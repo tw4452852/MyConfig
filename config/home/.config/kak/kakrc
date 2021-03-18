@@ -72,3 +72,5 @@ pathogen-infect "%val{config}/kak-crosshairs"
 cursorline
 # command line integration
 pathogen-infect "%val{config}/cmd"
+# wiki
+pathogen-infect "%val{config}/wiki"
