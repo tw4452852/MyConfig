@@ -49,8 +49,8 @@ pathogen-infect "%val{config}/switch"
 pathogen-infect "%val{config}/youdao"
 # Golang
 pathogen-infect "%val{config}/go"
-# Makefile mode
-pathogen-infect "%val{config}/make"
+# Makefile mode (keymap conflict with cmd's fzf-files)
+# pathogen-infect "%val{config}/make"
 # Tool client jump
 pathogen-infect "%val{config}/tj"
 # Notmuch
