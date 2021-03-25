@@ -74,3 +74,4 @@ cursorline
 pathogen-infect "%val{config}/cmd"
 # wiki
 pathogen-infect "%val{config}/wiki"
+set-option global wiki_path "/home/tw/notes"
