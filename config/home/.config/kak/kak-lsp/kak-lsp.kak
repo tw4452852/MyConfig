@@ -4,6 +4,9 @@ hook global WinSetOption filetype=(go|c|cpp|dart|rust) %{
         lsp-enable-window
 }
 
+# Auto formatting before writing
+hook global BufWritePre .*\.(dart|rs) %{ lsp-formatting }
+
 define-command -hidden insert-tab %{
  try %{
    lsp-snippets-select-next-placeholders
