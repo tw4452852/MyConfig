@@ -10,7 +10,6 @@ hook global BufWritePre .*\.(dart|rs) %{ lsp-formatting }
 define-command -hidden insert-tab %{
  try %{
    lsp-snippets-select-next-placeholders
-   exec '<a-;>d'
  } catch %{
    exec -with-hooks '<tab>'
  }
