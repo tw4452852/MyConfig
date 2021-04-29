@@ -37,7 +37,7 @@ bind-mouse "5"		menu-window
 bind-key 4-slash	menu-exec
 bind-key 4-Return	terminal
 bind-key 4-l		lock
-bind-key 4-Tab		window-cycle
+bind-key 4-Tab		window-cycle-ingroup
 bind-key 4-m		window-maximize
 bind-key 4-q		window-close
 bind-key 4C-q		quit
