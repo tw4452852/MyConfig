@@ -40,16 +40,16 @@ fn l [@args]{
 	ls --color $@args
 }
 # key bindings#{{{
-edit:insert:binding[c-a] = $edit:move-dot-sol~
-edit:insert:binding[c-e] = $edit:move-dot-eol~
-edit:insert:binding[a-w] = $edit:kill-small-word-left~
-edit:insert:binding[a-p] = $edit:history:start~
+edit:insert:binding[C-a] = $edit:move-dot-sol~
+edit:insert:binding[C-e] = $edit:move-dot-eol~
+edit:insert:binding[A-w] = $edit:kill-small-word-left~
+edit:insert:binding[A-p] = $edit:history:start~
 # Alt-d to delete the word under the cursor
-edit:insert:binding[a-d] = { edit:move-dot-right-word; edit:kill-word-left }
-edit:insert:binding[c-x] = { edit:-instant:start }
+edit:insert:binding[A-d] = { edit:move-dot-right-word; edit:kill-word-left }
+edit:insert:binding[C-x] = { edit:-instant:start }
 
-edit:history:binding[a-p] = $edit:history:up~
-edit:history:binding[a-n] = $edit:history:down-or-quit~
+edit:history:binding[A-p] = $edit:history:up~
+edit:history:binding[A-n] = $edit:history:down-or-quit~
 #}}}
 # abbreviates#{{{
 edit:abbr['~A'] = /data/code/android/5.1
