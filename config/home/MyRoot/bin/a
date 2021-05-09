@@ -1,0 +1,32 @@
+#!/bin/env bash
+
+BROWSER=chromium
+PLUMBFILE=$HOME/lib/plumbing
+font=/mnt/font/GoMono/11a/font
+tabstop=4
+SHELL=$PLAN9/bin/rc
+acmeshell=$PLAN9/bin/rc
+
+TERM=dumb
+MANPAGER=nobs
+PAGER=nobs
+EDITOR=E
+
+MANPATH=$MANPATH:$PLAN9/man
+
+export BROWSER TERM MANPAGER \
+PAGER EDITOR MANPATH SHELL
+unset FCEDIT VISUAL
+
+export tabstop acmeshell
+
+[ -z "$(pgrep fontsrv)" ] && fontsrv &
+[ -z "$(pgrep plumber)" ] && plumber
+
+if [ -f "$PLUMBFILE" ]; then
+	cat "$PLUMBFILE" | 9p write plumb/rules
+else
+	cat $PLAN9/plumb/basic | 9p write plumb/rules
+fi
+
+exec acme -a -f $font $*
