@@ -1,0 +1,5 @@
+#!/bin/env bash
+
+echo '>>>>>>>>>>>>>>'
+rg -w --vimgrep $*
+echo '<<<<<<<<<<<<<<'
