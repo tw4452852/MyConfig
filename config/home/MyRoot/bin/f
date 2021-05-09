@@ -1,0 +1,5 @@
+#!/bin/env bash
+
+echo '>>>>>>>>>>>>>>'
+fd -I -c never $*
+echo '<<<<<<<<<<<<<<'
