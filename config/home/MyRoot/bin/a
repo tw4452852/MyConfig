@@ -1,5 +1,10 @@
 #!/bin/env bash
 
+command -v acmefocused >/dev/null 2>&1 || { echo "install acmefocused"; GO111MODULE=on go get github.com/fhs/acme-lsp/cmd/acmefocused@latest || exit 1; }
+command -v L >/dev/null 2>&1 || { echo "install L"; GO111MODULE=on go get github.com/fhs/acme-lsp/cmd/L@latest || exit 1; }
+command -v acme-lsp >/dev/null 2>&1 || { echo "install acme-lsp"; GO111MODULE=on go get github.com/fhs/acme-lsp/cmd/acme-lsp@latest || exit 1; }
+command -v acme-dot >/dev/null 2>&1 || { echo "install acme-dot"; GO111MODULE=on go get github.com/tw4452852/acme-dot@v1.0.0 || exit 1; }
+
 BROWSER=chromium
 PLUMBFILE=$HOME/lib/plumbing
 font=/mnt/font/GoMono/11a/font
