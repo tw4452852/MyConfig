@@ -2,6 +2,7 @@ command term urxvt
 command lock 'xautolock -locknow'
 command c "dclock -bg black -led_off black -date '%Y-%b-%d %a' -fontName 'Go Mono' -bw 0"
 command a "/home/tw/MyRoot/bin/a"
+command h "urxvt -e htop"
 
 ignore dclock
 autogroup 9 Dclock
