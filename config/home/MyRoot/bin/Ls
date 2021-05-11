@@ -1,0 +1,79 @@
+#!/bin/env bash
+
+#set -x
+
+dir=$HOME/.config/acme-lsp
+[ ! -d $dir ] && mkdir -p $dir
+
+if [ $# -lt 1 ]; then
+	echo "$0 [command]"
+	exit 2
+fi
+
+[ -z "$(pgrep acmefocused)" ] && { echo "acmefocused not started"; exit 2; }
+
+winid=`dial unix!$(namespace)/acmefocused`
+path=`9p read acme/$winid/tag | cut -d' ' -f1`
+name=
+if [ -d $path ]; then
+	[ -f $path/Cargo.toml ] && name=r
+	[ -f $path/go.mod ] && name=g
+elif [ -f $path ]; then
+	ext=${path##*\.}
+	[ $ext == "go" ] && name=g
+	[ $ext == "rs" ] && name=r
+	[ $ext == "c" ] && name=c
+fi
+
+proxy_addr="`namespace`/acme-lsp-$name.rpc"
+cmd=$1
+shift 1
+
+case $cmd in
+	start)
+		root=`pwd`
+		[ ! -z $1 ] && root=`realpath $1`
+		case $name in
+			c)
+				cat <<-EOF > $dir/config.toml
+					[Servers]
+					[Servers.clangd]
+					Command = ["clangd", "--log=error"]
+					[[FilenameHandlers]]
+					Pattern = '\.(c|cpp|cc)$'
+					ServerKey = "clangd"
+				EOF
+				acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
+				;;
+			r)
+				cat <<-EOF > $dir/config.toml
+					[Servers]
+					[Servers.ra]
+					Command = ["rust-analyzer"]
+					[[FilenameHandlers]]
+					Pattern = '\.rs$'
+					ServerKey = "ra"
+				EOF
+				acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
+				;;
+			g)
+				cat <<-EOF > $dir/config.toml
+					[Servers]
+					[Servers.gopls]
+					Command = ["gopls", "serve"]
+					[[FilenameHandlers]]
+					Pattern = '\.go$'
+					ServerKey = "gopls"
+				EOF
+				acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
+				;;
+			*)
+				echo "Not supported: $name"
+				;;
+		 esac
+		;;
+	*)
+		acme-dot $winid | 9p write acme/cons
+		L -proxy.addr $proxy_addr $cmd $*
+		;;
+esac
