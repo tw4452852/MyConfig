@@ -1,0 +1,12 @@
+#!/bin/sh
+
+export GOPATH="$HOME/go"
+# affix colons on either side of $PATH to simplify matching
+case ":${PATH}:" in
+    *:"$GOPATH/bin":*)
+        ;;
+    *)
+        # Prepending path in case a system-installed rustc needs to be overridden
+        export PATH="$GOPATH/bin:$PATH"
+        ;;
+esac
