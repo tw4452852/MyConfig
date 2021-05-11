@@ -1,11 +1,4 @@
 #!/bin/env bash
 
-mtpt=/home/tw/mnt/acme
-
-mkdir -p $mtpt
-
-if ! mountpoint -q -- $mtpt; then
-	9 mount `namespace`/acme $mtpt || exit 2;
-fi
-
-u diff -s --unchanged-line-format="" --old-line-format="$samfile:%dn-new:%L" --new-line-format="$samfile:%dn-old:%L" $mtpt/$winid/body $samfile
+echo '-----------------'
+9p read acme/$winid/body | u diff -s --unchanged-line-format="" --old-line-format="$samfile:%dn-new:%L" --new-line-format="$samfile:%dn-old:%L" $samfile --from-file -
