@@ -22,6 +22,7 @@ pulseaudio --start --exit-idle-time=-1
 # rust
 . ~/.cargo/env
 
-# status bar
-~/.config/twwm/status.sh &
+# xbindkeys
+[ -z "$(pgrep xbindkeys)" ] && xbindkeys
+
 exec cwm 1>~/.twwm.log 2>&1
