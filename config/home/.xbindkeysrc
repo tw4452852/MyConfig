@@ -1,0 +1,4 @@
+"Ls def | 9p write acme/cons"
+  Shift + b:1
+"Ls refs | 9p write acme/cons"
+  Shift + b:3
