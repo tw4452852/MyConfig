@@ -10,7 +10,7 @@ if [ $# -lt 1 ]; then
 	exit 2
 fi
 
-[ -z "$(pgrep acmefocused)" ] && { echo "acmefocused not started"; exit 2; }
+[ -z "$(pgrep acmefocused)" ] && { echo "acmefocused not started, starting..."; acmefocused; exit 0; }
 
 winid=`dial unix!$(namespace)/acmefocused`
 path=`9p read acme/$winid/tag | cut -d' ' -f1`
