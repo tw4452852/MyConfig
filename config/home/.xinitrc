@@ -22,7 +22,14 @@ pulseaudio --start --exit-idle-time=-1
 # rust
 . ~/.cargo/env
 
+# Go
+. ~/.go/env
+
+# MySelf
+export PATH=$PATH:$HOME/MyRoot/bin
+
 # xbindkeys
-[ -z "$(pgrep xbindkeys)" ] && xbindkeys
+pkill xbindkeys
+xbindkeys
 
 exec cwm 1>~/.twwm.log 2>&1
