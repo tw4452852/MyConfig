@@ -14,7 +14,7 @@ fi
 
 winid=`dial unix!$(namespace)/acmefocused`
 path=`9p read acme/$winid/tag | cut -d' ' -f1`
-name=
+name=c
 if [ -d $path ]; then
 	[ -f $path/Cargo.toml ] && name=r
 	[ -f $path/go.mod ] && name=g
@@ -40,7 +40,7 @@ case $cmd in
 					[Servers.clangd]
 					Command = ["clangd", "--log=error"]
 					[[FilenameHandlers]]
-					Pattern = '\.(c|cpp|cc)$'
+					Pattern = '\.(c|cpp|cc|h)$'
 					ServerKey = "clangd"
 				EOF
 				acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
