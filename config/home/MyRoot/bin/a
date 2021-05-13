@@ -18,6 +18,7 @@ command -v Watch >/dev/null 2>&1 || \
 BROWSER=chromium
 PLUMBFILE=$HOME/lib/plumbing
 font=/mnt/font/GoMono/11a/font
+Font=/mnt/font/WenQuanYiMicroHei/11a/font
 tabstop=4
 SHELL=$PLAN9/bin/rc
 acmeshell=$PLAN9/bin/rc
@@ -44,4 +45,4 @@ else
 	cat $PLAN9/plumb/basic | 9p write plumb/rules
 fi
 
-exec acme -a -f $font -r $*
+exec acme -a -f $font -F $Font -r $*
