@@ -1,5 +1,21 @@
-#!/bin/env bash
+#!/bin/sh
+
+#set -x
+
+pattern=""
+dir="."
+while [ $# -gt 1 ]
+do
+	pattern="${pattern:+$pattern }$1"
+	shift
+done
+
+if [ -d "$1" ]; then
+	dir="$1"
+else
+	pattern="${pattern:+$pattern }$1"
+fi
 
 echo '>>>>>>>>>>>>>>'
-rg -w --vimgrep $*
+rg -w --vimgrep "$pattern" "$dir"
 echo '<<<<<<<<<<<<<<'
