@@ -24,7 +24,7 @@ MANPAGER=nobs
 PAGER=nobs
 EDITOR=E
 
-MANPATH=$MANPATH:$PLAN9/man
+MANPATH=/usr/local/share/man:/usr/share/man:$PLAN9/man
 
 export BROWSER TERM MANPAGER \
 PAGER EDITOR MANPATH SHELL
