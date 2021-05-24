@@ -25,9 +25,10 @@ PAGER=nobs
 EDITOR=E
 
 MANPATH=/usr/local/share/man:/usr/share/man:$PLAN9/man
+upasname=wei.tan@intel.com
 
 export BROWSER TERM MANPAGER \
-PAGER EDITOR MANPATH SHELL
+PAGER EDITOR MANPATH SHELL upasname
 unset FCEDIT VISUAL
 
 export tabstop acmeshell
