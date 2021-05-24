@@ -41,4 +41,4 @@ else
 	cat $PLAN9/plumb/basic | 9p write plumb/rules
 fi
 
-exec acme -a -f $font -F $Font -r $*
+exec acme -a -f $font -F $Font $*
