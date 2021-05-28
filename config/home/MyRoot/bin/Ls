@@ -12,7 +12,7 @@ fi
 
 [ -z "$(pgrep acmefocused)" ] && { echo "acmefocused not started, starting..."; acmefocused; exit 0; }
 
-winid=`dial unix!$(namespace)/acmefocused`
+[ -z "$winid" ] && winid=`dial unix!$(namespace)/acmefocused`
 path=`9p read acme/$winid/tag | cut -d' ' -f1`
 name=c
 if [ -d $path ]; then
