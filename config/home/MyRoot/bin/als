@@ -1,9 +1,11 @@
-#!/bin/env bash
+#!/bin/sh
 
 #set -x
 
 dir=$HOME/.config/acme-lsp
-[ ! -d $dir ] && mkdir -p $dir
+[ "$(uname -s)" = "Darwin" ] && dir="$HOME/Library/Application Support/acme-lsp"
+
+[ ! -d "$dir" ] && mkdir -p "$dir"
 
 if [ $# -lt 1 ]; then
 	echo "$0 [command]"
