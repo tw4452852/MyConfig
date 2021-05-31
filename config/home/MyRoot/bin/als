@@ -22,9 +22,8 @@ if [ -d $path ]; then
 	[ -f $path/go.mod ] && name=g
 elif [ -f $path ]; then
 	ext=${path##*\.}
-	[ $ext == "go" ] && name=g
-	[ $ext == "rs" ] && name=r
-	[ $ext == "c" ] && name=c
+	[ $ext = "go" ] && name=g
+	[ $ext = "rs" ] && name=r
 fi
 
 proxy_addr="`namespace`/acme-lsp-$name.rpc"
