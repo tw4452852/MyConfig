@@ -42,4 +42,4 @@
 	;golang stuff
 	cookiefile = /home/tw/.gitcookies
 [credential]
-	helper = cache
+	helper = store
