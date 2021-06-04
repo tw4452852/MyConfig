@@ -3,7 +3,6 @@
 #set -x
 
 dir=$HOME/.config/acme-lsp
-[ "$(uname -s)" = "Darwin" ] && dir="$HOME/Library/Application Support/acme-lsp"
 
 [ ! -d "$dir" ] && mkdir -p "$dir"
 
@@ -36,7 +35,8 @@ case $cmd in
 		[ ! -z $1 ] && root=`realpath $1`
 		case $name in
 			c)
-				cat <<-EOF > $dir/config.toml
+				cfg="$dir/c_config.toml"
+				cat <<-EOF > "$cfg"
 					[Servers]
 					[Servers.clangd]
 					Command = ["clangd", "--log=error"]
@@ -44,10 +44,11 @@ case $cmd in
 					Pattern = '\.(c|cpp|cc|h)$'
 					ServerKey = "clangd"
 				EOF
-				acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
+				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
 			r)
-				cat <<-EOF > $dir/config.toml
+				cfg="$dir/rust_config.toml"
+				cat <<-EOF > "$cfg"
 					[Servers]
 					[Servers.ra]
 					Command = ["rust-analyzer"]
@@ -55,10 +56,11 @@ case $cmd in
 					Pattern = '\.rs$'
 					ServerKey = "ra"
 				EOF
-				acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
+				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
 			g)
-				cat <<-EOF > $dir/config.toml
+				cfg="$dir/go_config.toml"
+				cat <<-EOF > "$cfg"
 					[Servers]
 					[Servers.gopls]
 					Command = ["gopls", "serve"]
@@ -66,7 +68,7 @@ case $cmd in
 					Pattern = '\.go$'
 					ServerKey = "gopls"
 				EOF
-				acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
+				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
 			*)
 				echo "Not supported: $name"
