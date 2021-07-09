@@ -1,0 +1,10 @@
+# Alt-w, delete 1 small word at a time
+- key:
+    Char: w
+  modifiers:
+    ALT:
+  binding:
+    Kill:
+      BackwardWord:
+        repeat: 1
+        word: Emacs
