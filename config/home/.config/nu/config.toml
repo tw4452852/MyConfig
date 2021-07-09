@@ -1,0 +1,9 @@
+rm_always_trash = true
+
+[env]
+EDITOR = "editinacme"
+
+[line_editor]
+history_duplicates = true
+max_history_size = 10000
+completion_match_method = "case-insensitive"
