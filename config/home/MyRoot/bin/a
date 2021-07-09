@@ -10,6 +10,8 @@ command -v acme-dot >/dev/null 2>&1 || \
  { echo "install acme-dot"; GO111MODULE=on go get github.com/tw4452852/acme-dot@v1.0.0 || exit 1; }
 command -v Watch >/dev/null 2>&1 || \
  { echo "install Watch"; GO111MODULE=on go get 9fans.net/go/acme/Watch@latest || exit 1; }
+command -v editinacme >/dev/null 2>&1 || \
+ { echo "install editinacme"; GO111MODULE=on go get 9fans.net/go/acme/editinacme@latest || exit 1; }
 
 BROWSER=chromium
 PLUMBFILE=$HOME/lib/plumbing
