@@ -10,7 +10,7 @@ Rxvt*background: rgba:ffff/ffff/d700/ffff
 Rxvt*cursorBlink: true
 
 ! sync primary and clipboard section
-URxvt.perl-ext-common: selection-to-clipboard
+URxvt.perl-ext-common: selection-to-clipboard,52-osc
 
 !! black dark/light
 *color0: #073642
@@ -45,7 +45,7 @@ xterm*altSendsEscape: true
 *VT100*translations: #override \n\
 Shift <KeyPress> Insert:insert-selection(CLIPBOARD, CUT_BUFFER1) \n\
 ~Shift~Ctrl<Btn2Up>: insert-selection(CLIPBOARD, CUT_BUFFER1) \n\
-~Shift<BtnUp>: select-end(CLIPBOARD, CUT_BUFFER1) 
+~Shift<BtnUp>: select-end(CLIPBOARD, CUT_BUFFER1)
 
 ! allow sendevent from xserver to support wm key remap
 xterm*allowSendEvents: true
