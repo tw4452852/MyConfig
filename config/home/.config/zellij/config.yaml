@@ -1,0 +1,22 @@
+simplified_ui: true
+default_shell: "/home/tw/.cargo/bin/nu"
+keybinds:
+  normal:
+    - action: [ GoToTab: 1,]
+      key: [ F: 1,]
+    - action: [ GoToTab: 2,]
+      key: [ F: 2,]
+    - action: [ GoToTab: 3,]
+      key: [ F: 3,]
+    - action: [ GoToTab: 4,]
+      key: [ F: 4,]
+    - action: [ GoToTab: 5,]
+      key: [ F: 5,]
+    - action: [ GoToTab: 6,]
+      key: [ F: 6,]
+    - action: [ GoToTab: 7,]
+      key: [ F: 7,]
+    - action: [ GoToTab: 8,]
+      key: [ F: 8,]
+    - action: [ GoToTab: 9,]
+      key: [ F: 9,]
