@@ -1,6 +1,8 @@
 simplified_ui: true
 default_shell: "/home/tw/.cargo/bin/nu"
+
 keybinds:
+  unbind: [ Ctrl: 'r']
   normal:
     - action: [ GoToTab: 1,]
       key: [ Alt: '1',]
