@@ -21,3 +21,16 @@ keybinds:
     - action: [ GoToTab: 9,]
       key: [ Alt: '9',]
 
+themes:
+  default:
+    fg: [128, 128, 128]
+    bg: [0xff,0xff,0xd7]
+    black: [0,0,0]
+    red: [222, 29, 16]
+    green: [71, 166, 31]
+    yellow: [0,0,0]
+    blue: [0,0,0xff]
+    magenta: [0,0,0]
+    cyan: [0xff,0xff,0xd7]
+    white: [0,0,0]
+    orange: [0,0,0]
