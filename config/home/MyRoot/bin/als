@@ -52,6 +52,9 @@ case $cmd in
 					[Servers]
 					[Servers.ra]
 					Command = ["rust-analyzer"]
+					[Servers.ra.Options]
+					[Servers.ra.Options.diagnostics]
+					disabled = ["inactive-code"]
 					[[FilenameHandlers]]
 					Pattern = '\.rs$'
 					ServerKey = "ra"
