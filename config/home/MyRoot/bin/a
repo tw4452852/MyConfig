@@ -8,6 +8,8 @@ command -v acme-lsp >/dev/null 2>&1 || \
  { echo "install acme-lsp"; GO111MODULE=on go get github.com/tw4452852/acme-lsp/cmd/acme-lsp@latest || exit 1; }
 command -v acme-dot >/dev/null 2>&1 || \
  { echo "install acme-dot"; GO111MODULE=on go get github.com/tw4452852/acme-dot@v1.0.0 || exit 1; }
+command -v acme-tag >/dev/null 2>&1 || \
+ { echo "install acme-tag"; GO111MODULE=on go get github.com/tw4452852/acme-tag@v1.0.0 || exit 1; }
 command -v Watch >/dev/null 2>&1 || \
  { echo "install Watch"; GO111MODULE=on go get 9fans.net/go/acme/Watch@latest || exit 1; }
 command -v editinacme >/dev/null 2>&1 || \
@@ -44,4 +46,11 @@ else
 	cat $PLAN9/plumb/basic | 9p write plumb/rules
 fi
 
-exec acme -a -f $font -F $Font $*
+acme -a -f $font -F $Font $* &
+acme_pid=$!
+
+sleep 1
+acmefocused &
+acme-tag als_start als_def als_refs als_impls &
+
+wait $acme_pid
