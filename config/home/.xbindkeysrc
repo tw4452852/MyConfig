@@ -2,3 +2,6 @@
 #  Shift + b:1
 #"als refs | 9p write acme/cons"
 #  Shift + b:3
+
+"import /tmp/screenshot-$(date +%Y%m%d@%H%M%S).png"
+  Print
