@@ -30,6 +30,6 @@ export PATH=$PATH:$HOME/MyRoot/bin
 
 # xbindkeys
 pkill xbindkeys
-xbindkeys
+xbindkeys -p
 
 exec cwm 1>~/.twwm.log 2>&1
