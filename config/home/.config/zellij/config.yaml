@@ -1,27 +1,6 @@
 simplified_ui: true
 default_shell: "/home/tw/.cargo/bin/nu"
 
-keybinds:
-  normal:
-    - action: [ GoToTab: 1,]
-      key: [ Alt: '1',]
-    - action: [ GoToTab: 2,]
-      key: [ Alt: '2',]
-    - action: [ GoToTab: 3,]
-      key: [ Alt: '3',]
-    - action: [ GoToTab: 4,]
-      key: [ Alt: '4',]
-    - action: [ GoToTab: 5,]
-      key: [ Alt: '5',]
-    - action: [ GoToTab: 6,]
-      key: [ Alt: '6',]
-    - action: [ GoToTab: 7,]
-      key: [ Alt: '7',]
-    - action: [ GoToTab: 8,]
-      key: [ Alt: '8',]
-    - action: [ GoToTab: 9,]
-      key: [ Alt: '9',]
-
 themes:
   default:
     fg: [128, 128, 128]
@@ -35,3 +14,116 @@ themes:
     cyan: [0xff,0xff,0xd7]
     white: [0,0,0]
     orange: [0,0,0]
+
+default_mode: locked
+keybinds:
+  unbind: true
+  # the prefix key ^k
+  locked:
+    - action: [SwitchToMode: Normal,]
+      key: [Ctrl: 'k',]
+  normal:
+    # ctrl-k-c: creat a new tab
+    - action: [NewTab: , SwitchToMode: Locked,]
+      key: [Char: 'c']
+
+    # ctrl-k-n: goto previous tab
+    - action: [GoToPreviousTab, SwitchToMode: Locked,]
+      key: [Char: 'n']
+
+    # ctrl-k--: split current pane vertically
+    - action: [NewPane: Down, SwitchToMode: Locked,]
+      key: [Char: '-']
+
+    # ctrl-k-|: split current pane horizontally
+    - action: [NewPane: Right, SwitchToMode: Locked,]
+      key: [Char: '|']
+
+    # ctrl-k-h: move focus to the left pane/tab
+    - action: [MoveFocusOrTab: Left, SwitchToMode: Locked,]
+      key: [Char: 'h']
+
+    # ctrl-k-j: move focus to the blow pane
+    - action: [MoveFocus: Down, SwitchToMode: Locked,]
+      key: [Char: 'j']
+
+    # ctrl-k-k: move focus to the up pane
+    - action: [MoveFocus: Up, SwitchToMode: Locked,]
+      key: [Char: 'k']
+
+    # ctrl-k-l: move focus to the right pane/tab
+    - action: [MoveFocusOrTab: Right, SwitchToMode: Locked,]
+      key: [Char: 'l']
+
+    # ctrl-k-H: resize the focused pane to the left
+    - action: [Resize: Left, SwitchToMode: Locked,]
+      key: [Char: 'H']
+
+    # ctrl-k-J: resize the focused pane to the bottom
+    - action: [Resize: Down, SwitchToMode: Locked,]
+      key: [Char: 'J']
+
+    # ctrl-k-K: resize the focused pane to the up
+    - action: [Resize: Up, SwitchToMode: Locked,]
+      key: [Char: 'K']
+
+    # ctrl-k-L: resize the focused pane to the right
+    - action: [Resize: Right, SwitchToMode: Locked,]
+      key: [Char: 'L']
+
+    # ctrl-k-m: toggle fullscreen
+    - action: [ToggleFocusFullscreen, SwitchToMode: Locked,]
+      key: [Char: 'm']
+
+    # ctrl-k-q: close pane
+    - action: [CloseFocus, SwitchToMode: Locked,]
+      key: [Char: 'q']
+
+    # ctrl-k-d: detach session
+    - action: [Detach, SwitchToMode: Locked,]
+      key: [Char: 'd']
+
+    # ctrl-k-1: goto tab 1
+    - action: [GoToTab: 1, SwitchToMode: Locked,]
+      key: [ Char: '1',]
+
+    # ctrl-k-2: goto tab 2
+    - action: [GoToTab: 2, SwitchToMode: Locked,]
+      key: [ Char: '2',]
+
+    # ctrl-k-3: goto tab 3
+    - action: [GoToTab: 3, SwitchToMode: Locked,]
+      key: [ Char: '3',]
+
+    # ctrl-k-4: goto tab 4
+    - action: [GoToTab: 4, SwitchToMode: Locked,]
+      key: [ Char: '4',]
+
+    # ctrl-k-5: goto tab 5
+    - action: [GoToTab: 5, SwitchToMode: Locked,]
+      key: [ Char: '5',]
+
+    # ctrl-k-6: goto tab 6
+    - action: [GoToTab: 6, SwitchToMode: Locked,]
+      key: [ Char: '6',]
+
+    # ctrl-k-7: goto tab 7
+    - action: [GoToTab: 7, SwitchToMode: Locked,]
+      key: [ Char: '7',]
+
+    # ctrl-k-8: goto tab 8
+    - action: [GoToTab: 8, SwitchToMode: Locked,]
+      key: [ Char: '8',]
+
+    # ctrl-k-9: goto tab 9
+    - action: [GoToTab: 9, SwitchToMode: Locked,]
+      key: [ Char: '9',]
+
+    # ctrl-k-,: rename tab
+    - action: [SwitchToMode: RenameTab, TabNameInput: [0],]
+      key: [Char: ',']
+
+  renametab:
+    # <enter>/<esc> to exit
+    - action: [SwitchToMode: Locked,]
+      key: [Char: "\n", Esc,]
