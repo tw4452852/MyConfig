@@ -1,4 +1,4 @@
-"als def | 9p write acme/cons"
-  Shift + b:1
-"als refs | 9p write acme/cons"
-  Shift + b:3
+#"als def | 9p write acme/cons"
+#  Shift + b:1
+#"als refs | 9p write acme/cons"
+#  Shift + b:3
