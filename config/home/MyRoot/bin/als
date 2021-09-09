@@ -68,6 +68,8 @@ case $cmd in
 			g)
 				cfg="$dir/go_config.toml"
 				cat <<-EOF > "$cfg"
+					FormatOnPut = true
+					CodeActionsOnPut = ["source.organizeImports"]
 					[Servers]
 					[Servers.gopls]
 					Command = ["gopls", "serve"]
