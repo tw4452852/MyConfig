@@ -10,11 +10,18 @@ if [ $# -lt 1 ]; then
 	echo "$0 [command]"
 	exit 2
 fi
+cmd=$1
+shift 1
 
 [ -z "$(pgrep acmefocused)" ] && { echo "acmefocused not started"; exit 1; }
 
 [ -z "$winid" ] && winid=`dial unix!$(namespace)/acmefocused`
+
 path=`9p read acme/$winid/tag | cut -d' ' -f1`
+if [ "$cmd" = "start" -a ! -z $1 ]; then
+	path="$1"
+fi
+
 name=c
 if [ -d $path ]; then
 	[ -f $path/Cargo.toml ] && name=r
@@ -24,10 +31,7 @@ elif [ -f $path ]; then
 	[ $ext = "go" ] && name=g
 	[ $ext = "rs" ] && name=r
 fi
-
 proxy_addr="`namespace`/acme-lsp-$name.rpc"
-cmd=$1
-shift 1
 
 case $cmd in
 	start)
