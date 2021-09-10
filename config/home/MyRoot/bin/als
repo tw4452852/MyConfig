@@ -18,7 +18,7 @@ shift 1
 [ -z "$winid" ] && winid=`dial unix!$(namespace)/acmefocused`
 
 path=`9p read acme/$winid/tag | cut -d' ' -f1`
-if [ "$cmd" = "start" -a ! -z $1 ]; then
+if [ "$cmd" = "start" -a ! -z "$1" ]; then
 	path="$1"
 fi
 
