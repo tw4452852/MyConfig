@@ -53,6 +53,7 @@ case $cmd in
 			r)
 				cfg="$dir/rust_config.toml"
 				cat <<-EOF > "$cfg"
+					FormatOnPut = true
 					[Servers]
 					[Servers.ra]
 					Command = ["rust-analyzer"]
