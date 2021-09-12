@@ -28,7 +28,7 @@ keybinds:
       key: [Char: 'c']
 
     # ctrl-k-n: goto previous tab
-    - action: [GoToPreviousTab, SwitchToMode: Locked,]
+    - action: [ToggleTab, SwitchToMode: Locked,]
       key: [Char: 'n']
 
     # ctrl-k--: split current pane vertically
