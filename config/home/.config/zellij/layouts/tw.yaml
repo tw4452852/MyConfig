@@ -3,18 +3,11 @@ template:
   direction: Horizontal
   parts:
     - direction: Vertical
-      borderless: true
-      split_size:
-        Fixed: 1
-      run:
-        plugin:
-          path: tab-bar
-    - direction: Vertical
       body: true
     - direction: Vertical
       borderless: true
       split_size:
-        Fixed: 2
+        Fixed: 1
       parts:
         - direction: Horizontal
           borderless: true
@@ -22,14 +15,14 @@ template:
             Percent: 70
           run:
             plugin:
-              path: status-bar
+              path: tab-bar
         - direction: Horizontal
           borderless: true
           split_size:
             Percent: 30
           run:
             plugin:
-              path: /home/tw/code/zellij-pomodoro-plugin/target/wasm32-wasi/debug/zellij-pomodoro-plugin.wasm
+              path: /home/tw/code/zellij-pomodoro-plugin/target/wasm32-wasi/debug/pomodoro-clock.wasm
               _allow_exec_host_cmd: true
 
 tabs:
