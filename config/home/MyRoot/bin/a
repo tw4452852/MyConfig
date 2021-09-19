@@ -1,19 +1,19 @@
 #!/bin/sh
 
 command -v acmefocused >/dev/null 2>&1 || \
- { echo "install acmefocused"; GO111MODULE=on go get github.com/fhs/acme-lsp/cmd/acmefocused@latest || exit 1; }
+ { echo "install acmefocused"; GO111MODULE=on go install github.com/fhs/acme-lsp/cmd/acmefocused@latest || exit 1; }
 command -v L >/dev/null 2>&1 || \
- { echo "install L"; GO111MODULE=on go get github.com/tw4452852/acme-lsp/cmd/L@latest || exit 1; }
+ { echo "install L"; GO111MODULE=on go install github.com/tw4452852/acme-lsp/cmd/L@latest || exit 1; }
 command -v acme-lsp >/dev/null 2>&1 || \
- { echo "install acme-lsp"; GO111MODULE=on go get github.com/tw4452852/acme-lsp/cmd/acme-lsp@latest || exit 1; }
+ { echo "install acme-lsp"; GO111MODULE=on go install github.com/tw4452852/acme-lsp/cmd/acme-lsp@latest || exit 1; }
 command -v acme-dot >/dev/null 2>&1 || \
- { echo "install acme-dot"; GO111MODULE=on go get github.com/tw4452852/acme-dot@latest || exit 1; }
+ { echo "install acme-dot"; GO111MODULE=on go install github.com/tw4452852/acme-dot@latest || exit 1; }
 command -v acme-tag >/dev/null 2>&1 || \
- { echo "install acme-tag"; GO111MODULE=on go get github.com/tw4452852/acme-tag@latest || exit 1; }
+ { echo "install acme-tag"; GO111MODULE=on go install github.com/tw4452852/acme-tag@latest || exit 1; }
 command -v Watch >/dev/null 2>&1 || \
- { echo "install Watch"; GO111MODULE=on go get 9fans.net/go/acme/Watch@latest || exit 1; }
+ { echo "install Watch"; GO111MODULE=on go install 9fans.net/go/acme/Watch@latest || exit 1; }
 command -v editinacme >/dev/null 2>&1 || \
- { echo "install editinacme"; GO111MODULE=on go get 9fans.net/go/acme/editinacme@latest || exit 1; }
+ { echo "install editinacme"; GO111MODULE=on go install 9fans.net/go/acme/editinacme@latest || exit 1; }
 
 BROWSER=chromium
 PLUMBFILE=$HOME/lib/plumbing
