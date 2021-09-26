@@ -26,10 +26,12 @@ name=c
 if [ -d $path ]; then
 	[ -f $path/Cargo.toml ] && name=r
 	[ -f $path/go.mod ] && name=g
+	[ -f $path/pubspec.yaml ] && name=d
 elif [ -f $path ]; then
 	ext=${path##*\.}
 	[ $ext = "go" ] && name=g
 	[ $ext = "rs" ] && name=r
+	[ $ext = "dart" ] && name=d
 fi
 proxy_addr="`namespace`/acme-lsp-$name.rpc"
 
@@ -77,6 +79,19 @@ case $cmd in
 					[[FilenameHandlers]]
 					Pattern = '\.go$'
 					ServerKey = "gopls"
+				EOF
+				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
+				;;
+			d)
+				cfg="$dir/dart_config.toml"
+				cat <<-EOF > "$cfg"
+					FormatOnPut = true
+					[Servers]
+					[Servers.dart]
+					Command = ["sh", "-c", "dart $(dirname $(which dart))/snapshots/analysis_server.dart.snapshot --lsp"]
+					[[FilenameHandlers]]
+					Pattern = '\.dart$'
+					ServerKey = "dart"
 				EOF
 				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
