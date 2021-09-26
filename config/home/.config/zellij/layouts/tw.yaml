@@ -15,14 +15,14 @@ template:
             Percent: 70
           run:
             plugin:
-              path: tab-bar
+              location: "zellij:tab-bar"
         - direction: Horizontal
           borderless: true
           split_size:
             Percent: 30
           run:
             plugin:
-              path: /home/tw/code/zellij-pomodoro-plugin/target/wasm32-wasi/debug/pomodoro-clock.wasm
+              location: "file:/home/tw/code/zellij-pomodoro-plugin/target/wasm32-wasi/debug/pomodoro-clock.wasm"
               _allow_exec_host_cmd: true
 
 tabs:
