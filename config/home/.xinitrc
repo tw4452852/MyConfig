@@ -25,6 +25,9 @@ pulseaudio --start --exit-idle-time=-1
 # Go
 . ~/.go/env
 
+# Dart/Flutter
+. ~/.dart/env
+
 # MySelf
 export PATH=$PATH:$HOME/MyRoot/bin
 

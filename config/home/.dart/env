@@ -1,0 +1,15 @@
+#!/bin/sh
+
+export ANDROID_SDK_ROOT="$HOME/android-sdk"
+export FLUTTER_SDK="$HOME/code/flutter"
+export DART_SDK="$FLUTTER_SDK/bin/cache/dart-sdk"
+
+# affix colons on either side of $PATH to simplify matching
+case ":${PATH}:" in
+    *:"$DART_SDK/bin":*)
+        ;;
+    *)
+        # Prepending path in case a system-installed rustc needs to be overridden
+        export PATH="$DART_SDK/bin:$FLUTTER_SDK/bin:$PATH"
+        ;;
+esac
