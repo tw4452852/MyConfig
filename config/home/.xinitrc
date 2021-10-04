@@ -28,6 +28,9 @@ pulseaudio --start --exit-idle-time=-1
 # Dart/Flutter
 . ~/.dart/env
 
+# Plan9Port
+. ~/.p9p/env
+
 # MySelf
 export PATH=$PATH:$HOME/MyRoot/bin
 

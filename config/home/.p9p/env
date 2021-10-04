@@ -1,0 +1,12 @@
+#!/bin/sh
+
+export PLAN9="$HOME/code/plan9port"
+# affix colons on either side of $PATH to simplify matching
+case ":${PATH}:" in
+    *:"$PLAN9/bin":*)
+        ;;
+    *)
+        # Prepending path in case a system-installed rustc needs to be overridden
+        export PATH="$PATH:$PLAN9/bin"
+        ;;
+esac
