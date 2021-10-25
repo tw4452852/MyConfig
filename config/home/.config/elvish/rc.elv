@@ -57,36 +57,6 @@ edit:abbr['~T'] = ~/tmp
 edit:abbr['~P'] = ~/public/android/5.1
 #}}}
 
-#tmux_window_id = (tmux display-message -p '#I')
-# hooks#{{{
-edit:before-readline = [
-	{
-		# window's name
-		#tmux rename-window -t $tmux_window_id elvish
-	}
-]
-edit:after-readline = [
-	[cmdline]{
-		cmds = [(edit:wordify $cmdline)]
-		if (> (count $cmds) 0) {
-			cmd = $cmds[0]
-
-			# explore the real cmdline
-			if (==s $cmd fg) {
-				p = $cmds[1]
-				cmdline = (replaces (cat /proc/$p/cmdline)[:-1] "\x00" ' ')
-				cmds = [(edit:wordify $cmdline)]
-				cmd = (cat /proc/$p/comm)
-			}
-
-			# window's name
-			#tmux rename-window -t $tmux_window_id $cmd
-			# pannel's title
-			#tmux select-pane -T $cmdline
-		}
-	}
-]
-
 # pin previous cwp to facilitate jumping back
 before-chdir = [
 	[_]{
@@ -100,6 +70,9 @@ edit:completion:matcher[''] = [x]{ edit:match-prefix &ignore-case=$true $x }
 use epm
 epm:install &silent-if-installed=$true github.com/zzamboni/elvish-completions
 epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
+epm:install &silent-if-installed=$true github.com/zzamboni/elvish-modules
+
+use github.com/zzamboni/elvish-modules/terminal-title
 
 use github.com/tw4452852/elvish-completions/common
 use github.com/tw4452852/elvish-completions/adb
