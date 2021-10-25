@@ -57,12 +57,12 @@ edit:abbr['~T'] = ~/tmp
 edit:abbr['~P'] = ~/public/android/5.1
 #}}}
 
-tmux_window_id = (tmux display-message -p '#I')
+#tmux_window_id = (tmux display-message -p '#I')
 # hooks#{{{
 edit:before-readline = [
 	{
 		# window's name
-		tmux rename-window -t $tmux_window_id elvish
+		#tmux rename-window -t $tmux_window_id elvish
 	}
 ]
 edit:after-readline = [
@@ -80,9 +80,9 @@ edit:after-readline = [
 			}
 
 			# window's name
-			tmux rename-window -t $tmux_window_id $cmd
+			#tmux rename-window -t $tmux_window_id $cmd
 			# pannel's title
-			tmux select-pane -T $cmdline
+			#tmux select-pane -T $cmdline
 		}
 	}
 ]
@@ -99,10 +99,11 @@ edit:completion:matcher[''] = [x]{ edit:match-prefix &ignore-case=$true $x }
 
 use epm
 epm:install &silent-if-installed=$true github.com/zzamboni/elvish-completions
+epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
 
-use completer/common
-use completer/adb
-use completer/sudo
+use github.com/tw4452852/elvish-completions/common
+use github.com/tw4452852/elvish-completions/adb
+use github.com/tw4452852/elvish-completions/sudo
 use github.com/zzamboni/elvish-completions/git
 use github.com/zzamboni/elvish-completions/ssh
 use github.com/zzamboni/elvish-completions/cd
