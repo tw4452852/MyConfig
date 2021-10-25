@@ -1,5 +1,5 @@
 simplified_ui: true
-default_shell: "/home/tw/.cargo/bin/nu"
+default_shell: "/home/tw/go/bin/elvish"
 
 themes:
   default:
