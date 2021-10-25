@@ -22,7 +22,7 @@ template:
             Percent: 30
           run:
             plugin:
-              location: "file:/home/tw/code/zellij-pomodoro-plugin/target/wasm32-wasi/debug/pomodoro-clock.wasm"
+              location: "file:/home/tw/.cargo/bin/pomodoro-clock.wasm"
               _allow_exec_host_cmd: true
 
 tabs:
