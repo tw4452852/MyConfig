@@ -73,6 +73,9 @@ epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
 epm:install &silent-if-installed=$true github.com/zzamboni/elvish-modules
 
 use github.com/zzamboni/elvish-modules/terminal-title
+terminal-title:title-during-command = [cmd]{
+  put $cmd" | "(tilde-abbr $pwd)
+}
 
 use github.com/tw4452852/elvish-completions/common
 use github.com/tw4452852/elvish-completions/adb
