@@ -1,11 +1,11 @@
 eval %sh{kak-lsp --kakoune -s $kak_session}
 # set global lsp_cmd "kak-lsp -s %val{session} -vvv --log /tmp/kak-lsp.log"
-hook global WinSetOption filetype=(go|c|cpp|dart|rust) %{
+hook global WinSetOption filetype=(go|c|cpp|dart|rust|zig) %{
         lsp-enable-window
 }
 
 # Auto formatting before writing
-hook global BufWritePre .*\.(dart|rs) %{ lsp-formatting }
+hook global BufWritePre .*\.(dart|rs|zig) %{ lsp-formatting }
 
 define-command -hidden insert-tab %{
  try %{
