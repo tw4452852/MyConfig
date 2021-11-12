@@ -18,20 +18,24 @@ shift 1
 [ -z "$winid" ] && winid=`dial unix!$(namespace)/acmefocused`
 
 path=`9p read acme/$winid/tag | cut -d' ' -f1`
-if [ "$cmd" = "start" -a ! -z "$1" ]; then
-	path="$1"
+name=
+if [ "$cmd" = "start" ]; then
+	[ ! -z "$1" ] && name="$1" && shift 1
 fi
 
-name=c
-if [ -d $path ]; then
-	[ -f $path/Cargo.toml ] && name=r
-	[ -f $path/go.mod ] && name=g
-	[ -f $path/pubspec.yaml ] && name=d
-elif [ -f $path ]; then
-	ext=${path##*\.}
-	[ $ext = "go" ] && name=g
-	[ $ext = "rs" ] && name=r
-	[ $ext = "dart" ] && name=d
+if [ -z "$name" ]; then
+	if [ -d $path ]; then
+		[ -f $path/Cargo.toml ] && name=r
+		[ -f $path/go.mod ] && name=g
+		[ -f $path/pubspec.yaml ] && name=d
+		[ -f $path/build.zig ] && name=z
+	elif [ -f $path ]; then
+		ext=${path##*\.}
+		[ $ext = "go" ] && name=g
+		[ $ext = "rs" ] && name=r
+		[ $ext = "dart" ] && name=d
+		[ $ext = "zig" ] && name=z
+	fi
 fi
 proxy_addr="`namespace`/acme-lsp-$name.rpc"
 
@@ -92,6 +96,19 @@ case $cmd in
 					[[FilenameHandlers]]
 					Pattern = '\.dart$'
 					ServerKey = "dart"
+				EOF
+				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
+				;;
+			z)
+				cfg="$dir/zig_config.toml"
+				cat <<-EOF > "$cfg"
+					FormatOnPut = true
+					[Servers]
+					[Servers.zls]
+					Command = ["zls"]
+					[[FilenameHandlers]]
+					Pattern = '\.zig$'
+					ServerKey = "zls"
 				EOF
 				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
