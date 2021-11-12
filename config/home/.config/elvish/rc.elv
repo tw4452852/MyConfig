@@ -17,8 +17,10 @@ each [p]{
 	$E:FLUTTER_SDK/bin
 
 ]
-# prefer neovim
-if (has-external kak) {
+# prefer editinacme
+if (has-external editinacme) {
+	E:EDITOR = editinacme
+} elif (has-external kak) {
 	E:EDITOR = kak
 } elif (has-external nvim) {
 	E:CSCOPE_EDITOR = nvim
