@@ -35,6 +35,8 @@ if [ -z "$name" ]; then
 		[ $ext = "rs" ] && name=r
 		[ $ext = "dart" ] && name=d
 		[ $ext = "zig" ] && name=z
+		[ $ext = "c" ] && name=c
+		[ $ext = "h" ] && name=c
 	fi
 fi
 proxy_addr="`namespace`/acme-lsp-$name.rpc"
