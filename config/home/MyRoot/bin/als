@@ -2,6 +2,24 @@
 
 #set -x
 
+getWin() {
+	9p read acme/index | while read -r line; do
+		id=`echo $line | cut -d' ' -f1`
+		name=`echo $line | cut -d' ' -f6`
+		if [ "/LSP/DefRef" = $name ]; then
+			echo $id
+		fi
+	done
+}
+
+createWin() {
+	echo 'name /LSP/DefRef' | 9p write acme/new/ctl
+}
+
+wid=`getWin`
+[ -z "$wid" ] && createWin && wid=`getWin`
+[ -z "$wid" ] && { echo "failed to create /LSP/DefRef window"; exit 1; }
+
 dir=$HOME/.config/acme-lsp
 
 [ ! -d "$dir" ] && mkdir -p "$dir"
@@ -120,7 +138,8 @@ case $cmd in
 		 esac
 		;;
 	*)
-		acme-dot $winid | 9p write acme/cons
-		L -proxy.addr $proxy_addr $cmd $*
+		position=`acme-dot $winid`
+		echo "\n$position $cmd $*" | 9p write acme/$wid/body
+		L -proxy.addr $proxy_addr $cmd $* | 9p write acme/$wid/body
 		;;
 esac
