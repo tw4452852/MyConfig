@@ -141,5 +141,6 @@ case $cmd in
 		position=`acme-dot $winid`
 		echo "\n$position $cmd $*" | 9p write acme/$wid/body
 		L -proxy.addr $proxy_addr $cmd $* | 9p write acme/$wid/body
+		echo "clean" | 9p write acme/$wid/ctl
 		;;
 esac
