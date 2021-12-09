@@ -139,8 +139,12 @@ case $cmd in
 		;;
 	*)
 		position=`acme-dot $winid`
+		offset=`9p read acme/$wid/ctl | tr -s ' ' | cut -d' ' -f4`
+		echo -n "#$offset" | 9p write acme/$wid/addr
 		echo "\n$position $cmd $*" | 9p write acme/$wid/body
 		L -proxy.addr $proxy_addr $cmd $* | 9p write acme/$wid/body
 		echo "clean" | 9p write acme/$wid/ctl
+		echo "dot=addr" | 9p write acme/$wid/ctl
+		echo "show" | 9p write acme/$wid/ctl
 		;;
 esac
