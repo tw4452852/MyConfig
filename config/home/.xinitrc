@@ -1,5 +1,6 @@
 # cache to tmp
 export XDG_CACHE_HOME="/tmp/.cache"
+export XDG_RUNTIME_DIR="/tmp/runtime-tw"
 # Update fonts cache
 fc-cache -vf
 # Load myself config
@@ -17,7 +18,8 @@ fcitx -r -d
 xautolock -locker 'xlock -mode blank' &
 
 # start PulseAudio if it's not running
-pulseaudio --start --exit-idle-time=-1
+#pulseaudio --start --exit-idle-time=-1
+pipewire &
 
 # rust
 . ~/.cargo/env
