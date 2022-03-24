@@ -47,14 +47,15 @@ if [ -z "$name" ]; then
 		[ -f $path/go.mod ] && name=g
 		[ -f $path/pubspec.yaml ] && name=d
 		[ -f $path/build.zig ] && name=z
+		[ -f $path/mix.exs ] && name=e
 	elif [ -f $path ]; then
 		ext=${path##*\.}
 		[ $ext = "go" ] && name=g
 		[ $ext = "rs" ] && name=r
 		[ $ext = "dart" ] && name=d
 		[ $ext = "zig" ] && name=z
-		[ $ext = "c" ] && name=c
-		[ $ext = "h" ] && name=c
+		[ $ext = "c" -o $ext = "h" ] && name=c
+		[ $ext = "ex" -o $ext = "exs" ] && name=e
 	fi
 fi
 proxy_addr="`namespace`/acme-lsp-$name.rpc"
@@ -129,6 +130,19 @@ case $cmd in
 					[[FilenameHandlers]]
 					Pattern = '\.zig$'
 					ServerKey = "zls"
+				EOF
+				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
+				;;
+			e)
+				cfg="$dir/elixir_config.toml"
+				cat <<-EOF > "$cfg"
+					FormatOnPut = true
+					[Servers]
+					[Servers.els]
+					Command = ["/home/tw/Downloads/elixir-ls/language_server.sh"]
+					[[FilenameHandlers]]
+					Pattern = '\.(ex|exs)$'
+					ServerKey = "els"
 				EOF
 				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
