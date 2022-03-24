@@ -2,6 +2,6 @@
 
 #set -x
 
-path=`fzf +m --bind alt-c:replace-query,alt-enter:print-query`
+path=`fzf +m --bind alt-c:replace-query,enter:replace-query+print-query`
 mkdir -p `dirname $path`
 B $path
