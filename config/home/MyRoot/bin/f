@@ -2,6 +2,10 @@
 
 #set -x
 
+dir=$1
+[ -z $dir ] && dir=.
+cd $dir
+
 path=`fzf +m --bind alt-c:replace-query,enter:replace-query+print-query`
 mkdir -p `dirname $path`
 B $path
