@@ -43,3 +43,6 @@
 	cookiefile = /home/tw/.gitcookies
 [credential]
 	helper = store
+
+[includeIf "gitdir:~/code/work/"]
+    path = ~/code/work/.gitconfig
