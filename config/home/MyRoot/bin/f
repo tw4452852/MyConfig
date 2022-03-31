@@ -1,11 +1,23 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-#set -x
+set -e
 
 dir=$1
 [ -z $dir ] && dir=.
 cd $dir
 
-path=`fzf +m --bind alt-c:replace-query,enter:replace-query+print-query,alt-enter:print-query`
-mkdir -p `dirname $path`
-B $path
+sel=`fzf +m \
+	--bind alt-r:reload:"sh -c {q}||true" \
+	--bind alt-r:+clear-query \
+	--bind alt-c:replace-query \
+	--bind alt-enter:print-query \
+	--bind enter:replace-query+print-query \
+	--header '<a-r>:run|<a-c>:complete|<a-enter>:query'`
+
+IFS=':'; a=($sel); unset IFS;
+mkdir -p `dirname ${a[0]}`
+
+case ${a[1]} in
+    ''|*[!0-9]*) B ${a[0]} ;;
+    *) B ${a[0]}:${a[1]} ;;
+esac
