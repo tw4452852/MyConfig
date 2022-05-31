@@ -1,0 +1,1 @@
+# Mirror of my $HOME
