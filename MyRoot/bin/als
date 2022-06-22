@@ -1,8 +1,9 @@
 #!/bin/sh
 
+set -e
 #set -x
 
-getWin() {
+get_lsp_wid() {
 	9p read acme/index | while read -r line; do
 		id=`echo $line | cut -d' ' -f1`
 		name=`echo $line | cut -d' ' -f6`
@@ -12,73 +13,138 @@ getWin() {
 	done
 }
 
-createWin() {
+create_lsp_window() {
 	echo 'name /LSP/DefRef' | 9p write acme/new/ctl
 }
 
-wid=`getWin`
-[ -z "$wid" ] && createWin && wid=`getWin`
-[ -z "$wid" ] && { echo "failed to create /LSP/DefRef window"; exit 1; }
+detect_kind() {
+	path=$1
+	kind=
 
-dir=$HOME/.config/acme-lsp
+	if [ -d $path ]; then
+		[ -f $path/Cargo.toml ] && kind=r
+		[ -f $path/go.mod ] && kind=g
+		[ -f $path/pubspec.yaml ] && kind=d
+		[ -f $path/build.zig ] && kind=z
+		[ -f $path/mix.exs ] && kind=e
+	elif [ -f $path ]; then
+		ext=${path##*\.}
+		[ $ext = "go" ] && kind=g
+		[ $ext = "rs" ] && kind=r
+		[ $ext = "dart" ] && kind=d
+		[ $ext = "zig" ] && kind=z
+		[ $ext = "c" -o $ext = "cpp" -o $ext = "cc" -o $ext = "h" ] && kind=c
+		[ $ext = "ex" -o $ext = "exs" ] && kind=e
+	fi
 
-[ ! -d "$dir" ] && mkdir -p "$dir"
+	echo $kind
+}
+
+detect_root() {
+	kind=$1
+	root=$2
+
+	case $kind in
+		c)
+			while [ ! -e "$root/compile_commands.json" ] && [ "$root" != "/" ]
+			do
+				root=`dirname $root`
+			done
+			;;
+		d)
+			while [ ! -e "$root/pubspec.yaml" ] && [ "$root" != "/" ]
+			do
+				root=`dirname $root`
+			done
+			;;
+		e)
+			while [ ! -e "$root/mix.exs" ] && [ "$root" != "/" ]
+			do
+				root=`dirname $root`
+			done
+			;;
+		g)
+			while [ ! -e "$root/go.mod" ] && [ "$root" != "/" ]
+			do
+				root=`dirname $root`
+			done
+			;;
+		r)
+			while [ ! -e "$root/Cargo.toml" ] && [ "$root" != "/" ]
+			do
+				root=`dirname $root`
+			done
+			;;
+		z)
+			while [ ! -e "$root/build.zig" ] && [ "$root" != "/" ]
+			do
+				root=`dirname $root`
+			done
+			;;
+	esac
+
+	[ $root = "/" ] && root=
+	echo $root
+}
+
+wid=`get_lsp_wid`
+[ -z "$wid" ] && create_lsp_window && wid=`get_lsp_wid`
+[ -z "$wid" ] && { echo "failed to create lsp window"; exit 1; }
+
 
 if [ $# -lt 1 ]; then
-	echo "$0 [command]"
+	echo "usage: $0 [command]"
 	exit 2
 fi
 cmd=$1
 shift 1
 
-[ -z "$(pgrep acmefocused)" ] && { echo "acmefocused not started"; exit 1; }
-
+[ -z "$winid" ] && [ -z "$(pgrep acmefocused)" ] && { echo "acmefocused not started"; exit 3; }
 [ -z "$winid" ] && winid=`dial unix!$(namespace)/acmefocused`
+[ -z "$winid" ] && { echo "failed to get current window id"; exit 3; }
 
-path=`9p read acme/$winid/tag | cut -d' ' -f1`
-name=
-if [ "$cmd" = "start" ]; then
-	[ ! -z "$1" ] && name="$1" && shift 1
-fi
+file_path=`9p read acme/$winid/tag | cut -d' ' -f1`
+kind=`detect_kind "$file_path"`
+[ -z "$kind" ] && { echo "failed to detect kind based on $file_path"; exit 4; }
+root=`detect_root "$kind" "$file_path"`
+[ -z "$root" ] && { echo "failed to detect root based on $kind $file_path"; exit 5; }
 
-if [ -z "$name" ]; then
-	if [ -d $path ]; then
-		[ -f $path/Cargo.toml ] && name=r
-		[ -f $path/go.mod ] && name=g
-		[ -f $path/pubspec.yaml ] && name=d
-		[ -f $path/build.zig ] && name=z
-		[ -f $path/mix.exs ] && name=e
-	elif [ -f $path ]; then
-		ext=${path##*\.}
-		[ $ext = "go" ] && name=g
-		[ $ext = "rs" ] && name=r
-		[ $ext = "dart" ] && name=d
-		[ $ext = "zig" ] && name=z
-		[ $ext = "c" -o $ext = "h" ] && name=c
-		[ $ext = "ex" -o $ext = "exs" ] && name=e
+dir=/tmp/acme-lsp
+[ ! -d "$dir" ] && mkdir -p "$dir"
+name="${kind}_`echo $root | sed -e 's|/|_|g'`"
+proxy_addr="$dir/$name.rpc"
+cfg="$dir/$name.conf"
+pidfile="$dir/$name.pid"
+
+if ! grep -q ${proxy_addr} /proc/net/unix; then
+	if [ "$cmd" != "start" ]; then
+		$0 start &
+
+		i=100 # 100 * 0.1 = 10s
+		while [ $i -gt 0 ] && ! grep -q ${proxy_addr} /proc/net/unix; do sleep .1; i=$((i-1)); done
+		[ $i = 0 ] && ! grep -q ${proxy_addr} /proc/net/unix && { echo "failed to start server $name"; exit 6; }
+	fi
+else
+	if [ "$cmd" = "start" ]; then
+		echo "server $name started"
+		exit 0
 	fi
 fi
-proxy_addr="`namespace`/acme-lsp-$name.rpc"
 
 case $cmd in
 	start)
-		root=`pwd`
-		[ ! -z $1 ] && root=`realpath $1`
-		case $name in
+		case $kind in
 			c)
-				cfg="$dir/c_config.toml"
 				cat <<-EOF > "$cfg"
 					[Servers]
 					[Servers.clangd]
 					Command = ["clangd", "--log=error"]
 					[[FilenameHandlers]]
-					Pattern = '\.(c|cpp|cc|h)$'
+					Pattern = '${root}/.*\.(c|cpp|cc|h)$'
 					ServerKey = "clangd"
 				EOF
-				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
 			r)
-				cfg="$dir/rust_config.toml"
 				cat <<-EOF > "$cfg"
 					FormatOnPut = true
 					[Servers]
@@ -88,13 +154,11 @@ case $cmd in
 					[Servers.ra.Options.diagnostics]
 					disabled = ["inactive-code"]
 					[[FilenameHandlers]]
-					Pattern = '\.rs$'
+					Pattern = '${root}/.*\.rs$'
 					ServerKey = "ra"
 				EOF
-				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
 			g)
-				cfg="$dir/go_config.toml"
 				cat <<-EOF > "$cfg"
 					FormatOnPut = true
 					CodeActionsOnPut = ["source.organizeImports"]
@@ -102,67 +166,93 @@ case $cmd in
 					[Servers.gopls]
 					Command = ["gopls", "serve"]
 					[[FilenameHandlers]]
-					Pattern = '\.go$'
+					Pattern = '${root}/.*\.go$'
 					ServerKey = "gopls"
 				EOF
-				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
 			d)
-				cfg="$dir/dart_config.toml"
 				cat <<-EOF > "$cfg"
 					FormatOnPut = true
 					[Servers]
 					[Servers.dart]
 					Command = ["sh", "-c", "dart $(dirname $(which dart))/snapshots/analysis_server.dart.snapshot --lsp"]
 					[[FilenameHandlers]]
-					Pattern = '\.dart$'
+					Pattern = '${root}/.*\.dart$'
 					ServerKey = "dart"
 				EOF
-				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
 			z)
-				cfg="$dir/zig_config.toml"
 				cat <<-EOF > "$cfg"
 					FormatOnPut = true
 					[Servers]
 					[Servers.zls]
-					Command = ["zls"]
+					Command = ["/home/tw/code/zls/zig-out/bin/zls"]
+					StderrFile = "/tmp/zls.log"
 					[[FilenameHandlers]]
-					Pattern = '\.zig$'
+					Pattern = '${root}/.*\.zig$'
 					ServerKey = "zls"
 				EOF
-				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
 			e)
-				cfg="$dir/elixir_config.toml"
 				cat <<-EOF > "$cfg"
 					FormatOnPut = true
 					[Servers]
 					[Servers.els]
-					Command = ["/home/tw/Downloads/elixir-ls/language_server.sh"]
+					Command = ["/home/tw/code/elixir-ls/output/language_server.sh"]
+					[Servers.els.Options]
+					[Servers.els.Options.elixirLS]
+					dialyzerEnabled = false
 					[[FilenameHandlers]]
-					Pattern = '\.(ex|exs)$'
+					Pattern = '${root}/.*\.(ex|exs)$'
 					ServerKey = "els"
 				EOF
-				ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr $proxy_addr -rootdir $root -workspaces $root
 				;;
 			*)
-				echo "Not supported: $name"
+				echo "Not supported: $kind"
+				exit 1
 				;;
-		 esac
+		esac
+		echo $$ > $pidfile
+		exec env ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr "$proxy_addr" -rootdir "$root" -workspaces "$root"
 		;;
 	*)
+		# save current position
 		position=`acme-dot $winid`
 		offset=`9p read acme/$wid/ctl | tr -s ' ' | cut -d' ' -f4`
 		printf "#$offset" | 9p write acme/$wid/addr
+
+		# get context
 		curOff=`echo $position | cut -d'#' -f3`
-		curLineNum=`head -c+$curOff $path | wc -l`
+		curLineNum=`head -c+$curOff $file_path | wc -l`
 		curLineNum=$((curLineNum+1))
-		curLine=`sed -n ${curLineNum}p $path`
+		curLine=`sed -n ${curLineNum}p $file_path`
 		echo "\n$position $cmd $*:$curLine" | 9p write acme/$wid/body
+
+		# query the server and pump the response to lsp result window
 		L -proxy.addr $proxy_addr $cmd $* | 9p write acme/$wid/body
+
+		# make sure the result is visible
 		echo "clean" | 9p write acme/$wid/ctl
 		echo "dot=addr" | 9p write acme/$wid/ctl
 		echo "show" | 9p write acme/$wid/ctl
+
+		# refresh the timestamp for garbage collection below
+		touch $pidfile
 		;;
 esac
+
+# killed unused servers
+threshold=$((15*60)) # 15min
+cur=`date "+%s"`
+for f in $dir/*.pid; do
+	ts=`date -r "$f" "+%s"`
+	duration=$((cur-ts))
+	pid=`cat $f`
+
+	if ! kill -s 0 $pid 2>/dev/null; then
+		rm -f ${f%.*}.rpc ${f%.*}.conf $f
+	elif [ $duration -gt $threshold ];then
+		kill $pid
+		rm -f ${f%.*}.rpc ${f%.*}.conf $f
+	fi
+done
