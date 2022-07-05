@@ -108,6 +108,7 @@ kind=`detect_kind "$file_path"`
 [ -z "$kind" ] && { echo "failed to detect kind based on $file_path"; exit 4; }
 root=`detect_root "$kind" "$file_path"`
 [ -z "$root" ] && { echo "failed to detect root based on $kind $file_path"; exit 5; }
+quoted_root=$(printf %s "$root" | sed 's/[][()\.^$?*+]/\\&/g')
 
 dir=/tmp/acme-lsp
 [ ! -d "$dir" ] && mkdir -p "$dir"
@@ -140,7 +141,7 @@ case $cmd in
 					[Servers.clangd]
 					Command = ["clangd", "--log=error"]
 					[[FilenameHandlers]]
-					Pattern = '${root}/.*\.(c|cpp|cc|h)$'
+					Pattern = '${quoted_root}/.*\.(c|cpp|cc|h)$'
 					ServerKey = "clangd"
 				EOF
 				;;
@@ -154,7 +155,7 @@ case $cmd in
 					[Servers.ra.Options.diagnostics]
 					disabled = ["inactive-code"]
 					[[FilenameHandlers]]
-					Pattern = '${root}/.*\.rs$'
+					Pattern = '${quoted_root}/.*\.rs$'
 					ServerKey = "ra"
 				EOF
 				;;
@@ -166,7 +167,7 @@ case $cmd in
 					[Servers.gopls]
 					Command = ["gopls", "serve"]
 					[[FilenameHandlers]]
-					Pattern = '${root}/.*\.go$'
+					Pattern = '${quoted_root}/.*\.go$'
 					ServerKey = "gopls"
 				EOF
 				;;
@@ -177,7 +178,7 @@ case $cmd in
 					[Servers.dart]
 					Command = ["sh", "-c", "dart $(dirname $(which dart))/snapshots/analysis_server.dart.snapshot --lsp"]
 					[[FilenameHandlers]]
-					Pattern = '${root}/.*\.dart$'
+					Pattern = '${quoted_root}/.*\.dart$'
 					ServerKey = "dart"
 				EOF
 				;;
@@ -189,7 +190,7 @@ case $cmd in
 					Command = ["/home/tw/code/zls/zig-out/bin/zls"]
 					StderrFile = "/tmp/zls.log"
 					[[FilenameHandlers]]
-					Pattern = '${root}/.*\.zig$'
+					Pattern = '${quoted_root}/.*\.zig$'
 					ServerKey = "zls"
 				EOF
 				;;
@@ -203,7 +204,7 @@ case $cmd in
 					[Servers.els.Options.elixirLS]
 					dialyzerEnabled = false
 					[[FilenameHandlers]]
-					Pattern = '${root}/.*\.(ex|exs)$'
+					Pattern = '${quoted_root}/.*\.(ex|exs)$'
 					ServerKey = "els"
 				EOF
 				;;
