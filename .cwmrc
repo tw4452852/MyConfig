@@ -47,10 +47,12 @@ bind-mouse 4-1		window-move
 bind-mouse 4-3		window-resize
 bind-mouse "4"		menu-cmd
 bind-mouse "5"		menu-window
+bind-key 4-w		menu-window
 bind-key 4-slash	menu-exec
 bind-key 4-Return	terminal
 bind-key 4-l		lock
 bind-key 4-Tab		window-cycle-ingroup
+bind-key 4-g		group-cycle
 bind-key 4-m		window-maximize
 bind-key 4-q		window-close
 bind-key 4C-q		quit
