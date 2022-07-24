@@ -2,7 +2,7 @@ command term urxvt
 command lock 'xautolock -locknow'
 command clock "dclock -bg black -led_off black -date '%Y-%b-%d %a' -fontName 'Go Mono' -bw 0"
 command acme "/home/tw/MyRoot/bin/a"
-command monitor "urxvt -name monitor -e btm --color default-light"
+command monitor "urxvt -name monitor -e sudo htop"
 
 ignore dclock
 autogroup 9 Dclock
