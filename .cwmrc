@@ -48,6 +48,7 @@ bind-key 4C-9		window-movetogroup-9
 bind-mouse 4-1		window-move
 bind-mouse 4-3		window-resize
 bind-mouse "4"		menu-cmd
+bind-key 4-c		menu-cmd
 bind-mouse "5"		menu-window
 bind-key 4-w		menu-window
 bind-key 4-slash	menu-exec
@@ -58,3 +59,4 @@ bind-key 4-g		group-cycle
 bind-key 4-m		window-maximize
 bind-key 4-q		window-close
 bind-key 4C-q		quit
+bind-key 4C-r		restart
