@@ -140,6 +140,8 @@ case $cmd in
 					[Servers]
 					[Servers.clangd]
 					Command = ["clangd", "--log=error"]
+					#StderrFile = "/tmp/clangd.log"
+					#LogFile = "/tmp/clangd.log"
 					[[FilenameHandlers]]
 					Pattern = '${quoted_root}/.*\.(c|cpp|cc|h)$'
 					ServerKey = "clangd"
@@ -227,7 +229,7 @@ case $cmd in
 		curLineNum=`head -c+$curOff $file_path | wc -l`
 		curLineNum=$((curLineNum+1))
 		curLine=`sed -n ${curLineNum}p $file_path`
-		echo "\n$position $cmd $*:$curLine" | 9p write acme/$wid/body
+		printf "\n$position $cmd $*:$curLine\n" | 9p write acme/$wid/body
 
 		# query the server and pump the response to lsp result window
 		L -proxy.addr $proxy_addr $cmd $* | 9p write acme/$wid/body
