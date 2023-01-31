@@ -44,6 +44,10 @@ fn l {|@args|
 # key bindings#{{{
 set edit:insert:binding[C-a] = $edit:move-dot-sol~
 set edit:insert:binding[C-e] = $edit:move-dot-eol~
+set edit:insert:binding[A-h] = $edit:move-dot-left~
+set edit:insert:binding[A-j] = $edit:move-dot-down~
+set edit:insert:binding[A-k] = $edit:move-dot-up~
+set edit:insert:binding[A-l] = $edit:move-dot-right~
 set edit:insert:binding[A-w] = $edit:kill-small-word-left~
 set edit:insert:binding[A-p] = $edit:history:start~
 # Alt-d to delete the word under the cursor
