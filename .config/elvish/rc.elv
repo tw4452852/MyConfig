@@ -71,6 +71,16 @@ set before-chdir = [
 	}
 ]
 #}}}
+
+# notify when long-run command finish
+set edit:after-command = [ $@edit:after-command
+	{|m|
+		if (>= $m[duration] 1.0) {
+			notify-send $m[src][code] 'took '$m[duration]' seconds'
+		}
+	}
+]
+
 # completion#{{{
 set edit:completion:matcher[''] = {|x| edit:match-prefix &ignore-case=$true $x }
 
