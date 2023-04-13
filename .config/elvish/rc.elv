@@ -72,14 +72,6 @@ set before-chdir = [
 ]
 #}}}
 
-# notify when long-run command finish
-set edit:after-command = [ $@edit:after-command
-	{|m|
-		if (>= $m[duration] 1.0) {
-			notify-send $m[src][code] 'took '$m[duration]' seconds'
-		}
-	}
-]
 
 # completion#{{{
 set edit:completion:matcher[''] = {|x| edit:match-prefix &ignore-case=$true $x }
@@ -89,11 +81,22 @@ epm:install &silent-if-installed=$true github.com/zzamboni/elvish-completions
 epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
 epm:install &silent-if-installed=$true github.com/zzamboni/elvish-modules
 epm:install &silent-if-installed=$true github.com/xiaq/edit.elv
+epm:install &silent-if-installed=$true github.com/krader1961/elvish-lib
 
 use github.com/zzamboni/elvish-modules/terminal-title
 set terminal-title:title-during-command = {|cmd|
   put $cmd" | "(tilde-abbr $pwd)
 }
+
+# notify when long-run command finish
+use github.com/krader1961/elvish-lib/cmd-duration
+set edit:after-command = [ $@edit:after-command
+	{|m|
+		if (>= $m[duration] 1.0) {
+			notify-send $m[src][code] 'took '(cmd-duration:human-readable $m[duration])
+		}
+	}
+]
 
 use github.com/xiaq/edit.elv/smart-matcher
 smart-matcher:apply
