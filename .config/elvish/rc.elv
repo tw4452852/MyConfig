@@ -41,6 +41,9 @@ if (has-external pt) {
 fn l {|@args|
 	ls --color $@args
 }
+fn zr {|@args|
+	zellij run $@args
+}
 # key bindings#{{{
 set edit:insert:binding[C-a] = $edit:move-dot-sol~
 set edit:insert:binding[C-e] = $edit:move-dot-eol~
