@@ -1,9 +1,3 @@
-# cache to tmp
-export XDG_CACHE_HOME="/tmp/.cache"
-mkdir -p "$XDG_CACHE_HOME"
-export XDG_RUNTIME_DIR="/tmp/runtime-tw"
-mkdir -p "$XDG_RUNTIME_DIR"
-
 # Update fonts cache
 fc-cache -vf
 # Load myself config
@@ -21,21 +15,6 @@ xautolock -locker 'xlock -mode blank' &
 # start PulseAudio if it's not running
 #pulseaudio --start --exit-idle-time=-1
 pipewire 1>/tmp/pipewire.log 2>&1 &
-
-# rust
-. ~/.cargo/env
-
-# Go
-. ~/.go/env
-
-# Dart/Flutter
-. ~/.dart/env
-
-# Plan9Port
-. ~/.p9p/env
-
-# MySelf
-export PATH=$PATH:$HOME/MyRoot/bin
 
 # xbindkeys
 pkill xbindkeys
