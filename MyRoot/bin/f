@@ -19,6 +19,7 @@ cd $dir
 
 SHELL="bash" fzf +m \
 	--bind alt-r:reload:"sh -c {q}||true" \
+	--bind 'ctrl-r:reload(fd)' \
 	--bind alt-r:+clear-query \
 	--bind alt-c:replace-query \
 	--bind 'alt-enter:execute-silent(open_in_acme {q})' \
