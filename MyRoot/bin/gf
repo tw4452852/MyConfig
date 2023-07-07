@@ -1,3 +1,5 @@
 #!/bin/bash
 
-urxvt -e f
+name="f-$PWD"
+
+wmctrl -F -a "$name" || urxvt -title "$name" -e f
