@@ -2,22 +2,28 @@
 
 set -e
 
+function open_in_acme() {
+	IFS=':'; a=($1); unset IFS;
+	mkdir -p `dirname ${a[0]}`
+
+	case ${a[1]} in
+  	  ''|*[!0-9]*) B ${a[0]} ;;
+ 	   *) B ${a[0]}:${a[1]} ;;
+	esac
+}
+export -f open_in_acme
+
 dir=$1
 [ -z $dir ] && dir=.
 cd $dir
 
-sel=`fzf +m \
+SHELL="bash" fzf +m \
 	--bind alt-r:reload:"sh -c {q}||true" \
 	--bind alt-r:+clear-query \
 	--bind alt-c:replace-query \
-	--bind alt-enter:print-query \
-	--bind enter:replace-query+print-query \
-	--header '<a-r>:run|<a-c>:complete|<a-enter>:query'`
+	--bind 'alt-enter:execute-silent(open_in_acme {q})' \
+	--bind 'enter:execute-silent(open_in_acme {})' \
+	--header "$(realpath $dir)
+<a-r>:run query|<a-c>:complete query|<a-enter>:open query|<enter>:open selected"
 
-IFS=':'; a=($sel); unset IFS;
-mkdir -p `dirname ${a[0]}`
 
-case ${a[1]} in
-    ''|*[!0-9]*) B ${a[0]} ;;
-    *) B ${a[0]}:${a[1]} ;;
-esac
