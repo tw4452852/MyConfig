@@ -16,9 +16,9 @@ command -v editinacme >/dev/null 2>&1 || \
  { echo "install editinacme"; GO111MODULE=on go install 9fans.net/go/acme/editinacme@latest || exit 1; }
 
 BROWSER=qutebrowser
-PLUMBFILE=$HOME/lib/plumbing
 font=/mnt/font/GoMono/11a/font
 Font=/mnt/font/WenQuanYiMicroHei/11a/font
+PLUMBFILE=$HOME/.config/plan9/plumbing
 tabstop=4
 SHELL=$PLAN9/bin/rc
 acmeshell=$PLAN9/bin/rc

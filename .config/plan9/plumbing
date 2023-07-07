@@ -1,4 +1,4 @@
-# to update: cat $HOME/lib/plumbing | 9p write plumb/rules
+# to update: cat $HOME/.config/plan9/plumbing | 9p write plumb/rules
 
 editor = acme
 
