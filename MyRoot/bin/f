@@ -19,11 +19,11 @@ cd $dir
 
 SHELL="bash" fzf +m \
 	--bind alt-r:reload:"sh -c {q}||true" \
-	--bind 'ctrl-r:reload(fd)' \
+	--bind 'ctrl-r:reload(fd --no-ignore)' \
 	--bind alt-r:+clear-query \
 	--bind alt-c:replace-query \
-	--bind 'alt-enter:execute-silent(open_in_acme {q})' \
-	--bind 'enter:execute-silent(open_in_acme {})' \
+	--bind 'alt-enter:execute-silent(open_in_acme {q})+close' \
+	--bind 'enter:execute-silent(open_in_acme {})+close' \
 	--header "$(realpath $dir)
 <a-r>:run query|<a-c>:complete query|<a-enter>:open query|<enter>:open selected"
 
