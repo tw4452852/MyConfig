@@ -6,12 +6,17 @@ command monitor "urxvt -name monitor -e sudo htop"
 
 fontname "WenQuanYi Micro Hei"
 
+sticky yes
+
 ignore dclock
 autogroup 9 Dclock
 ignore monitor
 autogroup 9 monitor,URxvt
 
-sticky yes
+autogroup 1 acme
+autogroup 2 URxvt
+autogroup 3 qutebrowser
+autogroup 3 Chromium
 
 unbind-key all
 unbind-mouse all
@@ -49,13 +54,14 @@ bind-key 4C-9		window-movetogroup-9
 bind-mouse 4-1		window-move
 bind-mouse 4-3		window-resize
 bind-mouse "4"		menu-cmd
-bind-key 4-c		menu-cmd
+bind-key 4-space	menu-ssh
 bind-mouse "5"		menu-window
 bind-key 4-w		menu-window
 bind-key 4-slash	menu-exec
 bind-key 4-Return	terminal
 bind-key 4-l		lock
-bind-key 4-Tab		window-cycle-ingroup
+bind-key 4-Tab		group-last
+bind-key 4C-Tab		window-cycle-ingroup
 bind-key 4-g		group-cycle
 bind-key 4-m		window-maximize
 bind-key 4-x		window-close
