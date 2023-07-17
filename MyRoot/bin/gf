@@ -1,5 +1,61 @@
-#!/bin/bash
+#!/home/tw/code/plan9port/bin/rc
 
-name="f-$PWD"
+. 9.rc
+. $PLAN9/lib/acme.rc
 
-wmctrl -F -a "$name" || urxvt -title "$name" -e f
+PWD=`{pwd}
+name=$PWD/+fzf
+
+fn refresh {
+	echo -n , | winwrite addr
+	echo -n '' | winwrite data
+	tmux capturep -t $name:1 -p | winwrite body
+}
+
+fn event {
+	# $1 - c1 origin of event
+	# $2 - c2 type of action
+	# $3 - q0 beginning of selection
+	# $4 - q1 end of selection
+	# $5 - eq0 beginning of expanded selection
+	# $6 - eq1 end of expanded selection
+	# $7 - flag
+	# $8 - nr number of runes in $9
+	# $9 - text
+	# $10 - chorded argument
+	# $11 - origin of chorded argument
+
+	switch($1$2){
+	case Mx MX	# button 2 in tag or body
+		if(~ $7 3) { # builtin command
+			winwriteevent $*
+		}
+		if not{
+			ifs='|'
+			input=`{winread tag}
+			tmux send -t $name:1 'C-u' `{echo $input(2)|xargs} 'M-r'
+			refresh
+		}
+	case *i Kd # changes in tag
+		ifs='|'
+		input=`{winread tag}
+		tmux send -t $name:1 'C-u' `{echo $input(2)|xargs}
+		refresh
+	case Ml # right click on tag bar to trigger refresh
+		refresh
+	case ML # rigth click on body to find
+		winwriteevent $*
+	}
+}
+
+newwindow
+winname $name
+tmux new -d -A -s $name -c $PWD f >[2]/dev/null
+winctl cleartag >[2]/dev/null || exit 0
+
+wineventloop &
+
+while() {
+	9p ls acme/$winid >/dev/null >[2=1] || exit 0
+	sleep 1
+}
