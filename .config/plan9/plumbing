@@ -7,4 +7,43 @@ data	matches	'[0-9a-f]*[a-f][0-9a-f]*'
 data	matches	'([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]+)'
 plumb	start rc -c 'cd '$wdir'; cd `{git rev-parse --show-toplevel} && [ -d .git ] && git show '$1' | plumb -i -d edit -a ''action=showdata filename=+git/'$1''' '
 
-include basic
+type	is	text
+data	matches	'file:([.a-zA-Z¡-￿0-9_\-]([.a-zA-Z¡-￿0-9_/\-]*[a-zA-Z¡-￿0-9_/\-]))?'
+arg	isfile	$1
+data	set	file://$file
+plumb	to	web
+plumb	start	web $data
+
+type	is	text
+data	matches	'(https?|ftp|file|gopher|mailto|news|nntp|telnet|wais|prospero)://[a-zA-Z0-9_@\-]+([.:][a-zA-Z0-9_@\-]+)*/?[a-zA-Z0-9_?,%#~&/\-+=]+([:.][a-zA-Z0-9_?,%#~&/\-+=]+)*'
+plumb	to	web
+plumb	start	web $0
+
+type	is	text
+data	matches	'([.a-zA-Z¡-￿0-9_/\-@]*[a-zA-Z¡-￿0-9_/\-])':$twocolonaddr,$twocolonaddr
+arg	isfile	$1
+data	set	$file
+attr	add	addr=$2-#0+#$3-#1,$4-#0+#$5-#1
+plumb	to	edit
+plumb	client	$editor
+
+type	is	text
+data	matches	'([.a-zA-Z¡-￿0-9_/\-@]*[a-zA-Z¡-￿0-9_/\-])':$twocolonaddr
+arg	isfile	$1
+data	set	$file
+attr	add	addr=$2-#0+#$3-#1
+plumb	to	edit
+plumb	client	$editor
+
+type	is	text
+data	matches	'([.a-zA-Z¡-￿0-9_/\-@]*[a-zA-Z¡-￿0-9_/\-])('$addr')?'
+arg	isfile	$1
+data	set	$file
+attr	add	addr=$3
+plumb	to	edit
+plumb	client	$editor
+
+type	is	text
+data	matches	'([a-zA-Z¡-￿0-9_\-./]+)\(([1-8])\)'
+plumb	start	rc -c 'man '$2' '$1' >[2=1] | nobs | plumb -i -d edit -a ''action=showdata filename=/man/'$1'('$2')'''
+
