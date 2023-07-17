@@ -17,7 +17,7 @@ dir=$1
 [ -z $dir ] && dir=.
 cd $dir
 
-SHELL="bash" fzf +m \
+SHELL="bash" fzf +m --no-unicode --no-separator --no-scrollbar --no-color \
 	--bind alt-r:reload:"sh -c {q}||true" \
 	--bind 'ctrl-r:reload(fd --no-ignore)' \
 	--bind alt-r:+clear-query \
