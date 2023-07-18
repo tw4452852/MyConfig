@@ -96,7 +96,9 @@ use github.com/krader1961/elvish-lib/cmd-duration
 set edit:after-command = [ $@edit:after-command
 	{|m|
 		if (>= $m[duration] 1.0) {
-			notify-send $m[src][code] 'took '(cmd-duration:human-readable $m[duration])
+			if (has-external notify-send) {
+				notify-send $m[src][code] 'took '(cmd-duration:human-readable $m[duration])
+			}
 		}
 	}
 ]
