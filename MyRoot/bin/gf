@@ -10,6 +10,7 @@ fn refresh {
 	echo -n , | winwrite addr
 	echo -n '' | winwrite data
 	tmux capturep -t $name:1 -p | winwrite body
+	echo clean | winwrite ctl
 }
 
 fn event {
