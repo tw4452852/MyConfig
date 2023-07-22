@@ -22,6 +22,7 @@ PLUMBFILE=$HOME/.config/plan9/plumbing
 tabstop=4
 SHELL=$PLAN9/bin/rc
 acmeshell=$PLAN9/bin/rc
+mnt=/tmp/acme
 
 TERM=dumb
 MANPAGER=nobs
@@ -52,5 +53,8 @@ acme_pid=$!
 sleep 1
 acmefocused &
 acme-tag &
+
+[ -d $mnt ] || mkdir $mnt
+9 mount `9 namespace`/acme $mnt
 
 wait $acme_pid
