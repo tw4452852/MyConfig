@@ -51,7 +51,7 @@ fn event {
 
 newwindow
 winname $name
-tmux new -d -A -s $name -c $PWD f >[2]/dev/null
+tmux new -dAD -s $name -c $PWD f >[2]/dev/null
 winctl cleartag >[2]/dev/null || exit 0
 
 wineventloop
