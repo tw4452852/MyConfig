@@ -35,7 +35,13 @@ fn event {
 		if not{
 			ifs='|'
 			input=`{winread tag}
-			tmux send -t $name:1 'C-u' `{echo $input(2)|xargs} 'M-r'
+			cmd=`{echo $input(2)|xargs}
+			if (~ $cmd '') {
+				tmux send -t $name:1 'C-r'
+			}
+			if not{
+				tmux send -t $name:1 'C-u' $cmd 'M-r'
+			}
 			refresh
 		}
 	case *i Kd # changes in tag
