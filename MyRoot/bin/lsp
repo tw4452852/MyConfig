@@ -190,6 +190,7 @@ run-parallel {
     try {
       handle (str:fields $l)
     } catch e {
+      put $l
       put 'file tracking thread: error:'
       put $e
       put 'file tracking thread: exit'
@@ -243,6 +244,7 @@ run-parallel {
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
     } catch e {
+      put $l
       put 'input thread: error:'
       pprint $e
       break
