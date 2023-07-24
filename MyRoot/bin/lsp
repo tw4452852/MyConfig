@@ -1,0 +1,255 @@
+#!/home/tw/go/bin/elvish
+use file
+use str
+use path
+
+# pipe between input thread(writer), file tracking thread(writer) and server thread(reader)
+var p = (file:pipe)
+var wlock = $false
+fn lock {
+  while $wlock { nop }
+  set wlock = $true
+}
+fn unlock {
+  set wlock = $false
+}
+
+var content = (jo -d. -- -s jsonrpc=2.0 id=1 method=initialize params.rootPath=$pwd)
+put "-------------> main thread send: "$content
+printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+set content = (jo -d. -- -s jsonrpc=2.0 method=initialized params='{}')
+put "-------------> main thread send: "$content
+printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+
+var mnt = '/tmp/acme'
+var winid
+var winname = (echo $pwd | 9 tr .@ _)/+LSP
+fn checkwin {
+  try {
+    var @parts = (str:fields (9p read acme/index | grep -e $winname))
+    set winid = $parts[0]
+  } catch e {
+    # window not exist, just create one
+    set winid = (str:fields (9p read acme/new/ctl) | take 1)
+    echo 'name '$winname | 9p write acme/$winid/ctl
+  }
+}
+
+fn append {|s|
+  echo $s | 9p write acme/$winid/body
+  echo clean | 9p write acme/$winid/ctl
+}
+
+fn endoffset {
+  var f = (file:open-output &also-input=$true &if-not-exists=error &if-exists=update $mnt/$winid/addr)
+  print '$' > $f
+  var @parts = (str:fields (cat < $f))
+  put $parts[1]
+  file:close $f
+}
+
+fn show {|begin end|
+  print '#'$begin,'#'$end | 9p write acme/$winid/addr
+  echo dot=addr | 9p write acme/$winid/ctl
+  echo show | 9p write acme/$winid/ctl
+}
+
+fn read_line {|f l|
+  var @lines = (cat $f | from-lines)
+  put $lines[$l]
+}
+
+var log = (file:open $mnt/log)
+run-parallel {
+  # server thread
+  eval (str:join ' ' $args) < $p | while $true {
+    var m
+    try {
+      var n = (read-upto "\n")[16..-2] # get content length
+      read-upto "\n" | nop # skip "\r\n"
+      set m = (echo (read-bytes $n) | from-json)
+    } catch e {
+      put 'server thread error:'
+      pprint $e
+      put 'server thread exit'
+      file:close $p[r]
+      break
+    }
+
+    try {
+      var count = 0
+      var addr
+      var begin = (endoffset)
+      if (==s (kind-of $m[result]) list) {
+        for entry $m[result] {
+          var file = $entry[uri][7..]
+          set addr = (printf "%s:%d+#%d,%d+#%d" $file^
+            $entry[range][start][line] $entry[range][start][character]^
+            $entry[range][end][line] $entry[range][end][character]^
+          )
+          append (printf "%s %s\n" $addr (read_line $file $entry[range][start][line]))
+          set count = (+ $count 1)
+        }
+      } else {
+        var entry = $m[result]
+        var file = $entry[uri][7..]
+        set addr = (printf "%s:%d+#%d,%d+#%d" $file^
+          $entry[range][start][line] $entry[range][start][character]^
+          $entry[range][end][line] $entry[range][end][character]^
+        )
+        append (printf "%s %s\n" $addr (read_line $file $entry[range][start][line]))
+        set count = (+ $count 1)
+      }
+
+      # jump to it if there's only one result
+      if (== $count 1) {
+        B $addr
+      }
+
+      # make sure the results are visible
+      show $begin (endoffset)
+    } catch e {
+      pprint $m
+    }
+  }
+} {
+  # file tracking thread
+  var content
+  fn handle {|winid cmd @rest|
+
+    # skip if there's no file path
+    if (eq $rest []) {
+      return
+    }
+    var name = $rest[0]
+    # skip non-regular file
+    # TODO: symlink?
+    if (not (path:is-regular $name)) {
+      return
+    }
+    # skip the file which is not belong us
+    if (not (str:has-prefix $name $pwd)) {
+      return
+    }
+
+    if (==s new $cmd) {
+      set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didOpen^
+        params.textDocument.uri='file://'$name^
+        params.textDocument.languageId=(path:ext $name)[1..]^
+        params.textDocument.version=0^
+        'params.textDocument.text=@'$name^
+      )
+      put "-------------> file tracking thread send: "$content
+      lock
+      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+      unlock
+    } elif (==s get $cmd) {
+      set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didChange^
+        params.textDocument.uri='file://'$name^
+        'params.contentChanges[]='(jo -- 'text=@'$name)^
+      )
+      put "-------------> file tracking thread send: "$content
+      lock
+      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+      unlock
+    } elif (==s del $cmd) {
+      set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didClose^
+        params.textDocument.uri='file://'$name^
+      )
+      put "-------------> file tracking thread send: "$content
+      lock
+      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+      unlock
+    } elif (==s put $cmd) {
+      set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didChange^
+        params.textDocument.uri='file://'$name^
+        'params.contentChanges[]='(jo -- 'text=@'$name)^
+      )
+      put "-------------> file tracking thread send: "$content
+      lock
+      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+      unlock
+
+      set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didSave^
+        params.textDocument.uri='file://'$name^
+      )
+      put "-------------> file tracking thread send: "$content
+      lock
+      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+      unlock
+    }
+  }
+
+  # already openned windows
+  9p read acme/index | from-lines | each {|l|
+    var @parts = (str:fields $l)
+    handle $parts[0] new $parts[5]
+  }
+
+  from-lines < $log | each {|l|
+    try {
+      handle (str:fields $l)
+    } catch e {
+      put 'file tracking thread: error:'
+      put $e
+      put 'file tracking thread: exit'
+      break
+    }
+  }
+} {
+  # Input reader thread (also the main thread)
+  var id = 1
+  while $true {
+    try {
+      var l = (read-line)
+      var @parts = (str:fields $l)
+      var cmd = $parts[0]
+      var file = $parts[1]
+
+      put 'recv: '$l
+      if (==s $cmd def) {
+        if (< (count $parts) 4) {
+          put "not enough parameters for definition, skip: "$l
+          continue
+        }
+        set id = (+ $id 1)
+        set content = (jo -d. -- -s jsonrpc=2.0 id=$id method=textDocument/definition^
+            params.textDocument.uri='file://'$file^
+            params.position.line=$parts[2]^
+            params.position.character=$parts[3]^
+        )
+        checkwin
+        append (printf "\n%s:%d+#%d def: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
+      } elif (==s $cmd ref) {
+        if (< (count $parts) 4) {
+          put "not enough parameters for reference, skip: "$l
+          continue
+        }
+        set id = (+ $id 1)
+        set content = (jo -d. -- -s jsonrpc=2.0 id=$id method=textDocument/references^
+            params.textDocument.uri='file://'$file^
+            params.position.line=$parts[2]^
+            params.position.character=$parts[3]^
+        )
+        checkwin
+        append (printf "\n%s:%d+#%d refs: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
+      } else {
+        put "skip unknown input: "$l
+        continue
+      }
+
+      put "-------------> input thread send: "$content
+      lock
+      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+      unlock
+    } catch e {
+      put 'input thread: error:'
+      pprint $e
+      break
+    }
+  }
+
+  put 'input thread: exit'
+  file:close $p[w] # terminate server thread
+  file:close $log # terminate file tracking thread
+}

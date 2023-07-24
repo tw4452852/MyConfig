@@ -1,21 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 #set -x
-
-get_lsp_wid() {
-	9p read acme/index | while read -r line; do
-		id=`echo $line | cut -d' ' -f1`
-		name=`echo $line | cut -d' ' -f6`
-		if [ "/LSP/DefRef" = $name ]; then
-			echo $id
-		fi
-	done
-}
-
-create_lsp_window() {
-	echo 'name /LSP/DefRef' | 9p write acme/new/ctl
-}
 
 detect_kind() {
 	path=$1
@@ -87,11 +73,6 @@ detect_root() {
 	echo $root
 }
 
-wid=`get_lsp_wid`
-[ -z "$wid" ] && create_lsp_window && wid=`get_lsp_wid`
-[ -z "$wid" ] && { echo "failed to create lsp window"; exit 1; }
-
-
 if [ $# -lt 1 ]; then
 	echo "usage: $0 [command]"
 	exit 2
@@ -108,154 +89,42 @@ kind=`detect_kind "$file_path"`
 [ -z "$kind" ] && { echo "failed to detect kind based on $file_path"; exit 4; }
 root=`detect_root "$kind" "$file_path"`
 [ -z "$root" ] && { echo "failed to detect root based on $kind $file_path"; exit 5; }
-quoted_root=$(printf %s "$root" | sed 's/[][()\.^$?*+]/\\&/g')
 
-dir=/tmp/acme-lsp
-[ ! -d "$dir" ] && mkdir -p "$dir"
-name="${kind}_`echo $root | sed -e 's|/|_|g'`"
-proxy_addr="$dir/$name.rpc"
-cfg="$dir/$name.conf"
-pidfile="$dir/$name.pid"
-
-if ! grep -q ${proxy_addr} /proc/net/unix; then
-	if [ "$cmd" != "start" ]; then
-		$0 start &
-
-		i=100 # 100 * 0.1 = 10s
-		while [ $i -gt 0 ] && ! grep -q ${proxy_addr} /proc/net/unix; do sleep .1; i=$((i-1)); done
-		[ $i = 0 ] && ! grep -q ${proxy_addr} /proc/net/unix && { echo "failed to start server $name"; exit 6; }
-	fi
-else
-	if [ "$cmd" = "start" ]; then
-		echo "server $name started"
-		exit 0
-	fi
-fi
-
-case $cmd in
-	start)
-		case $kind in
-			c)
-				cat <<-EOF > "$cfg"
-					[Servers]
-					[Servers.clangd]
-					Command = ["clangd", "--log=error"]
-					#StderrFile = "/tmp/clangd.log"
-					#LogFile = "/tmp/clangd.log"
-					[[FilenameHandlers]]
-					Pattern = '${quoted_root}/.*\.(c|cpp|cc|h)$'
-					ServerKey = "clangd"
-				EOF
-				;;
-			r)
-				cat <<-EOF > "$cfg"
-					FormatOnPut = true
-					[Servers]
-					[Servers.ra]
-					Command = ["rust-analyzer"]
-					[Servers.ra.Options]
-					[Servers.ra.Options.diagnostics]
-					disabled = ["inactive-code"]
-					[[FilenameHandlers]]
-					Pattern = '${quoted_root}/.*\.rs$'
-					ServerKey = "ra"
-				EOF
-				;;
-			g)
-				cat <<-EOF > "$cfg"
-					FormatOnPut = true
-					CodeActionsOnPut = ["source.organizeImports"]
-					[Servers]
-					[Servers.gopls]
-					Command = ["gopls", "serve"]
-					[[FilenameHandlers]]
-					Pattern = '${quoted_root}/.*\.go$'
-					ServerKey = "gopls"
-				EOF
-				;;
-			d)
-				cat <<-EOF > "$cfg"
-					FormatOnPut = true
-					[Servers]
-					[Servers.dart]
-					Command = ["sh", "-c", "dart $(dirname $(which dart))/snapshots/analysis_server.dart.snapshot --lsp"]
-					[[FilenameHandlers]]
-					Pattern = '${quoted_root}/.*\.dart$'
-					ServerKey = "dart"
-				EOF
-				;;
-			z)
-				cat <<-EOF > "$cfg"
-					FormatOnPut = true
-					[Servers]
-					[Servers.zls]
-					Command = ["/home/tw/code/zls/zig-out/bin/zls"]
-					StderrFile = "/tmp/zls.log"
-					[[FilenameHandlers]]
-					Pattern = '${quoted_root}/.*\.zig$'
-					ServerKey = "zls"
-				EOF
-				;;
-			e)
-				cat <<-EOF > "$cfg"
-					FormatOnPut = true
-					[Servers]
-					[Servers.els]
-					Command = ["/home/tw/code/elixir-ls/output/language_server.sh"]
-					[Servers.els.Options]
-					[Servers.els.Options.elixirLS]
-					dialyzerEnabled = false
-					[[FilenameHandlers]]
-					Pattern = '${quoted_root}/.*\.(ex|exs)$'
-					ServerKey = "els"
-				EOF
-				;;
-			*)
-				echo "Not supported: $kind"
-				exit 1
-				;;
-		esac
-		echo $$ > $pidfile
-		exec env ACME_LSP_CONFIG="$cfg" acme-lsp -proxy.addr "$proxy_addr" -rootdir "$root" -workspaces "$root"
+session=`echo -n "$root"/+LSP | 9 tr .@ _`
+tmux has -t "$session" 2>/dev/null ||
+case $kind in
+	c)
+		tmux new -d -s "$session" -c "$root" lsp clangd --log=error
+		;;
+	r)
+		tmux new -d -s "$session" -c "$root" lsp rust-analyzer
+		;;
+	g)
+		tmux new -d -s "$session" -c "$root" lsp gopls serve
+		;;
+	d)
+		tmux new -d -s "$session" -c "$root" lsp "sh", "-c", "dart $(dirname $(which dart))/snapshots/analysis_server.dart.snapshot --lsp"
+		;;
+	z)
+		tmux new -d -s "$session" -c "$root" lsp /home/tw/code/zls/zig-out/bin/zls
+		;;
+	e)
+		tmux new -d -s "$session" -c "$root" lsp /home/tw/code/elixir-ls/output/language_server.sh
 		;;
 	*)
-		# save current position
-		position=`acme-dot $winid`
-		offset=`9p read acme/$wid/ctl | tr -s ' ' | cut -d' ' -f4`
-		printf "#$offset" | 9p write acme/$wid/addr
-
-		# get context
-		curOff=`echo $position | cut -d'#' -f3`
-		curLineNum=`head -c+$curOff $file_path | wc -l`
-		curLineNum=$((curLineNum+1))
-		curLine=`sed -n ${curLineNum}p $file_path`
-		printf "\n$position $cmd $*:$curLine\n" | 9p write acme/$wid/body
-
-		# query the server and pump the response to lsp result window
-		L -proxy.addr $proxy_addr $cmd $* | 9p write acme/$wid/body
-
-		# make sure the result is visible
-		echo "clean" | 9p write acme/$wid/ctl
-		echo "dot=addr" | 9p write acme/$wid/ctl
-		echo "show" | 9p write acme/$wid/ctl
-
-		# refresh the timestamp for garbage collection below
-		touch $pidfile
+		echo "Not supported: $kind"
+		exit 1
 		;;
 esac
 
-# killed unused servers
-threshold=$((15*60)) # 15min
-cur=`date "+%s"`
-for f in $dir/*.pid; do
-	ts=`date -r "$f" "+%s"`
-	duration=$((cur-ts))
-	pid=`cat $f`
-
-	if ! kill -s 0 $pid 2>/dev/null; then
-		rm -f ${f%.*}.rpc ${f%.*}.conf $f
-	elif [ $duration -gt $threshold ];then
-		kill $pid
-		rm -f ${f%.*}.rpc ${f%.*}.conf $f
-	fi
-done
+case $cmd in
+	def)
+		tmux pipep -t $session:1 -I "echo def ""$file_path"" `acme-dot -l $winid`"
+		;;
+	refs)
+		tmux pipep -t $session:1 -I "echo ref ""$file_path"" `acme-dot -l $winid`"
+		;;
+	*)
+		echo "$cmd not supported"
+		;;
+esac
