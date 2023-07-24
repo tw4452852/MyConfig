@@ -14,9 +14,8 @@ ignore monitor
 autogroup 9 monitor,URxvt
 
 autogroup 1 acme
-autogroup 2 URxvt
-autogroup 3 qutebrowser
-autogroup 3 Chromium
+autogroup 2 qutebrowser
+autogroup 2 Chromium
 
 unbind-key all
 unbind-mouse all
@@ -60,8 +59,8 @@ bind-key 4-w		menu-window
 bind-key 4-slash	menu-exec
 bind-key 4-Return	terminal
 bind-key 4-l		lock
-bind-key 4-Tab		group-last
-bind-key 4C-Tab		window-cycle-ingroup
+bind-key 4C-Tab		group-last
+bind-key 4-Tab		window-cycle-ingroup
 bind-key 4-g		group-cycle
 bind-key 4-m		window-maximize
 bind-key 4-x		window-close
