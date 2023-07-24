@@ -91,31 +91,35 @@ root=`detect_root "$kind" "$file_path"`
 [ -z "$root" ] && { echo "failed to detect root based on $kind $file_path"; exit 5; }
 
 session=`echo -n "$root"/+LSP | 9 tr .@ _`
-tmux has -t "$session" 2>/dev/null ||
-case $kind in
-	c)
-		tmux new -d -s "$session" -c "$root" lsp clangd --log=error
-		;;
-	r)
-		tmux new -d -s "$session" -c "$root" lsp rust-analyzer
-		;;
-	g)
-		tmux new -d -s "$session" -c "$root" lsp gopls serve
-		;;
-	d)
-		tmux new -d -s "$session" -c "$root" lsp "sh", "-c", "dart $(dirname $(which dart))/snapshots/analysis_server.dart.snapshot --lsp"
-		;;
-	z)
-		tmux new -d -s "$session" -c "$root" lsp /home/tw/code/zls/zig-out/bin/zls
-		;;
-	e)
-		tmux new -d -s "$session" -c "$root" lsp /home/tw/code/elixir-ls/output/language_server.sh
-		;;
-	*)
-		echo "Not supported: $kind"
-		exit 1
-		;;
-esac
+if tmux has -t "$session" 2>/dev/null; then
+	[[ `tmux lsp -t "$session:1" -F '#{pane_dead}'` = 1 ]] && tmux respawnp -t "$session:1"
+else
+	case $kind in
+		c)
+			tmux new -d -s "$session" -c "$root" lsp clangd --log=error
+			;;
+		r)
+			tmux new -d -s "$session" -c "$root" lsp rust-analyzer
+			;;
+		g)
+			tmux new -d -s "$session" -c "$root" lsp gopls serve
+			;;
+		d)
+			tmux new -d -s "$session" -c "$root" lsp "sh", "-c", "dart $(dirname $(which dart))/snapshots/analysis_server.dart.snapshot --lsp"
+			;;
+		z)
+			tmux new -d -s "$session" -c "$root" lsp /home/tw/code/zls/zig-out/bin/zls
+			;;
+		e)
+			tmux new -d -s "$session" -c "$root" lsp /home/tw/code/elixir-ls/output/language_server.sh
+			;;
+		*)
+			echo "Not supported: $kind"
+			exit 1
+			;;
+	esac
+	tmux set -p -t "$session:1"  remain-on-exit on
+fi
 
 case $cmd in
 	def)
