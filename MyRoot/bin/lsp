@@ -161,17 +161,9 @@ run-parallel {
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
     } elif (==s put $cmd) {
-      set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didChange^
-        params.textDocument.uri='file://'$name^
-        'params.contentChanges[]='(jo -- 'text=@'$name)^
-      )
-      put "-------------> file tracking thread send: "$content
-      lock
-      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-      unlock
-
       set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didSave^
         params.textDocument.uri='file://'$name^
+        'params.text=@'$name^
       )
       put "-------------> file tracking thread send: "$content
       lock
@@ -244,7 +236,6 @@ run-parallel {
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
     } catch e {
-      put $l
       put 'input thread: error:'
       pprint $e
       break
