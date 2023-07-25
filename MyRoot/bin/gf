@@ -33,20 +33,17 @@ fn event {
 			winwriteevent $*
 		}
 		if not{
-			ifs='|'
-			input=`{winread tag}
-			cmd=`{echo $input(2)|xargs}
-			if (~ $cmd '') {
+			if (~ $9 '|') {
 				tmux send -t $name:1 'C-r'
 			}
 			if not{
-				tmux send -t $name:1 'C-u' $cmd 'M-r'
+				tmux send -t $name:1 'C-u' $9 'M-r'
 			}
 			refresh
 		}
 	case *i Kd # changes in tag
 		ifs='|' input=`{winread tag}
-		tmux send -t $name:1 'C-u' `{echo $input(2)|xargs}
+		tmux send -t $name:1 'C-u' `{echo $input(2)|sed 's/^[ \t]+//;s/[ \t]+$//'}
 		refresh
 	case Ml # right click on tag bar to trigger refresh
 		refresh
