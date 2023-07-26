@@ -146,10 +146,17 @@ run-parallel {
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
     } elif (==s get $cmd) {
+      var tmp = (path:temp-file jo-)
+      defer {
+        file:close $tmp
+        rm $tmp[name]
+      }
+      jo -- 'text=@'$name > $tmp
       set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didChange^
         params.textDocument.uri='file://'$name^
-        'params.contentChanges[]='(jo -- 'text=@'$name)^
+        'params.contentChanges[]=:'$tmp[name]^
       )
+
       put "-------------> file tracking thread send: "$content
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
