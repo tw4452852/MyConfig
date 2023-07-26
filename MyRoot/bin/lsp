@@ -14,7 +14,9 @@ fn unlock {
   set wlock = $false
 }
 
-var content = (jo -d. -- -s jsonrpc=2.0 id=1 method=initialize params.rootPath=$pwd)
+var content = (jo -d. -- -s jsonrpc=2.0 id=1 method=initialize params.rootPath=$pwd^
+  'params.capabilities.general.positionEncodings[]'=utf-8^
+)
 put "-------------> main thread send: "$content
 printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
 set content = (jo -d. -- -s jsonrpc=2.0 method=initialized params='{}')
