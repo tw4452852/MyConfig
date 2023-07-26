@@ -1,8 +1,8 @@
-command term urxvt
+command term alacritty
 command lock 'xautolock -locknow'
 command clock "dclock -bg black -led_off black -date '%Y-%b-%d %a' -fontName 'Go Mono' -bw 0"
 command acme "/home/tw/MyRoot/bin/a"
-command monitor "urxvt -name monitor -e sudo htop"
+command monitor "alacritty --class monitor -e sudo htop"
 
 fontname "WenQuanYi Micro Hei"
 
@@ -11,7 +11,7 @@ sticky yes
 ignore dclock
 autogroup 9 Dclock
 ignore monitor
-autogroup 9 monitor,URxvt
+autogroup 9 monitor,monitor
 
 autogroup 1 acme
 autogroup 2 qutebrowser
