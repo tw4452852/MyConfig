@@ -235,6 +235,19 @@ run-parallel {
         )
         checkwin
         append (printf "\n%s:%d+#%d refs: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
+      }  elif (==s $cmd imp) {
+        if (< (count $parts) 4) {
+          put "not enough parameters for implementation, skip: "$l
+          continue
+        }
+        set id = (+ $id 1)
+        set content = (jo -d. -- -s jsonrpc=2.0 id=$id method=textDocument/implementation^
+            params.textDocument.uri='file://'$file^
+            params.position.line=$parts[2]^
+            params.position.character=$parts[3]^
+        )
+        checkwin
+        append (printf "\n%s:%d+#%d impls: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
       } else {
         put "skip unknown input: "$l
         continue

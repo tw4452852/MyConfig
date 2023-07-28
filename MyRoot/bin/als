@@ -131,6 +131,9 @@ case $cmd in
 	restart)
 		tmux respawnp -k -t "$session:1"
 		;;
+	impls)
+		tmux pipep -t $session:1 -I "echo imp ""$file_path"" `acme-dot -l $winid`"
+		;;
 	*)
 		echo "$cmd not supported"
 		;;
