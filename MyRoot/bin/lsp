@@ -62,6 +62,8 @@ fn read_line {|f l|
 }
 
 var log = (file:open $mnt/log)
+var id = 1
+var edits = [&]
 run-parallel {
   # server thread
   eval (str:join ' ' $args) < $p | while $true {
@@ -79,11 +81,25 @@ run-parallel {
     }
 
     try {
-      var count = 0
-      var addr
-      var begin = (endoffset)
-      if (==s (kind-of $m[result]) list) {
-        for entry $m[result] {
+      if (has-key $edits $m[id]) {
+        $edits[$m[id]] $m[result]
+        del edits[$m[id]]
+      } else {
+        var count = 0
+        var addr
+        var begin = (endoffset)
+        if (==s (kind-of $m[result]) list) {
+          for entry $m[result] {
+            var file = $entry[uri][7..]
+            set addr = (printf "%s:%d+#%d,%d+#%d" $file^
+              $entry[range][start][line] $entry[range][start][character]^
+              $entry[range][end][line] $entry[range][end][character]^
+            )
+            append (printf "%s %s\n" $addr (read_line $file $entry[range][start][line]))
+            set count = (+ $count 1)
+          }
+        } else {
+          var entry = $m[result]
           var file = $entry[uri][7..]
           set addr = (printf "%s:%d+#%d,%d+#%d" $file^
             $entry[range][start][line] $entry[range][start][character]^
@@ -92,24 +108,15 @@ run-parallel {
           append (printf "%s %s\n" $addr (read_line $file $entry[range][start][line]))
           set count = (+ $count 1)
         }
-      } else {
-        var entry = $m[result]
-        var file = $entry[uri][7..]
-        set addr = (printf "%s:%d+#%d,%d+#%d" $file^
-          $entry[range][start][line] $entry[range][start][character]^
-          $entry[range][end][line] $entry[range][end][character]^
-        )
-        append (printf "%s %s\n" $addr (read_line $file $entry[range][start][line]))
-        set count = (+ $count 1)
-      }
 
-      # jump to it if there's only one result
-      if (== $count 1) {
-        B $addr
-      }
+        # jump to it if there's only one result
+        if (== $count 1) {
+          B $addr
+        }
 
-      # make sure the results are visible
-      show $begin (endoffset)
+        # make sure the results are visible
+        show $begin (endoffset)
+      }
     } catch e {
       pprint $m
     }
@@ -145,7 +152,7 @@ run-parallel {
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
-    } elif (==s get $cmd) {
+    } elif (or (==s get $cmd) (==s put $cmd)) {
       var tmp = (path:temp-file jo-)
       defer {
         file:close $tmp
@@ -169,15 +176,54 @@ run-parallel {
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
-    } elif (==s put $cmd) {
+    }
+
+    if (==s put $cmd) {
       set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didSave^
         params.textDocument.uri='file://'$name^
-        'params.text=@'$name^
       )
       put "-------------> file tracking thread send: "$content
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
+      if (eq $E:_lsp_format_on_save 1) {
+        set id = (+ $id 1)
+        # register a edit callback
+        set edits[$id] = {|m|
+
+          fn apply {|m|
+            var f = (file:open-output &if-not-exists=error &if-exists=update $mnt/$winid/addr)
+            printf '%d+#%d,%d+#%d'^
+              $m[range][start][line] $m[range][start][character]^
+              $m[range][end][line] $m[range][end][character]^
+            > $f
+            print $m[newText] | 9p write acme/$winid/data
+            file:close $f
+          }
+
+          if (==s (kind-of $m) list) {
+            var @entries = (order &less-than={|a b|
+              if (== $a[range][start][line] $b[range][start][line]) {
+                put (< $a[range][start][character] $b[range][start][character])
+              } else {
+                put (< $a[range][start][line] $b[range][start][line])
+              }
+            } &reverse=$true $m)
+            for entry $entries {
+              apply $entry
+            }
+          } else {
+            apply $m
+          }
+        }
+        set content = (jo -d. -- -s jsonrpc=2.0 id=$id method=textDocument/formatting^
+          params.textDocument.uri='file://'$name^
+        )
+        put "-------------> file tracking thread send: "$content
+        lock
+        printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+        unlock
+      }
     }
   }
 
@@ -200,7 +246,6 @@ run-parallel {
   }
 } {
   # Input reader thread (also the main thread)
-  var id = 1
   while $true {
     try {
       var l = (read-line)

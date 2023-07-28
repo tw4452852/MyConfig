@@ -99,19 +99,19 @@ else
 			tmux new -d -s "$session" -c "$root" lsp clangd --log=error
 			;;
 		r)
-			tmux new -d -s "$session" -c "$root" lsp rust-analyzer
+			tmux new -d -s "$session" -c "$root" -e _lsp_format_on_save=1 lsp rust-analyzer
 			;;
 		g)
-			tmux new -d -s "$session" -c "$root" lsp gopls serve
+			tmux new -d -s "$session" -c "$root" -e _lsp_format_on_save=1 lsp gopls serve
 			;;
 		d)
-			tmux new -d -s "$session" -c "$root" lsp "sh", "-c", "dart $(dirname $(which dart))/snapshots/analysis_server.dart.snapshot --lsp"
+			tmux new -d -s "$session" -c "$root" -e _lsp_format_on_save=1 lsp "sh", "-c", "dart $(dirname $(which dart))/snapshots/analysis_server.dart.snapshot --lsp"
 			;;
 		z)
-			tmux new -d -s "$session" -c "$root" lsp /home/tw/code/zls/zig-out/bin/zls
+			tmux new -d -s "$session" -c "$root" -e _lsp_format_on_save=1 lsp zls
 			;;
 		e)
-			tmux new -d -s "$session" -c "$root" lsp /home/tw/code/elixir-ls/output/language_server.sh
+			tmux new -d -s "$session" -c "$root" -e _lsp_format_on_save=1 lsp /home/tw/code/elixir-ls/output/language_server.sh
 			;;
 		*)
 			echo "Not supported: $kind"
