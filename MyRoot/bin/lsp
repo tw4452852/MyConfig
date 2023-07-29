@@ -63,7 +63,7 @@ fn read_line {|f l|
 
 var log = (file:open $mnt/log)
 var id = 1
-var edits = [&]
+var cbs = [&]
 run-parallel {
   # server thread
   eval (str:join ' ' $args) < $p | while $true {
@@ -81,42 +81,8 @@ run-parallel {
     }
 
     try {
-      if (has-key $edits $m[id]) {
-        $edits[$m[id]] $m[result]
-        del edits[$m[id]]
-      } else {
-        var count = 0
-        var addr
-        var begin = (endoffset)
-        if (==s (kind-of $m[result]) list) {
-          for entry $m[result] {
-            var file = $entry[uri][7..]
-            set addr = (printf "%s:%d+#%d,%d+#%d" $file^
-              $entry[range][start][line] $entry[range][start][character]^
-              $entry[range][end][line] $entry[range][end][character]^
-            )
-            append (printf "%s %s\n" $addr (read_line $file $entry[range][start][line]))
-            set count = (+ $count 1)
-          }
-        } else {
-          var entry = $m[result]
-          var file = $entry[uri][7..]
-          set addr = (printf "%s:%d+#%d,%d+#%d" $file^
-            $entry[range][start][line] $entry[range][start][character]^
-            $entry[range][end][line] $entry[range][end][character]^
-          )
-          append (printf "%s %s\n" $addr (read_line $file $entry[range][start][line]))
-          set count = (+ $count 1)
-        }
-
-        # jump to it if there's only one result
-        if (== $count 1) {
-          B $addr
-        }
-
-        # make sure the results are visible
-        show $begin (endoffset)
-      }
+      $cbs[$m[id]] $m[result]
+      del cbs[$m[id]]
     } catch e {
       pprint $m
     }
@@ -189,7 +155,7 @@ run-parallel {
       if (eq $E:_lsp_format_on_save 1) {
         set id = (+ $id 1)
         # register a edit callback
-        set edits[$id] = {|m|
+        set cbs[$id] = {|m|
 
           fn apply {|m|
             var f = (file:open-output &if-not-exists=error &if-exists=update $mnt/$winid/addr)
@@ -296,6 +262,40 @@ run-parallel {
       } else {
         put "skip unknown input: "$l
         continue
+      }
+
+      # register a display callback
+      set cbs[$id] = {|m|
+        var count = 0
+        var addr
+        var begin = (endoffset)
+        if (==s (kind-of $m) list) {
+          for entry $m {
+            var file = $entry[uri][7..]
+            set addr = (printf "%s:%d+#%d,%d+#%d" $file^
+              $entry[range][start][line] $entry[range][start][character]^
+              $entry[range][end][line] $entry[range][end][character]^
+            )
+            append (printf "%s %s\n" $addr (read_line $file $entry[range][start][line]))
+            set count = (+ $count 1)
+          }
+        } else {
+          var file = $m[uri][7..]
+          set addr = (printf "%s:%d+#%d,%d+#%d" $file^
+            $m[range][start][line] $m[range][start][character]^
+            $m[range][end][line] $m[range][end][character]^
+          )
+          append (printf "%s %s\n" $addr (read_line $file $m[range][start][line]))
+          set count = (+ $count 1)
+        }
+
+        # jump to it if there's only one result
+        if (== $count 1) {
+          B $addr
+        }
+
+        # make sure the results are visible
+        show $begin (endoffset)
       }
 
       put "-------------> input thread send: "$content
