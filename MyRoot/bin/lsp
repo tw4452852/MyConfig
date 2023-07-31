@@ -110,7 +110,7 @@ run-parallel {
     if (==s new $cmd) {
       set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didOpen^
         params.textDocument.uri='file://'$name^
-        params.textDocument.languageId=(path:ext $name)[1..]^
+        params.textDocument.languageId=(try { (path:ext $name)[1..] } catch e { put unknown })^
         params.textDocument.version=0^
         'params.textDocument.text=@'$name^
       )
