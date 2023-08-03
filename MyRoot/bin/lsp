@@ -243,6 +243,7 @@ run-parallel {
             params.textDocument.uri='file://'$file^
             params.position.line=$parts[2]^
             params.position.character=$parts[3]^
+            params.context.includeDeclaration=true^
         )
         checkwin
         append (printf "\n%s:%d+#%d refs: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
