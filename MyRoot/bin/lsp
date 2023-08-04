@@ -14,12 +14,17 @@ fn unlock {
   set wlock = $false
 }
 
-var content = (jo -d. -- -s jsonrpc=2.0 id=1 method=initialize params.rootPath=$pwd^
-  'params.capabilities.general.positionEncodings[]'=utf-8^
-)
+var content = (put [&jsonrpc=2.0 &id=(num 1) &method=initialize &params=[
+  &rootPath=$pwd
+  &capabilities=[
+    &general=[
+      &positionEncodings=[utf-8]
+    ]
+  ]
+]] | to-json)
 put "-------------> main thread send: "$content
 printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-set content = (jo -d. -- -s jsonrpc=2.0 method=initialized params='{}')
+set content = (put [&jsonrpc=2.0 &method=initialized &params=[&]] | to-json)
 put "-------------> main thread send: "$content
 printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
 
@@ -62,7 +67,7 @@ fn read_line {|f l|
 }
 
 var log = (file:open $mnt/log)
-var id = 1
+var id = (num 1)
 var cbs = [&]
 run-parallel {
   # server thread
@@ -84,6 +89,7 @@ run-parallel {
       $cbs[$m[id]] $m[result]
       del cbs[$m[id]]
     } catch e {
+      put $e
       pprint $m
     }
   }
@@ -108,36 +114,38 @@ run-parallel {
     }
 
     if (==s new $cmd) {
-      set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didOpen^
-        params.textDocument.uri='file://'$name^
-        params.textDocument.languageId=(try { (path:ext $name)[1..] } catch e { put unknown })^
-        params.textDocument.version=0^
-        'params.textDocument.text=@'$name^
-      )
+      set content = (put [&jsonrpc=2.0 &method=textDocument/didOpen &params=[
+        &textDocument=[
+          &uri=file://$name
+          &languageId=(try { put (path:ext $name)[1..] } catch e { put unknown })
+          &version=(num 0)
+          &text=(9p read acme/$winid/body | slurp)
+        ]
+      ]] | to-json)
+
       put "-------------> file tracking thread send: "$content
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
     } elif (or (==s get $cmd) (==s put $cmd)) {
-      var tmp = (path:temp-file jo-)
-      defer {
-        file:close $tmp
-        rm $tmp[name]
-      }
-      jo -- 'text=@'$name > $tmp
-      set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didChange^
-        params.textDocument.uri='file://'$name^
-        'params.contentChanges[]=:'$tmp[name]^
-      )
+      set content = (put [&jsonrpc=2.0 &method=textDocument/didChange &params=[
+        &textDocument=[
+          &uri=file://$name
+          &contentChanges=[[&text=(9p read acme/$winid/body | slurp)]]
+        ]
+      ]] | to-json)
 
       put "-------------> file tracking thread send: "$content
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
     } elif (==s del $cmd) {
-      set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didClose^
-        params.textDocument.uri='file://'$name^
-      )
+      set content = (put [&jsonrpc=2.0 &method=textDocument/didClose &params=[
+        &textDocument=[
+          &uri=file://$name
+        ]
+      ]] | to-json)
+
       put "-------------> file tracking thread send: "$content
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
@@ -145,18 +153,22 @@ run-parallel {
     }
 
     if (==s put $cmd) {
-      set content = (jo -d. -- -s jsonrpc=2.0 method=textDocument/didSave^
-        params.textDocument.uri='file://'$name^
-      )
+      set content = (put [&jsonrpc=2.0 &method=textDocument/didSave &params=[
+        &textDocument=[
+          &uri=file://$name
+        ]
+      ]] | to-json)
+
       put "-------------> file tracking thread send: "$content
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
+
       if (eq $E:_lsp_format_on_save 1) {
         set id = (+ $id 1)
         # register a edit callback
         set cbs[$id] = {|m|
-
+pprint $m
           fn apply {|m|
             var f = (file:open-output &if-not-exists=error &if-exists=update $mnt/$winid/addr)
             printf '%d+#%d,%d+#%d'^
@@ -182,9 +194,13 @@ run-parallel {
             apply $m
           }
         }
-        set content = (jo -d. -- -s jsonrpc=2.0 id=$id method=textDocument/formatting^
-          params.textDocument.uri='file://'$name^
-        )
+
+        set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/formatting &params=[
+          &textDocument=[
+            &uri=file://$name
+          ]
+        ]] | to-json)
+
         put "-------------> file tracking thread send: "$content
         lock
         printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
@@ -218,6 +234,8 @@ run-parallel {
       var @parts = (str:fields $l)
       var cmd = $parts[0]
       var file = $parts[1]
+      var line = (num $parts[2])
+      var char = (num $parts[3])
 
       put 'recv: '$l
       if (==s $cmd def) {
@@ -225,12 +243,18 @@ run-parallel {
           put "not enough parameters for definition, skip: "$l
           continue
         }
+
         set id = (+ $id 1)
-        set content = (jo -d. -- -s jsonrpc=2.0 id=$id method=textDocument/definition^
-            params.textDocument.uri='file://'$file^
-            params.position.line=$parts[2]^
-            params.position.character=$parts[3]^
-        )
+        set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/definition &params=[
+          &textDocument=[
+            &uri=file://$file
+          ]
+          &position=[
+            &line=$line
+            &character=$char
+          ]
+        ]] | to-json)
+
         checkwin
         append (printf "\n%s:%d+#%d def: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
       } elif (==s $cmd ref) {
@@ -238,13 +262,21 @@ run-parallel {
           put "not enough parameters for reference, skip: "$l
           continue
         }
+
         set id = (+ $id 1)
-        set content = (jo -d. -- -s jsonrpc=2.0 id=$id method=textDocument/references^
-            params.textDocument.uri='file://'$file^
-            params.position.line=$parts[2]^
-            params.position.character=$parts[3]^
-            params.context.includeDeclaration=true^
-        )
+        set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/references &params=[
+          &textDocument=[
+            &uri=file://$file
+          ]
+          &position=[
+            &line=$line
+            &character=$char
+          ]
+          &context=[
+            &includeDeclaration=$true
+          ]
+        ]] | to-json)
+
         checkwin
         append (printf "\n%s:%d+#%d refs: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
       }  elif (==s $cmd imp) {
@@ -252,12 +284,18 @@ run-parallel {
           put "not enough parameters for implementation, skip: "$l
           continue
         }
+
         set id = (+ $id 1)
-        set content = (jo -d. -- -s jsonrpc=2.0 id=$id method=textDocument/implementation^
-            params.textDocument.uri='file://'$file^
-            params.position.line=$parts[2]^
-            params.position.character=$parts[3]^
-        )
+        set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/implementation &params=[
+          &textDocument=[
+            &uri=file://$file
+          ]
+          &position=[
+            &line=$line
+            &character=$char
+          ]
+        ]] | to-json)
+
         checkwin
         append (printf "\n%s:%d+#%d impls: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
       } else {
