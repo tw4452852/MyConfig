@@ -89,7 +89,6 @@ run-parallel {
       $cbs[$m[id]] $m[result]
       del cbs[$m[id]]
     } catch e {
-      put $e
       pprint $m
     }
   }
@@ -131,8 +130,8 @@ run-parallel {
       set content = (put [&jsonrpc=2.0 &method=textDocument/didChange &params=[
         &textDocument=[
           &uri=file://$name
-          &contentChanges=[[&text=(9p read acme/$winid/body | slurp)]]
         ]
+        &contentChanges=[[&text=(9p read acme/$winid/body | slurp)]]
       ]] | to-json)
 
       put "-------------> file tracking thread send: "$content
@@ -168,7 +167,7 @@ run-parallel {
         set id = (+ $id 1)
         # register a edit callback
         set cbs[$id] = {|m|
-pprint $m
+
           fn apply {|m|
             var f = (file:open-output &if-not-exists=error &if-exists=update $mnt/$winid/addr)
             printf '%d+#%d,%d+#%d'^
@@ -279,7 +278,7 @@ pprint $m
 
         checkwin
         append (printf "\n%s:%d+#%d refs: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
-      }  elif (==s $cmd imp) {
+      } elif (==s $cmd imp) {
         if (< (count $parts) 4) {
           put "not enough parameters for implementation, skip: "$l
           continue
