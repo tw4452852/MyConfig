@@ -130,6 +130,7 @@ run-parallel {
       set content = (put [&jsonrpc=2.0 &method=textDocument/didChange &params=[
         &textDocument=[
           &uri=file://$name
+          &version=(num 0)
         ]
         &contentChanges=[[&text=(9p read acme/$winid/body | slurp)]]
       ]] | to-json)
@@ -197,6 +198,10 @@ run-parallel {
         set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/formatting &params=[
           &textDocument=[
             &uri=file://$name
+          ]
+          &options=[
+            &tabSize=(num 4)
+            &insertSpaces=$false
           ]
         ]] | to-json)
 
