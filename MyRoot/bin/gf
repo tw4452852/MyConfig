@@ -5,11 +5,12 @@
 
 PWD=`{pwd}
 name=$PWD/+fzf
+session_name=`{echo $name | 9 tr .@ _}
 
 fn refresh {
 	echo -n , | winwrite addr
 	echo -n '' | winwrite data
-	tmux capturep -t $name:1 -p | winwrite body
+	tmux capturep -t $session_name:1 -p | winwrite body
 	echo clean | winwrite ctl
 }
 
@@ -34,16 +35,16 @@ fn event {
 		}
 		if not{
 			if (~ $9 '|') {
-				tmux send -t $name:1 'C-r'
+				tmux send -t $session_name:1 'C-r'
 			}
 			if not{
-				tmux send -t $name:1 'C-u' $9 'M-r'
+				tmux send -t $session_name:1 'C-u' $9 'M-r'
 			}
 			refresh
 		}
 	case *i Kd # changes in tag
 		ifs='|' input=`{winread tag}
-		tmux send -t $name:1 'C-u' `{echo $input(2)|sed 's/^[ \t]+//;s/[ \t]+$//'}
+		tmux send -t $session_name:1 'C-u' `{echo $input(2)|sed 's/^[ \t]+//;s/[ \t]+$//'}
 		refresh
 	case Ml # right click on tag bar to trigger refresh
 		refresh
@@ -54,7 +55,7 @@ fn event {
 
 newwindow
 winname $name
-tmux new -dAD -s $name -c $PWD f >[2]/dev/null
+tmux new -dAD -s $session_name -c $PWD f >[2]/dev/null
 winctl cleartag >[2]/dev/null || exit 0
 
 wineventloop
