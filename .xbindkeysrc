@@ -5,3 +5,6 @@
 
 "import /tmp/screenshot-$(date +%Y%m%d@%H%M%S).png"
   Print
+
+"alacritty -e sh -c "9p read acme/index | awk '{print \$6}'|f""
+  alt+space
