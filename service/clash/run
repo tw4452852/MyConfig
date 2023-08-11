@@ -1,3 +1,4 @@
 #!/bin/bash
 
-exec /root/go/bin/clash_pro -f /root/.config/clash/tw.yaml
+# wget -O /tmp/jms.conf 'http://sub.totorow.xyz:25500/getprofile?name=profiles/jms.ini&token=xxx'
+exec ~/go/bin/clash -f /tmp/jms.conf
