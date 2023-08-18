@@ -15,7 +15,7 @@ fn unlock {
 }
 
 var content = (put [&jsonrpc=2.0 &id=(num 1) &method=initialize &params=[
-  &rootPath=$pwd
+  &rootUri=file://$pwd
   &capabilities=[
     &general=[
       &positionEncodings=[utf-8]
