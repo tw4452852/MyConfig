@@ -168,15 +168,17 @@ run-parallel {
         set id = (+ $id 1)
         # register a edit callback
         set cbs[$id] = {|m|
+          var f = (file:open-output &if-not-exists=error &if-exists=update $mnt/$winid/addr)
+          defer {
+            file:close $f
+          }
 
           fn apply {|m|
-            var f = (file:open-output &if-not-exists=error &if-exists=update $mnt/$winid/addr)
             printf '%d+#%d,%d+#%d'^
               $m[range][start][line] $m[range][start][character]^
               $m[range][end][line] $m[range][end][character]^
             > $f
             print $m[newText] | 9p write acme/$winid/data
-            file:close $f
           }
 
           if (==s (kind-of $m) list) {
@@ -190,7 +192,7 @@ run-parallel {
             for entry $entries {
               apply $entry
             }
-          } else {
+          } elif (not (is $m $nil)) {
             apply $m
           }
         }
