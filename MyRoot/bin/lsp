@@ -104,7 +104,7 @@ run-parallel {
     var name = $rest[0]
     # skip non-regular file
     # TODO: symlink?
-    if (not (path:is-regular $name)) {
+    if (and (not (path:is-regular $name)) (not (==s new $cmd))) {
       return
     }
     # skip the file which is not belong us
