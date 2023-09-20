@@ -107,8 +107,14 @@ run-parallel {
     if (and (not (path:is-regular $name)) (not (==s new $cmd))) {
       return
     }
-    # skip the file which is not belong us
+
+    # skip the file which is not belonging to us
     if (not (str:has-prefix $name $pwd)) {
+      return
+    }
+
+    # skip opened dir
+    if (and (==s new $cmd) (path:is-dir $name)) {
       return
     }
 
