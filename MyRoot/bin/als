@@ -118,7 +118,10 @@ else
 			exit 1
 			;;
 	esac
-	tmux set -p -t "$session:1"  remain-on-exit on
+	tmux set -p -t "$session:1" remain-on-exit on
+	tmux set -p -t "$session:1" monitor-silence 3600 # 1h
+	tmux set -p -t "$session:1" silence-action any
+	tmux set-hook -p -t "$session:1" alert-silence "kill-session"
 fi
 
 case $cmd in
