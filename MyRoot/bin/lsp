@@ -39,7 +39,7 @@ fn checkwin {
     # window not exist, just create one
     set winid = (str:fields (9p read acme/new/ctl) | take 1)
     echo 'name '$winname | 9p write acme/$winid/ctl
-    tmux set-hook -p 'alert-silence[1]' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null"'
+    tmux set-hook -p 'alert-silence[1]' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null || true"'
   }
 }
 
