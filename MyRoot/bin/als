@@ -87,7 +87,8 @@ shift 1
 file_path=`9p read acme/$winid/tag | cut -d' ' -f1`
 kind=`detect_kind "$file_path"`
 [ -z "$kind" ] && { echo "failed to detect kind based on $file_path"; exit 4; }
-root=`detect_root "$kind" "$file_path"`
+root="$ROOT"
+[ -z "$root" ] && root=`detect_root "$kind" "$file_path"`
 [ -z "$root" ] && { echo "failed to detect root based on $kind $file_path"; exit 5; }
 
 session=`echo -n "$root"/+LSP | 9 tr .@ _`
