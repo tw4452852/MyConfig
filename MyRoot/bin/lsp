@@ -41,7 +41,7 @@ fn del_exception {|p|
 
 fn track_look_loop {
    9p read acme/$winid/event | acmeevent | eawk {|_l @args|
-     put $args
+     #put $args
      if (and (==s $args[0] event) (== (% $args[7] 2) 1)) {
        if (==s $args[2] L) {
          var file = (str:trim $args[9] "'")
@@ -57,6 +57,40 @@ fn track_look_loop {
      }
    }
 }
+
+fn track_tagline_exec {|winid|
+  9p read acme/$winid/event | acmeevent | eawk {|_l @args|
+    #put $args
+    if (==s $args[0] event) {
+      var flag = $args[7]
+      if (== (% $flag 2) 1) {
+        echo $args[1]$args[2]$args[3]" "$args[4] | 9p write acme/$winid/event
+      } elif (and (== $flag 2) (==s $args[2] x)) {
+        echo nomenu | 9p write acme/$winid/ctl
+        defer { echo menu | 9p write acme/$winid/ctl }
+
+        var tagline = (9p read acme/$winid/tag | slurp)
+        var start = (str:index $tagline '|')
+        if (== $start -1) {
+          continue
+        }
+        set start = (+ $start 1)
+        var origin = $tagline[$start..]
+        defer {
+          echo cleartag | 9p write acme/$winid/ctl
+          print $origin | 9p write acme/$winid/tag
+        }
+
+        # prepend ROOT=xxx environment
+        var cmd = 'ROOT='$pwd' '$args[9]
+        echo cleartag | 9p write acme/$winid/ctl
+        echo $cmd | 9p write acme/$winid/tag
+        echo Mx$start" "(+ $start (count $cmd)) | 9p write acme/$winid/event
+      }
+    }
+  }
+}
+
 
 fn checkwin {
   try {
@@ -161,6 +195,10 @@ run-parallel {
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
+
+      if (has-key $excepts $name) {
+        track_tagline_exec $winid &
+      }
     } elif (or (==s get $cmd) (==s put $cmd)) {
       set content = (put [&jsonrpc=2.0 &method=textDocument/didChange &params=[
         &textDocument=[
