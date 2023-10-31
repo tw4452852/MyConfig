@@ -40,6 +40,9 @@ fn del_exception {|p|
 }
 
 fn track_look_loop {
+   tmux set-hook -p 'alert-silence['$winid']' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null || true"'
+   defer { tmux set-hook -pu 'alert-silence['$winid']' }
+
    9p read acme/$winid/event | acmeevent | eawk {|_l @args|
      #put $args
      if (and (==s $args[0] event) (== (% $args[7] 2) 1)) {
@@ -55,10 +58,13 @@ fn track_look_loop {
        }
        echo $args[1]$args[2]$args[3] $args[4] | 9p write acme/$winid/event
      }
-   }
+  }
 }
 
 fn track_tagline_exec {|winid|
+  tmux set-hook -p 'alert-silence['$winid']' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null || true"'
+  defer { tmux set-hook -pu 'alert-silence['$winid']' }
+
   9p read acme/$winid/event | acmeevent | eawk {|_l @args|
     #put $args
     if (==s $args[0] event) {
@@ -100,7 +106,7 @@ fn checkwin {
     # window not exist, just create one
     set winid = (str:fields (9p read acme/new/ctl) | take 1)
     echo 'name '$winname | 9p write acme/$winid/ctl
-    tmux set-hook -p 'alert-silence[1]' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null || true"'
+
     track_look_loop &
   }
 }
