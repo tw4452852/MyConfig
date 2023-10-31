@@ -31,6 +31,33 @@ printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
 var mnt = '/tmp/acme'
 var winid
 var winname = (echo $pwd | 9 tr .@ _)/+LSP
+var excepts = [&]
+fn add_exception {|p|
+  set excepts[$p] = $nil
+}
+fn del_exception {|p|
+  del excepts[$p]
+}
+
+fn track_look_loop {
+   9p read acme/$winid/event | acmeevent | eawk {|_l @args|
+     put $args
+     if (and (==s $args[0] event) (== (% $args[7] 2) 1)) {
+       if (==s $args[2] L) {
+         var file = (str:trim $args[9] "'")
+         var last_col = (str:last-index $file :)
+         if (!= $last_col -1) {
+           set file = $file[..$last_col]
+         }
+         if (path:is-regular $file) {
+           add_exception $file
+         }
+       }
+       echo $args[1]$args[2]$args[3] $args[4] | 9p write acme/$winid/event
+     }
+   }
+}
+
 fn checkwin {
   try {
     var @parts = (str:fields (9p read acme/index | grep -e $winname))
@@ -40,6 +67,7 @@ fn checkwin {
     set winid = (str:fields (9p read acme/new/ctl) | take 1)
     echo 'name '$winname | 9p write acme/$winid/ctl
     tmux set-hook -p 'alert-silence[1]' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null || true"'
+    track_look_loop &
   }
 }
 
@@ -110,7 +138,7 @@ run-parallel {
     }
 
     # skip the file which is not belonging to us
-    if (not (str:has-prefix $name $pwd)) {
+    if (and (not (str:has-prefix $name $pwd)) (not (has-key $excepts $name))) {
       return
     }
 
@@ -157,6 +185,8 @@ run-parallel {
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
+
+      del_exception $name
     }
 
     if (==s put $cmd) {
@@ -321,9 +351,10 @@ run-parallel {
         var count = 0
         var addr
         var begin = (endoffset)
+        var file
         if (==s (kind-of $m) list) {
           for entry $m {
-            var file = $entry[uri][7..]
+            set file = $entry[uri][7..]
             set addr = (printf "%s:%d+#%d,%d+#%d" $file^
               $entry[range][start][line] $entry[range][start][character]^
               $entry[range][end][line] $entry[range][end][character]^
@@ -332,7 +363,7 @@ run-parallel {
             set count = (+ $count 1)
           }
         } else {
-          var file = $m[uri][7..]
+          set file = $m[uri][7..]
           set addr = (printf "%s:%d+#%d,%d+#%d" $file^
             $m[range][start][line] $m[range][start][character]^
             $m[range][end][line] $m[range][end][character]^
@@ -343,6 +374,7 @@ run-parallel {
 
         # jump to it if there's only one result
         if (== $count 1) {
+          add_exception $file
           B $addr
         }
 
