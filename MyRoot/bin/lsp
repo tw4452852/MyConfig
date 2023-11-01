@@ -185,7 +185,7 @@ run-parallel {
     var name = $rest[0]
     # skip non-regular file
     # TODO: symlink?
-    if (and (not (path:is-regular $name)) (not (==s new $cmd))) {
+    if (not (path:is-regular $name)) {
       return
     }
 
@@ -218,6 +218,11 @@ run-parallel {
         track_tagline_exec $winid &
       }
     } elif (or (==s get $cmd) (==s put $cmd)) {
+      # create a new file to avoid it's not been openned
+      if (==s put $cmd) {
+        handle $winid new $name
+      }
+
       set content = (put [&jsonrpc=2.0 &method=textDocument/didChange &params=[
         &textDocument=[
           &uri=file://$name
