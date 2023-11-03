@@ -46,21 +46,18 @@ fn track_look_loop {
   9p read acme/$winid/event | acmeevent | eawk {|_l @args|
     #put $args
     try {
-      if (==s $args[0] event) {
-        var bits = (base 2 $args[7])
-        if (and (>= (count $bits) 2) (== $bits[-2] 1)) {
-          if (==s $args[2] L) {
-            var file = (str:trim $args[9] "'")
-            var last_col = (str:last-index $file :)
-            if (!= $last_col -1) {
-              set file = $file[..$last_col]
-            }
-            if (path:is-regular $file) {
-              add_exception $file
-            }
+      if (and (==s $args[0] event) (str:contains-any $args[2] "xXlL")) {
+        if (str:contains-any $args[2] "lL") {
+          var file = (str:trim $args[9] "'")
+          var last_col = (str:last-index $file :)
+          if (!= $last_col -1) {
+            set file = $file[..$last_col]
           }
-          echo $args[1]$args[2]$args[3] $args[4] | 9p write acme/$winid/event
+          if (path:is-regular $file) {
+            add_exception $file
+          }
         }
+        echo $args[1]$args[2]$args[3] $args[4] | 9p write acme/$winid/event
       }
     } catch e {
       put $e
@@ -75,12 +72,9 @@ fn track_tagline_exec {|winid|
   9p read acme/$winid/event | acmeevent | eawk {|_l @args|
     #put $args
     try {
-      if (==s $args[0] event) {
+      if (and (==s $args[0] event) (str:contains-any $args[2] "xXlL")) {
         var flag = $args[7]
-        var bits = (base 2 $flag)
-        if (== $bits[-2] 1) {
-          echo $args[1]$args[2]$args[3]" "$args[4] | 9p write acme/$winid/event
-        } elif (and (== $flag 2) (==s $args[2] x)) {
+        if (and (== $flag 2) (==s $args[2] x)) {
           echo nomenu | 9p write acme/$winid/ctl
           defer { echo menu | 9p write acme/$winid/ctl }
 
@@ -101,6 +95,8 @@ fn track_tagline_exec {|winid|
           echo cleartag | 9p write acme/$winid/ctl
           echo $cmd | 9p write acme/$winid/tag
           echo Mx$start" "(+ $start (count $cmd)) | 9p write acme/$winid/event
+        } else {
+          echo $args[1]$args[2]$args[3] $args[4] | 9p write acme/$winid/event
         }
       }
     } catch e {
