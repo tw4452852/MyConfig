@@ -195,7 +195,7 @@ run-parallel {
       return
     }
 
-    if (==s new $cmd) {
+    fn didOpen {||
       set content = (put [&jsonrpc=2.0 &method=textDocument/didOpen &params=[
         &textDocument=[
           &uri=file://$name
@@ -209,14 +209,18 @@ run-parallel {
       lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
+    }
+
+    if (==s new $cmd) {
+      didOpen
 
       if (has-key $excepts $name) {
         track_tagline_exec $winid &
       }
     } elif (or (==s get $cmd) (==s put $cmd)) {
-      # create a new file to avoid it's not been openned
+      # create a new file to avoid it's not been opened
       if (==s put $cmd) {
-        handle $winid new $name
+        didOpen
       }
 
       set content = (put [&jsonrpc=2.0 &method=textDocument/didChange &params=[
