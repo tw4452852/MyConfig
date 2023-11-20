@@ -122,6 +122,7 @@ else
 	tmux set -p -t "$session:1" remain-on-exit on
 	tmux set -p -t "$session:1" monitor-silence 3600 # 1h
 	tmux set -p -t "$session:1" silence-action any
+	tmux set -p -t "$session:1" status-right 'silent for #{e|-|:#(date +%s),#{window_activity}}s'
 	tmux set-hook -p -t "$session:1" alert-silence "kill-session"
 fi
 
