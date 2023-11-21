@@ -195,11 +195,13 @@ run-parallel {
       return
     }
 
+    var langid = (try { put (path:ext $name)[1..] } catch e { return })
+
     fn didOpen {||
       set content = (put [&jsonrpc=2.0 &method=textDocument/didOpen &params=[
         &textDocument=[
           &uri=file://$name
-          &languageId=(try { put (path:ext $name)[1..] } catch e { put unknown })
+          &languageId=$langid
           &version=(num 0)
           &text=(9p read acme/$winid/body | slurp)
         ]
