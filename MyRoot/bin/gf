@@ -58,6 +58,7 @@ winname $name
 tmux new -dAD -s $session_name -c $PWD f >[2]/dev/null
 tmux set -p -t $session_name:1 monitor-silence 3600 # 1h
 tmux set -p -t $session_name:1 silence-action any
+tmux set -p -t $session_name:1 status-right 'silent for #{e|-|:#(date +%s),#{window_activity}}s'
 tmux set-hook -p -t $session_name:1 alert-silence kill-session
 args=(run "echo delete '|' 9p write acme/$winid/ctl '>' /dev/null '||' true")
 tmux set-hook -p -t $session_name:1 alert-silence[1] $"args
