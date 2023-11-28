@@ -57,6 +57,7 @@ set edit:insert:binding[A-p] = $edit:history:start~
 set edit:insert:binding[A-d] = { edit:move-dot-right-word; edit:kill-word-left }
 set edit:insert:binding[C-x] = { edit:-instant:start }
 set edit:insert:binding[A-t] = $edit:transpose-word~
+set edit:insert:binding[A-/] = { var @args = (edit:wordify $edit:current-command); edit:insert-at-dot $args[-1] }
 
 set edit:history:binding[A-p] = $edit:history:up~
 set edit:history:binding[A-n] = $edit:history:down-or-quit~
