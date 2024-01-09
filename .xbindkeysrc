@@ -7,7 +7,7 @@
   Print
 
 "alacritty -e sh -c "9p read acme/index | awk '{print \$6}'|f""
-  alt+space
+  alt+f
 
 "alacritty -e elvish $HOME/MyRoot/scripts/search_in_acme_window.elv"
-  alt+f
+  alt+space
