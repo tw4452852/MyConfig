@@ -47,10 +47,11 @@ acme -a -f $font -F $Font $* &
 acme_pid=$!
 
 sleep 1
-acmefocused &
-acme-tag &
+[ -z "$(pgrep acmefocused)" ] && acmefocused &
+[ -z "$(pgrep acme-tag)" ] && acme-tag &
 
 [ -d $mnt ] || mkdir $mnt
+9 umount -q $mnt
 9 mount `9 namespace`/acme $mnt
 
 wait $acme_pid
