@@ -18,7 +18,7 @@ dir=$1
 cd $dir
 
 export usage="<a-r>:run query|<a-c>:complete query|<a-enter>:print query|<enter>:print selected|<c-r>:reload"
-SHELL="bash" fzf +m --no-unicode --no-separator --no-scrollbar --no-color \
+output=`SHELL="bash" fzf +m --no-unicode --no-separator --no-scrollbar --no-color \
 	--bind 'alt-r:reload(sh -c {q}||true)+transform-header(printf "%s %s\n%s" {q} $PWD "$usage")' \
 	--bind 'ctrl-r:reload(fd --no-ignore)+transform-header(printf "%s\n%s" $PWD "$usage")' \
 	--bind alt-r:+clear-query \
@@ -26,6 +26,12 @@ SHELL="bash" fzf +m --no-unicode --no-separator --no-scrollbar --no-color \
 	--bind 'alt-enter:print-query' \
 	--bind 'enter:accept-non-empty' \
 	--header "$(realpath $dir)
-$usage"
+$usage"`
+
+if [ -t 1 ]; then
+  open_in_acme "$output"
+else
+  echo $(realpath $output)
+fi
 
 
