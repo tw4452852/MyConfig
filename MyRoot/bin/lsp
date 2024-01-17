@@ -65,6 +65,8 @@ fn track_look_loop {
   }
 }
 
+use acme_tagline
+
 fn track_tagline_exec {|winid|
   tmux set-hook -p 'alert-silence['$winid']' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null || true"'
   defer { tmux set-hook -pu 'alert-silence['$winid']' }
@@ -75,26 +77,8 @@ fn track_tagline_exec {|winid|
       if (and (==s $args[0] event) (str:contains-any $args[2] "xXlL")) {
         var flag = $args[7]
         if (and (== $flag 2) (==s $args[2] x)) {
-          echo nomenu | 9p write acme/$winid/ctl
-          defer { echo menu | 9p write acme/$winid/ctl }
-
-          var tagline = (9p read acme/$winid/tag | slurp)
-          var start = (str:index $tagline '|')
-          if (== $start -1) {
-            continue
-          }
-          set start = (+ $start 1)
-          var origin = $tagline[$start..]
-          defer {
-            echo cleartag | 9p write acme/$winid/ctl
-            print $origin | 9p write acme/$winid/tag
-          }
-
           # prepend ROOT=xxx environment
-          var cmd = 'ROOT='$pwd' '$args[9]
-          echo cleartag | 9p write acme/$winid/ctl
-          echo $cmd | 9p write acme/$winid/tag
-          echo Mx$start" "(+ $start (count $cmd)) | 9p write acme/$winid/event
+          acme_tagline:run $winid 'ROOT='$pwd' '$args[9]
         } else {
           echo $args[1]$args[2]$args[3] $args[4] | 9p write acme/$winid/event
         }
