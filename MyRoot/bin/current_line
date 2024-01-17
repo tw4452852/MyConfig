@@ -1,0 +1,5 @@
+#!/usr/bin/env elvish
+
+use acme_tagline
+
+acme_tagline:run $E:winid 'Edit ='
