@@ -73,6 +73,13 @@ detect_root() {
 	echo $root
 }
 
+get_root_from_win_envs() {
+	for l in `9p read acme/$winid/envs`; do
+		env=(${l//=/ })
+		[ "${env[0]}" = "lsp_root" ] && echo "${env[1]}" && break
+	done
+}
+
 if [ $# -lt 1 ]; then
 	echo "usage: $0 [command]"
 	exit 2
@@ -87,7 +94,7 @@ shift 1
 file_path=`9p read acme/$winid/tag | cut -d' ' -f1`
 kind=`detect_kind "$file_path"`
 [ -z "$kind" ] && { echo "failed to detect kind based on $file_path"; exit 4; }
-root="$ROOT"
+root=`get_root_from_win_envs`
 [ -z "$root" ] && root=`detect_root "$kind" "$file_path"`
 [ -z "$root" ] && { echo "failed to detect root based on $kind $file_path"; exit 5; }
 
@@ -128,16 +135,16 @@ fi
 
 case $cmd in
 	def)
-		tmux pipep -t $session:1 -I "echo def ""$file_path"" `acme-dot -l $winid`"
+		tmux pipep -t $session:1 -I "echo open ""$file_path"" $winid && echo def ""$file_path"" `acme-dot -l $winid`"
 		;;
 	refs)
-		tmux pipep -t $session:1 -I "echo ref ""$file_path"" `acme-dot -l $winid`"
+		tmux pipep -t $session:1 -I "echo open ""$file_path"" $winid && echo ref ""$file_path"" `acme-dot -l $winid`"
 		;;
 	restart)
 		tmux respawnp -k -t "$session:1"
 		;;
 	impls)
-		tmux pipep -t $session:1 -I "echo imp ""$file_path"" `acme-dot -l $winid`"
+		tmux pipep -t $session:1 -I "echo open ""$file_path"" $winid && echo imp ""$file_path"" `acme-dot -l $winid`"
 		;;
 	*)
 		echo "$cmd not supported"

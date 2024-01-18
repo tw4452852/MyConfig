@@ -31,64 +31,7 @@ printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
 var mnt = '/tmp/acme'
 var winid
 var winname = (echo $pwd | 9 tr .@ _)/+LSP
-var excepts = [&]
-fn add_exception {|p|
-  set excepts[$p] = $nil
-}
-fn del_exception {|p|
-  del excepts[$p]
-}
-
-fn track_look_loop {
-  tmux set-hook -p 'alert-silence['$winid']' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null || true"'
-  defer { tmux set-hook -pu 'alert-silence['$winid']' }
-
-  9p read acme/$winid/event | acmeevent | eawk {|_l @args|
-    #put $args
-    try {
-      if (and (==s $args[0] event) (str:contains-any $args[2] "xXlL")) {
-        if (str:contains-any $args[2] "lL") {
-          var file = (str:trim $args[9] "'")
-          var last_col = (str:last-index $file :)
-          if (!= $last_col -1) {
-            set file = $file[..$last_col]
-          }
-          if (path:is-regular $file) {
-            add_exception $file
-          }
-        }
-        echo $args[1]$args[2]$args[3] $args[4] | 9p write acme/$winid/event
-      }
-    } catch e {
-      put $e
-    }
-  }
-}
-
-use acme_tagline
-
-fn track_tagline_exec {|winid|
-  tmux set-hook -p 'alert-silence['$winid']' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null || true"'
-  defer { tmux set-hook -pu 'alert-silence['$winid']' }
-
-  9p read acme/$winid/event | acmeevent | eawk {|_l @args|
-    #put $args
-    try {
-      if (and (==s $args[0] event) (str:contains-any $args[2] "xXlL")) {
-        var flag = $args[7]
-        if (and (== $flag 2) (==s $args[2] x)) {
-          # prepend ROOT=xxx environment
-          acme_tagline:run $winid 'ROOT='$pwd' '$args[9]
-        } else {
-          echo $args[1]$args[2]$args[3] $args[4] | 9p write acme/$winid/event
-        }
-      }
-    } catch e {
-      put $e
-    }
-  }
-}
-
+var opens = [&]
 
 fn checkwin {
   try {
@@ -98,8 +41,9 @@ fn checkwin {
     # window not exist, just create one
     set winid = (str:fields (9p read acme/new/ctl) | take 1)
     echo 'name '$winname | 9p write acme/$winid/ctl
-
-    track_look_loop &
+    echo 'add_env lsp_root='$pwd | 9p write acme/$winid/ctl
+    # close current window when tmux session exits.
+    tmux set-hook -p 'alert-silence['$winid']' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null || true"'
   }
 }
 
@@ -169,59 +113,7 @@ run-parallel {
       return
     }
 
-    # skip the file which is not belonging to us
-    if (and (not (str:has-prefix $name $pwd)) (not (has-key $excepts $name))) {
-      return
-    }
-
-    # skip opened dir
-    if (and (==s new $cmd) (path:is-dir $name)) {
-      return
-    }
-
-    var langid = (try { put (path:ext $name)[1..] } catch e { return })
-
-    fn didOpen {||
-      set content = (put [&jsonrpc=2.0 &method=textDocument/didOpen &params=[
-        &textDocument=[
-          &uri=file://$name
-          &languageId=$langid
-          &version=(num 0)
-          &text=(9p read acme/$winid/body | slurp)
-        ]
-      ]] | to-json)
-
-      put "-------------> file tracking thread send: "$content
-      lock
-      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-      unlock
-    }
-
-    if (==s new $cmd) {
-      didOpen
-
-      if (has-key $excepts $name) {
-        track_tagline_exec $winid &
-      }
-    } elif (or (==s get $cmd) (==s put $cmd)) {
-      # create a new file to avoid it's not been opened
-      if (==s put $cmd) {
-        didOpen
-      }
-
-      set content = (put [&jsonrpc=2.0 &method=textDocument/didChange &params=[
-        &textDocument=[
-          &uri=file://$name
-          &version=(num 0)
-        ]
-        &contentChanges=[[&text=(9p read acme/$winid/body | slurp)]]
-      ]] | to-json)
-
-      put "-------------> file tracking thread send: "$content
-      lock
-      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-      unlock
-    } elif (==s del $cmd) {
+    if (and (==s del $cmd) (has-key $opens $name)) {
       set content = (put [&jsonrpc=2.0 &method=textDocument/didClose &params=[
         &textDocument=[
           &uri=file://$name
@@ -233,10 +125,8 @@ run-parallel {
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
 
-      del_exception $name
-    }
-
-    if (==s put $cmd) {
+      del opens[$name]
+    } elif (and (==s put $cmd) (has-key $opens $name)) {
       set content = (put [&jsonrpc=2.0 &method=textDocument/didSave &params=[
         &textDocument=[
           &uri=file://$name
@@ -299,12 +189,6 @@ run-parallel {
     }
   }
 
-  # already openned windows
-  9p read acme/index | from-lines | each {|l|
-    var @parts = (str:fields $l)
-    handle $parts[0] new $parts[5]
-  }
-
   from-lines < $log | each {|l|
     try {
       handle (str:fields $l)
@@ -324,8 +208,6 @@ run-parallel {
       var @parts = (str:fields $l)
       var cmd = $parts[0]
       var file = $parts[1]
-      var line = (num $parts[2])
-      var char = (num $parts[3])
 
       put 'recv: '$l
       if (==s $cmd def) {
@@ -333,6 +215,8 @@ run-parallel {
           put "not enough parameters for definition, skip: "$l
           continue
         }
+        var line = (num $parts[2])
+        var char = (num $parts[3])
 
         set id = (+ $id 1)
         set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/definition &params=[
@@ -352,6 +236,8 @@ run-parallel {
           put "not enough parameters for reference, skip: "$l
           continue
         }
+        var line = (num $parts[2])
+        var char = (num $parts[3])
 
         set id = (+ $id 1)
         set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/references &params=[
@@ -374,6 +260,8 @@ run-parallel {
           put "not enough parameters for implementation, skip: "$l
           continue
         }
+        var line = (num $parts[2])
+        var char = (num $parts[3])
 
         set id = (+ $id 1)
         set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/implementation &params=[
@@ -388,6 +276,26 @@ run-parallel {
 
         checkwin
         append (printf "\n%s:%d+#%d impls: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
+      } elif (==s $cmd open) {
+        if (has-key $opens $file) {
+          continue
+        }
+        if (< (count $parts) 3) {
+          put "not enough parameters for open, skip: "$l
+          continue
+        }
+        var winid = $parts[2]
+
+        set content = (put [&jsonrpc=2.0 &method=textDocument/didOpen &params=[
+          &textDocument=[
+            &uri=file://$file
+            &languageId=(try { put (path:ext $file)[1..] } catch e { put unknown })
+            &version=(num 0)
+            &text=(9p read acme/$winid/body | slurp)
+          ]
+        ]] | to-json)
+
+        set opens[$file] = $nil
       } else {
         put "skip unknown input: "$l
         continue
@@ -421,8 +329,7 @@ run-parallel {
 
         # jump to it if there's only one result
         if (== $count 1) {
-          add_exception $file
-          B $addr
+          9 plumb -s lsp -d edit -a 'envs=lsp_root:'$pwd $addr
         }
 
         # make sure the results are visible
@@ -434,9 +341,14 @@ run-parallel {
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
       unlock
     } catch e {
-      put 'input thread: error:'
-      pprint $e
-      break
+      var reason = $e[reason]
+      if (and (==s $reason[type] flow) (==s $reason[name] continue)) {
+        continue
+      } else {
+        put 'input thread: error:'
+        pprint $e
+        break
+      }
     }
   }
 
