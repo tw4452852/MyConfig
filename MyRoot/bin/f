@@ -1,24 +1,26 @@
 #!/usr/bin/env bash
 
 set -e
-
-function open_in_acme() {
-	IFS=':'; a=($1); unset IFS;
-	mkdir -p `dirname ${a[0]}`
-
-	case ${a[1]} in
-  	  ''|*[!0-9]*) B ${a[0]} ;;
- 	   *) B ${a[0]}:${a[1]} ;;
-	esac
-}
-export -f open_in_acme
+#set -x
 
 dir=$1
 [ -z $dir ] && dir=.
 cd $dir
 
+function normalize() {
+	IFS=':'; a=($1); unset IFS;
+	parent_dir=`dirname ${a[0]}`
+	[ ! -d "$parent_dir" ] && mkdir -p $parent_dir
+	real_path="$dir/${a[0]}"
+
+	case ${a[1]} in
+  	  ''|*[!0-9]*) echo "$real_path" ;;
+ 	   *) echo "$real_path:${a[1]}" ;;
+	esac
+}
+
 export usage="<a-r>:run query|<a-c>:complete query|<a-enter>:print query|<enter>:print selected|<c-r>:reload"
-output=`SHELL="bash" fzf +m --no-unicode --no-separator --no-scrollbar --no-color \
+output=`SHELL="bash" fzf -m --no-unicode --no-separator --no-scrollbar --no-color \
 	--bind 'alt-r:reload(sh -c {q}||true)+transform-header(printf "%s %s\n%s" {q} $PWD "$usage")' \
 	--bind 'ctrl-r:reload(fd --no-ignore)+transform-header(printf "%s\n%s" $PWD "$usage")' \
 	--bind alt-r:+clear-query \
@@ -27,11 +29,15 @@ output=`SHELL="bash" fzf +m --no-unicode --no-separator --no-scrollbar --no-colo
 	--bind 'enter:accept-non-empty' \
 	--header "$(realpath $dir)
 $usage"`
+normalized_paths=()
+for i in $output; do
+	normalized_paths+=($(normalize $i))
+done
 
 if [ -t 1 ]; then
-  open_in_acme "$output"
+  B `printf '%s\n' ${normalized_paths[@]}`
 else
-  echo $(realpath $output)
+  printf '%s\n' "${normalized_paths[@]}"
 fi
 
 
