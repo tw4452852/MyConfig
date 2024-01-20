@@ -5,14 +5,6 @@ use path
 
 # pipe between input thread(writer), file tracking thread(writer) and server thread(reader)
 var p = (file:pipe)
-var wlock = $false
-fn lock {
-  while $wlock { nop }
-  set wlock = $true
-}
-fn unlock {
-  set wlock = $false
-}
 
 var content = (put [&jsonrpc=2.0 &id=(num 1) &method=initialize &params=[
   &rootUri=file://$pwd
@@ -121,9 +113,7 @@ run-parallel {
       ]] | to-json)
 
       put "-------------> file tracking thread send: "$content
-      lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-      unlock
 
       del opens[$name]
     } elif (and (==s put $cmd) (has-key $opens $name)) {
@@ -134,9 +124,7 @@ run-parallel {
       ]] | to-json)
 
       put "-------------> file tracking thread send: "$content
-      lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-      unlock
 
       if (eq $E:_lsp_format_on_save 1) {
         set id = (+ $id 1)
@@ -182,9 +170,7 @@ run-parallel {
         ]] | to-json)
 
         put "-------------> file tracking thread send: "$content
-        lock
         printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-        unlock
       }
     }
   }
@@ -337,9 +323,8 @@ run-parallel {
       }
 
       put "-------------> input thread send: "$content
-      lock
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-      unlock
+
     } catch e {
       var reason = $e[reason]
       if (and (==s $reason[type] flow) (==s $reason[name] continue)) {
