@@ -6,6 +6,8 @@ mkdir -p "$XDG_CACHE_HOME"
 export XDG_RUNTIME_DIR="/tmp/runtime-tw"
 mkdir -p "$XDG_RUNTIME_DIR"
 
+export NO_COLOR=1
+
 # rust
 [ -f $HOME/.cargo/env ] && . $HOME/.cargo/env
 
