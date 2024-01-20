@@ -1,4 +1,3 @@
-# environment variables#{{{
 set E:LC_ALL = en_US.UTF-8
 set E:GOPATH = ~/go
 set E:FLUTTER_SDK = ~/code/flutter
@@ -37,14 +36,11 @@ if (has-external pt) {
 	set E:FZF_DEFAULT_COMMAND = 'pt -l -g ".*"'
 }
 #E:MANPATH = (get-env MANPATH):{~}/MyRoot/usr/share/man
-#}}}
+
 fn l {|@args|
 	ls --color $@args
 }
-fn zr {|@args|
-	zellij run $@args
-}
-# key bindings#{{{
+
 set edit:insert:binding[C-a] = $edit:move-dot-sol~
 set edit:insert:binding[C-e] = $edit:move-dot-eol~
 set edit:insert:binding[A-h] = $edit:move-dot-left~
@@ -53,20 +49,16 @@ set edit:insert:binding[A-k] = $edit:move-dot-up~
 set edit:insert:binding[A-l] = $edit:move-dot-right~
 set edit:insert:binding[A-w] = $edit:kill-small-word-left~
 set edit:insert:binding[A-p] = $edit:history:start~
-# Alt-d to delete the word under the cursor
 set edit:insert:binding[A-d] = { edit:move-dot-right-word; edit:kill-word-left }
 set edit:insert:binding[C-x] = { edit:-instant:start }
 set edit:insert:binding[A-t] = $edit:transpose-word~
 set edit:insert:binding[A-/] = { var @args = (edit:wordify $edit:current-command); edit:insert-at-dot $args[-1] }
-
 set edit:history:binding[A-p] = $edit:history:up~
 set edit:history:binding[A-n] = $edit:history:down-or-quit~
-#}}}
-# abbreviates#{{{
+
 set edit:abbr['~A'] = /data/code/android/5.1
 set edit:abbr['~T'] = ~/tmp
 set edit:abbr['~P'] = ~/public/android/5.1
-#}}}
 
 # pin previous cwp to facilitate jumping back
 set before-chdir = [
@@ -74,19 +66,8 @@ set before-chdir = [
 		set edit:location:pinned = [$pwd]
 	}
 ]
-#}}}
 
-
-# completion#{{{
-set edit:completion:matcher[''] = {|x| edit:match-prefix &ignore-case=$true $x }
-
-use epm
-epm:install &silent-if-installed=$true github.com/zzamboni/elvish-completions
-epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
-epm:install &silent-if-installed=$true github.com/zzamboni/elvish-modules
-epm:install &silent-if-installed=$true github.com/xiaq/edit.elv
-epm:install &silent-if-installed=$true github.com/krader1961/elvish-lib
-
+# set window title for tmux
 use github.com/zzamboni/elvish-modules/terminal-title
 set terminal-title:title-during-command = {|cmd|
   put $cmd" | "(tilde-abbr $pwd)
@@ -104,14 +85,18 @@ set edit:after-command = [ $@edit:after-command
 	}
 ]
 
-use github.com/xiaq/edit.elv/smart-matcher
-smart-matcher:apply
+use epm
+epm:install &silent-if-installed=$true github.com/zzamboni/elvish-completions
+epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
+epm:install &silent-if-installed=$true github.com/zzamboni/elvish-modules
+epm:install &silent-if-installed=$true github.com/xiaq/edit.elv
+epm:install &silent-if-installed=$true github.com/krader1961/elvish-lib
+
+use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
+use github.com/tw4452852/elvish-completions/common
 use github.com/tw4452852/elvish-completions/adb
 use github.com/tw4452852/elvish-completions/sudo
 use github.com/zzamboni/elvish-completions/git
 use github.com/zzamboni/elvish-completions/ssh
 use github.com/zzamboni/elvish-completions/cd
 use github.com/zzamboni/elvish-completions/builtins
-
-#}}}
-# vim: set fdm=marker sw=4 ts=4 ft=sh:
