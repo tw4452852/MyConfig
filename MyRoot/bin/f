@@ -12,6 +12,7 @@ function normalize() {
 	parent_dir=`dirname ${a[0]}`
 	[ ! -d "$parent_dir" ] && mkdir -p $parent_dir
 	real_path="$dir/${a[0]}"
+	[[ "${a[0]}" == "/"* ]] && real_path="${a[0]}" # already absolute path
 
 	case ${a[1]} in
   	  ''|*[!0-9]*) echo "$real_path" ;;
