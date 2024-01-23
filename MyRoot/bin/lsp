@@ -117,6 +117,17 @@ run-parallel {
 
       del opens[$name]
     } elif (and (==s put $cmd) (has-key $opens $name)) {
+      set content = (put [&jsonrpc=2.0 &method=textDocument/didChange &params=[
+        &textDocument=[
+          &uri=file://$name
+          &version=(num 0)
+        ]
+        &contentChanges=[[&text=(9p read acme/$winid/body | slurp)]]
+      ]] | to-json)
+
+      put "-------------> file tracking thread send: "$content
+      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+
       set content = (put [&jsonrpc=2.0 &method=textDocument/didSave &params=[
         &textDocument=[
           &uri=file://$name
