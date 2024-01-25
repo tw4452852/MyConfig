@@ -86,7 +86,6 @@ set edit:after-command = [ $@edit:after-command
 ]
 
 use epm
-epm:install &silent-if-installed=$true github.com/zzamboni/elvish-completions
 epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
 epm:install &silent-if-installed=$true github.com/zzamboni/elvish-modules
 epm:install &silent-if-installed=$true github.com/xiaq/edit.elv
@@ -94,9 +93,7 @@ epm:install &silent-if-installed=$true github.com/krader1961/elvish-lib
 
 use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
 use github.com/tw4452852/elvish-completions/common
-use github.com/tw4452852/elvish-completions/adb
-use github.com/tw4452852/elvish-completions/sudo
-use github.com/zzamboni/elvish-completions/git
-use github.com/zzamboni/elvish-completions/ssh
-use github.com/zzamboni/elvish-completions/cd
-use github.com/zzamboni/elvish-completions/builtins
+use github.com/tw4452852/elvish-completions/git
+use github.com/tw4452852/elvish-completions/ssh
+use github.com/tw4452852/elvish-completions/cd
+use github.com/tw4452852/elvish-completions/builtins
