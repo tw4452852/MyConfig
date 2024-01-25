@@ -56,10 +56,6 @@ set edit:insert:binding[A-/] = { var @args = (edit:wordify $edit:current-command
 set edit:history:binding[A-p] = $edit:history:up~
 set edit:history:binding[A-n] = $edit:history:down-or-quit~
 
-set edit:abbr['~A'] = /data/code/android/5.1
-set edit:abbr['~T'] = ~/tmp
-set edit:abbr['~P'] = ~/public/android/5.1
-
 # pin previous cwp to facilitate jumping back
 set before-chdir = [
 	{|_|
@@ -87,9 +83,7 @@ set edit:after-command = [ $@edit:after-command
 
 use epm
 epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
-epm:install &silent-if-installed=$true github.com/zzamboni/elvish-modules
 epm:install &silent-if-installed=$true github.com/xiaq/edit.elv
-epm:install &silent-if-installed=$true github.com/krader1961/elvish-lib
 
 use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
 use github.com/tw4452852/elvish-completions/common
