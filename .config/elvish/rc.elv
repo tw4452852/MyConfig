@@ -1,3 +1,4 @@
+use epm
 set E:LC_ALL = en_US.UTF-8
 set E:GOPATH = ~/go
 set E:FLUTTER_SDK = ~/code/flutter
@@ -64,12 +65,14 @@ set before-chdir = [
 ]
 
 # set window title for tmux
+epm:install &silent-if-installed=$true github.com/zzamboni/elvish-modules
 use github.com/zzamboni/elvish-modules/terminal-title
 set terminal-title:title-during-command = {|cmd|
   put $cmd" | "(tilde-abbr $pwd)
 }
 
 # notify when long-run command finish
+epm:install &silent-if-installed=$true github.com/krader1961/elvish-lib
 use github.com/krader1961/elvish-lib/cmd-duration
 set edit:after-command = [ $@edit:after-command
 	{|m|
@@ -81,7 +84,6 @@ set edit:after-command = [ $@edit:after-command
 	}
 ]
 
-use epm
 epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
 epm:install &silent-if-installed=$true github.com/xiaq/edit.elv
 
