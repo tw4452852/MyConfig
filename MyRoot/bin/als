@@ -36,7 +36,6 @@ detect_root() {
 			do
 				root=`dirname $root`
 			done
-			[ $root != "/" ] && root=$(dirname $(realpath "$root/compile_commands.json"))
 			;;
 		d)
 			while [ ! -e "$root/pubspec.yaml" ] && [ "$root" != "/" ]
