@@ -116,6 +116,7 @@ run-parallel {
       printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
 
       del opens[$name]
+      tmux set-hook -pu 'alert-silence['$winid']'
     } elif (and (==s put $cmd) (has-key $opens $name)) {
       set content = (put [&jsonrpc=2.0 &method=textDocument/didChange &params=[
         &textDocument=[
@@ -293,6 +294,8 @@ run-parallel {
         ]] | to-json)
 
         set opens[$file] = $nil
+        # close current window when tmux session exits.
+        tmux set-hook -p 'alert-silence['$winid']' 'run "echo del | 9p write acme/'$winid'/ctl > /dev/null || true"'
       } else {
         put "skip unknown input: "$l
         continue
