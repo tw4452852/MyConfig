@@ -2,6 +2,14 @@
 
 editor = acme
 
+# image files go to page
+type is text
+data matches '[a-zA-Z¡-￿0-9_\-./@]+'
+data matches '([a-zA-Z¡-￿0-9_\-./@]+)\.(jpe?g|JPE?G|gif|GIF|tiff?|TIFF?|ppm|bit|png|PNG)'
+arg isfile	$0
+plumb to image
+plumb start 9 page $file
+
 type	is	text
 data	matches	'[0-9a-f]*[a-f][0-9a-f]*'
 data	matches	'([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]+)'
@@ -47,3 +55,8 @@ type	is	text
 data	matches	'([a-zA-Z¡-￿0-9_\-./]+)\(([1-8])\)'
 plumb	start	rc -c 'man '$2' '$1' >[2=1] | nobs | plumb -i -d edit -a ''action=showdata filename=/man/'$1'('$2')'''
 
+# start rule for images without known suffixes
+dst is image
+arg isfile $data
+plumb to image
+plumb start 9 page $data
