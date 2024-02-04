@@ -1,0 +1,9 @@
+[Default Applications]
+text/html=org.qutebrowser.qutebrowser.desktop
+x-scheme-handler/http=org.qutebrowser.qutebrowser.desktop
+x-scheme-handler/https=org.qutebrowser.qutebrowser.desktop
+x-scheme-handler/about=org.qutebrowser.qutebrowser.desktop
+x-scheme-handler/unknown=org.qutebrowser.qutebrowser.desktop
+application/pdf=sioyek.desktop
+image/png=plumb.desktop
+image/jpeg=plumb.desktop

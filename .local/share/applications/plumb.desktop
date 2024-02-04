@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Name=Plan9port plumb
+Exec=plumb %F
+MimeType=application/x-desktop
+Terminal=false
+Type=Application
