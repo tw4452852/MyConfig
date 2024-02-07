@@ -87,7 +87,20 @@ set edit:after-command = [ $@edit:after-command
 epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
 epm:install &silent-if-installed=$true github.com/xiaq/edit.elv
 
-use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
+fn match {|seed|
+  var inputs = [(all)]
+  var results = [(to-lines $inputs | try { e:fzf -0 -1 --no-sort -f $seed } catch { nop } )]
+  each {|x|
+    if (has-value $results $x) {
+      put $true
+    } else {
+      put $false
+    }
+  } $inputs
+}
+set edit:completion:matcher[''] = $match~
+#use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
+
 use github.com/tw4452852/elvish-completions/common
 use github.com/tw4452852/elvish-completions/git
 use github.com/tw4452852/elvish-completions/ssh
