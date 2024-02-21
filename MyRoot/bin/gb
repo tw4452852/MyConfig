@@ -6,4 +6,4 @@ curOff=`echo $position | cut -d'#' -f3`
 curLineNum=`head -c+$curOff $file_path | wc -l`
 curLineNum=$((curLineNum+1))
 
-git blame -L$curLineNum,$curLineNum $file_path
+git log -L$curLineNum,$curLineNum:$file_path
