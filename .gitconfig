@@ -34,6 +34,7 @@
 	pending = codereview pending
 	submit = codereview submit
 	sync = codereview sync
+	cl = clone --filter=blob:none
 [apply]
 	whitespace = fix
 [push]
