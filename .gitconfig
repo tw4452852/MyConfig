@@ -39,6 +39,8 @@
 	whitespace = fix
 [push]
 	default = tracking
+[rebase]
+	autosquash = true
 [init]
 	templatedir = ~/.git-template
 [http]
