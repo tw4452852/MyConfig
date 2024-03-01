@@ -98,8 +98,8 @@ fn match {|seed|
     }
   } $inputs
 }
-set edit:completion:matcher[''] = $match~
-#use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
+#set edit:completion:matcher[''] = $match~
+use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
 
 use github.com/tw4452852/elvish-completions/common
 use github.com/tw4452852/elvish-completions/git
