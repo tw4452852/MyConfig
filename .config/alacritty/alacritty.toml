@@ -1,0 +1,30 @@
+[colors.bright]
+black = "0x101010"
+blue = "0x0784b5"
+cyan = "0x87a2a3"
+green = "0x006600"
+magenta = "0x8888cc"
+red = "0xaa0000"
+white = "0xffffff"
+yellow = "0x99994C"
+
+[colors.normal]
+black = "0x101010"
+blue = "0x0784b5"
+cyan = "0x87a2a3"
+green = "0x006600"
+magenta = "0x8888cc"
+red = "0xaa0000"
+white = "0xffffff"
+yellow = "0x99994C"
+
+[colors.primary]
+background = "0xffffe0"
+foreground = "0x101010"
+
+[font.normal]
+family = "Go Mono"
+
+[window]
+dynamic_padding = true
+option_as_alt = "Both"
