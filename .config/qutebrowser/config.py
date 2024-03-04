@@ -6,4 +6,4 @@ c.tabs.select_on_remove = "last-used"
 c.tabs.background = False
 
 config.bind(',k', 'spawn --userscript qute-pass-with-fallback --dmenu-invocation="dmenu -b"')
-config.bind('aa', 'spawn -o curl -s dict://dict.org/d:{primary}:wn')
+config.bind('aa', 'spawn alacritty -e def {primary}')
