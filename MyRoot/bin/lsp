@@ -8,6 +8,7 @@ var p = (file:pipe)
 
 var content = (put [&jsonrpc=2.0 &id=(num 1) &method=initialize &params=[
   &rootUri=file://$pwd
+  &processId=$pid
   &capabilities=[
     &general=[
       &positionEncodings=[utf-8]
