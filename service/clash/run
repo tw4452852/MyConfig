@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # wget -O /tmp/jms.conf 'http://sub.totorow.xyz:25500/getprofile?name=profiles/jms.ini&token=xxx'
-exec ~/go/bin/clash -f /tmp/jms.conf
+exec ~/go/bin/mihomo -f ~/.config/clash/jms.conf 2>&1
