@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec caddy file-server --browse --root ~/d/ 2>&1
