@@ -106,3 +106,6 @@ use github.com/tw4452852/elvish-completions/git
 use github.com/tw4452852/elvish-completions/ssh
 use github.com/tw4452852/elvish-completions/cd
 use github.com/tw4452852/elvish-completions/builtins
+use asdf _asdf; var asdf~ = $_asdf:asdf~
+
+set edit:completion:arg-completer[asdf] = $_asdf:arg-completer~
