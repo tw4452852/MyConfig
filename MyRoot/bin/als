@@ -119,7 +119,7 @@ else
 			tmux new -d -s "$session" -c "$root" -e _lsp_format_on_save=1 lsp zls
 			;;
 		e)
-			tmux new -d -s "$session" -c "$root" -e _lsp_format_on_save=1 lsp /home/tw/code/elixir-ls/output/language_server.sh
+			tmux new -d -s "$session" -c "$root" -e _lsp_format_on_save=1 lsp /home/tw/code/lexical/_build/dev/package/lexical/bin/start_lexical.sh
 			;;
 		*)
 			echo "Not supported: $kind"
