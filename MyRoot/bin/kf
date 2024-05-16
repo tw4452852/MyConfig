@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -e
+#set -x
+
+dir=$1
+[ -z $dir ] && dir=.
+export abs_dir=`realpath $dir`
+
+function open_in_kakoune() {
+	IFS=':'; a=($1); unset IFS;
+	parent_dir=`dirname ${a[0]}`
+	[ ! -d "$parent_dir" ] && mkdir -p $parent_dir
+	real_path="$abs_dir/${a[0]}"
+	[[ "${a[0]}" == "/"* ]] && real_path="${a[0]}" # already absolute path
+
+	case ${a[1]} in
+  	  ''|*[!0-9]*) kak "$real_path" ;;
+ 	   *) kak "$real_path" +${a[1]} ;;
+	esac
+
+}
+export -f open_in_kakoune
+
+export usage="<a-r>:run query|<a-c>:complete query|<a-enter>:open query|<enter>:open selected|<c-r>:reload"
+cd $dir && SHELL="bash" fzf -m --no-unicode --no-separator --no-scrollbar --no-color \
+	--bind 'alt-r:reload(sh -c {q}||true)+transform-header(printf "%s %s\n%s" {q} $PWD "$usage")' \
+	--bind 'ctrl-r:reload(fd --no-ignore)+transform-header(printf "%s\n%s" $PWD "$usage")' \
+	--bind alt-r:+clear-query \
+	--bind alt-c:replace-query \
+	--bind 'enter:execute(open_in_kakoune {})' \
+	--bind 'alt-enter:execute(open_in_kakoune {q})' \
+	--header "$(realpath $dir)
+$usage"
+
