@@ -22,14 +22,14 @@ function open_in_kakoune() {
 }
 export -f open_in_kakoune
 
-export usage="<a-r>:run query|<a-c>:complete query|<a-enter>:open query|<enter>:open selected|<c-r>:reload"
+export usage="<a-r>:run query|<a-c>:complete query|<a-enter>:fzf selected|<enter>:open selected|<c-r>:reload"
 cd $dir && SHELL="bash" fzf -m --no-unicode --no-separator --no-scrollbar --no-color \
 	--bind 'alt-r:reload(sh -c {q}||true)+transform-header(printf "%s %s\n%s" {q} $PWD "$usage")' \
 	--bind 'ctrl-r:reload(fd --no-ignore)+transform-header(printf "%s\n%s" $PWD "$usage")' \
 	--bind alt-r:+clear-query \
 	--bind alt-c:replace-query \
 	--bind 'enter:execute(open_in_kakoune {})' \
-	--bind 'alt-enter:execute(open_in_kakoune {q})' \
+	--bind 'alt-enter:become(grep . -n -H {} | kf)' \
 	--header "$(realpath $dir)
 $usage"
 
