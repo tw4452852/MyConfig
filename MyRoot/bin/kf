@@ -29,7 +29,7 @@ cd $dir && SHELL="bash" fzf -m --no-unicode --no-separator --no-scrollbar --no-c
 	--bind alt-r:+clear-query \
 	--bind alt-c:replace-query \
 	--bind 'enter:execute(open_in_kakoune {})' \
-	--bind 'alt-enter:become(grep . -n -H {} | kf)' \
+	--bind 'alt-enter:reload(grep . -n -H {})' \
 	--header "$(realpath $dir)
 $usage"
 
