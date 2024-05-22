@@ -20,4 +20,7 @@ pipewire 1>/tmp/pipewire.log 2>&1 &
 pkill xbindkeys
 xbindkeys -p
 
+# notification
+tiramisu -o '#summary #body' 2>&1 | vlogger -p mail &
+
 exec cwm 1>~/.twwm.log 2>&1

@@ -6,7 +6,6 @@ clang-tools-extra
 cronie
 cwm
 dbus
-dunst
 elvish
 fcitx-configtool
 fcitx5
@@ -51,3 +50,5 @@ xsel
 xtools
 xz
 zip
+tiramisu
+herbe
