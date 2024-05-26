@@ -1,9 +1,7 @@
-#!/home/tw/code/plan9port/bin/rc
+#!/usr/bin/env rc
 
 . 9.rc
 . $PLAN9/lib/acme.rc
-
-stop=false
 
 fn event {
 	# $1 - c1 origin of event
@@ -45,13 +43,12 @@ winname pomoclock
 
 wineventloop &
 
-while() {
+while (winctl cleartag >[2]/dev/null|| exit 0) {
 	cmd=' pause reset |'
 	date=`{9 date| u tr -d '\n'}
 	status=`{zpomo status}
 
-	line=($cmd  $status $date)
-	winctl cleartag >[2]/dev/null || exit 0
+	line=($cmd $status $date)
 	printf $"line | winwrite tag >[2]/dev/null|| exit 0
 
 	sleep 1
