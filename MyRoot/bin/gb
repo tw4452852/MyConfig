@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 position=`acme-dot $winid`
 file_path=`9p read acme/$winid/tag | cut -d' ' -f1`

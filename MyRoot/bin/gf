@@ -1,4 +1,4 @@
-#!/home/tw/code/plan9port/bin/rc
+#!/usr/bin/env rc
 
 . 9.rc
 . $PLAN9/lib/acme.rc

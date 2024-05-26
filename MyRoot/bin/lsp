@@ -1,4 +1,4 @@
-#!/home/tw/go/bin/elvish
+#!/usr/bin/env elvish
 use file
 use str
 use path
