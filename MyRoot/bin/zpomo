@@ -1,6 +1,7 @@
 #!/usr/bin/env elvish
 
 use flag
+use github.com/krader1961/elvish-lib/cmd-duration
 
 var working_time = (* 40 60)
 var resting_time = (* 5 60)
@@ -40,9 +41,9 @@ fn main {|&s="" &e="" cmd|
       set output = $output"[paused] "
     }
     if (< $state[dur] $working_time) {
-      set output = $output"working: "(- $working_time $state[dur])"s"
+      set output = $output"working: "(cmd-duration:human-readable (- $working_time $state[dur]))
     } else {
-      set output = $output"resting: "(- $period $state[dur])"s"
+      set output = $output"resting: "(cmd-duration:human-readable (- $period $state[dur]))
     }
     echo $output
   } elif (==s $cmd "numstatus") {
