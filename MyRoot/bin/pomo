@@ -43,13 +43,24 @@ winname pomoclock
 
 wineventloop &
 
-while (winctl cleartag >[2]/dev/null|| exit 0) {
+mail_file=/var/log/socklog/mail/current
+
+while () {
 	cmd=' pause reset |'
 	date=`{9 date| u tr -d '\n'}
-	status=`{zpomo status}
+	status=`{zpomo -e 'xautolock -locknow' status}
 
 	line=($cmd $status $date)
+	winctl cleartag >[2]/dev/null|| exit 0
 	printf $"line | winwrite tag >[2]/dev/null|| exit 0
 
 	sleep 1
+
+	if (test -e $mail_file) {
+		cur=`{9 stat -c %y $mail_file}
+		if (! ~ $"prev $"cur) {
+			9 statusbar 'new message'
+		}
+		prev=$cur
+	}
 }
