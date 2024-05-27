@@ -33,6 +33,12 @@ fn main {|&s="" &e="" cmd|
     set state[dur] = $cur_dur
   } elif (==s $cmd "status") {
     if (not $state[paused]) {
+      if (and (>= $state[dur] $working_time) (<= $cur_dur $working_time) (!=s $s "")) {
+        e:sh -c $s
+      }
+      if (and (<= $state[dur] $working_time) (>= $cur_dur $working_time) (!=s $e "")) {
+        e:sh -c $e
+      }
       set state[dur] = $cur_dur
     }
 
