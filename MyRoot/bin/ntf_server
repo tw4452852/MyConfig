@@ -1,0 +1,13 @@
+#!/usr/bin/env elvish
+
+tiramisu -j | from-json | each {|e|
+  echo $e[summary] $e[body]
+
+  if (== $num-bg-jobs 0) {
+    try {
+      herbe "new message"
+    } catch {
+      nop
+    } &
+  }
+}

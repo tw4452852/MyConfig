@@ -43,8 +43,6 @@ winname pomoclock
 
 wineventloop &
 
-mail_file=/var/log/socklog/mail/current
-
 while () {
 	cmd=' pause reset |'
 	date=`{9 date| u tr -d '\n'}
@@ -55,12 +53,4 @@ while () {
 	printf $"line | winwrite tag >[2]/dev/null|| exit 0
 
 	sleep 1
-
-	if (test -e $mail_file) {
-		cur=`{9 stat -c %y $mail_file}
-		if (! ~ $"prev $"cur) {
-			9 statusbar 'new message'
-		}
-		prev=$cur
-	}
 }
