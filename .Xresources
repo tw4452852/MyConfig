@@ -50,3 +50,5 @@ Shift <KeyPress> Insert:insert-selection(CLIPBOARD, CUT_BUFFER1) \n\
 
 ! allow sendevent from xserver to support wm key remap
 xterm*allowSendEvents: true
+
+herbe.font_pattern: WenQuanYi Micro Hei:size=10
