@@ -76,9 +76,9 @@ epm:install &silent-if-installed=$true github.com/krader1961/elvish-lib
 use github.com/krader1961/elvish-lib/cmd-duration
 set edit:after-command = [ $@edit:after-command
 	{|m|
-		if (>= $m[duration] 1.0) {
-			if (has-external herbe) {
-				9 statusbar $m[src][code]' took '(cmd-duration:human-readable $m[duration])
+		if (>= $m[duration] 60.0) {
+			if (has-external notify-send) {
+				notify-send $m[src][code]' took '(cmd-duration:human-readable $m[duration])
 			}
 		}
 	}
