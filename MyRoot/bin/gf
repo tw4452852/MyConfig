@@ -1,4 +1,4 @@
 #!/usr/bin/env elvish
 
-alacritty -e f (git rev-parse --show-toplevel)
+alacritty -e f (try { git rev-parse --show-toplevel 2>/dev/null } catch { echo . })
 
