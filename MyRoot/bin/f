@@ -30,9 +30,9 @@ output=`cd $dir && SHELL="bash" fzf -m --no-unicode --no-separator --no-scrollba
 	--header "$(realpath $dir)
 $usage"`
 normalized_paths=()
-for i in $output; do
-	normalized_paths+=($(normalize $i))
-done
+while IFS= read -r line; do
+	normalized_paths+=($(normalize $line))
+done <<< "$output"
 
 if [ -t 1 ]; then
   B `printf '%s\n' ${normalized_paths[@]}`
