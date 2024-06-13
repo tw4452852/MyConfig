@@ -27,4 +27,6 @@ family = "Go Mono"
 
 [window]
 dynamic_padding = true
-option_as_alt = "Both"
+
+[keyboard]
+bindings = [{ key = "F11", action = "ToggleFullscreen" }]
