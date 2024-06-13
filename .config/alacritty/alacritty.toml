@@ -27,6 +27,7 @@ family = "Go Mono"
 
 [window]
 dynamic_padding = true
+startup_mode = "Maximized"
 
 [keyboard]
 bindings = [{ key = "F11", action = "ToggleFullscreen" }]
