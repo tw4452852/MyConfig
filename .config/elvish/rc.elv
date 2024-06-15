@@ -102,7 +102,6 @@ set edit:after-command = [ $@edit:after-command
 	}
 ]
 
-epm:install &silent-if-installed=$true github.com/tw4452852/elvish-completions
 epm:install &silent-if-installed=$true github.com/xiaq/edit.elv
 
 fn match {|seed|
@@ -119,11 +118,5 @@ fn match {|seed|
 #set edit:completion:matcher[''] = $match~
 use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
 
-use github.com/tw4452852/elvish-completions/common
-use github.com/tw4452852/elvish-completions/git
-use github.com/tw4452852/elvish-completions/ssh
-use github.com/tw4452852/elvish-completions/cd
-use github.com/tw4452852/elvish-completions/builtins
-use asdf _asdf; var asdf~ = $_asdf:asdf~
-
-set edit:completion:arg-completer[asdf] = $_asdf:arg-completer~
+set-env CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
+eval (carapace _carapace|slurp)
