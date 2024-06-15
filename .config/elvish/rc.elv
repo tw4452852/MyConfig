@@ -57,6 +57,24 @@ set edit:insert:binding[A-/] = { var @args = (edit:wordify $edit:current-command
 set edit:history:binding[A-p] = $edit:history:up~
 set edit:history:binding[A-n] = $edit:history:down-or-quit~
 
+use re
+fn list-commits {|filter|
+  git log -100 --graph --grep=$filter --format='%H -%d %s %cr <%an>' . | each {|line|
+    var match = [(re:find &max=1 '[0-9a-f]{40}' $line)]
+    put [
+      &to-show= $line
+      &to-accept= (if (!= (count $match) 0) { put $match[0][text] } else { put "" })
+    ]
+  }
+}
+
+fn show-commit {|hash|
+  if (!=s $hash "") {
+    edit:notify (git show $hash | slurp)
+  }
+}
+set edit:insert:binding[C-g] = { edit:listing:start-custom $list-commits~ &caption=" Git log " &accept=$show-commit~ }
+
 # pin previous cwp to facilitate jumping back
 set before-chdir = [
 	{|_|
