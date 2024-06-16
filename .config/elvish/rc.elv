@@ -120,3 +120,6 @@ use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
 
 set-env CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
 eval (carapace _carapace|slurp)
+
+set edit:abbr['~config'] = '~/.config'
+set edit:command-abbr['gti'] = 'git'
