@@ -1,4 +1,6 @@
 use epm
+use os
+
 set E:LC_ALL = en_US.UTF-8
 set E:GOPATH = ~/go
 set E:FLUTTER_SDK = ~/code/flutter
@@ -57,23 +59,24 @@ set edit:insert:binding[A-/] = { var @args = (edit:wordify $edit:current-command
 set edit:history:binding[A-p] = $edit:history:up~
 set edit:history:binding[A-n] = $edit:history:down-or-quit~
 
-use re
-fn list-commits {|filter|
-  git log -100 --graph --grep=$filter --format='%H -%d %s %cr <%an>' . | each {|line|
-    var match = [(re:find &max=1 '[0-9a-f]{40}' $line)]
-    put [
-      &to-show= $line
-      &to-accept= (if (!= (count $match) 0) { put $match[0][text] } else { put "" })
-    ]
+# git commit explorer
+fn gce {
+  try {
+    var sha = (git lg | fzf --ansi --with-shell 'elvish -c' ^
+      --preview-window=wrap --preview ' ^
+        use re; ^
+        use str; ^
+        each {|x| ^
+          if (re:match "^[0-9a-f]\{5,40}$" $x) { ^
+           git show --color $x ^
+          } ^
+        } [(str:fields (slurp < {f}))] ' | grep -o -E -e '[0-9a-f]{5,40}')
+    edit:insert-at-dot $sha
+  } catch {
+    nop
   }
 }
-
-fn show-commit {|hash|
-  if (!=s $hash "") {
-    edit:notify (git show $hash | slurp)
-  }
-}
-set edit:insert:binding[C-g] = { edit:listing:start-custom $list-commits~ &caption=" Git log " &accept=$show-commit~ }
+set edit:insert:binding[C-g] = { gce > $os:dev-tty 2>&1 }
 
 # pin previous cwp to facilitate jumping back
 set before-chdir = [
