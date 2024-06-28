@@ -51,3 +51,9 @@
 
 [includeIf "gitdir:~/code/work/"]
     path = ~/code/work/.gitconfig
+
+[sendemail]
+    smtpServer = smtp.gmail.com
+    smtpServerPort = 587
+    smtpEncryption = tls
+    smtpUser = tw19881113@gmail.com
