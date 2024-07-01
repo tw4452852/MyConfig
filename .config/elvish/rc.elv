@@ -62,7 +62,7 @@ set edit:history:binding[A-n] = $edit:history:down-or-quit~
 # git commit explorer
 fn gce {
   try {
-    var sha = (git lg | fzf --ansi --with-shell 'elvish -c' ^
+    var sha = (fzf --ansi --with-shell 'elvish -c' ^
       --preview-window=wrap --preview ' ^
         use re; ^
         use str; ^
@@ -76,7 +76,7 @@ fn gce {
     nop
   }
 }
-set edit:insert:binding[C-g] = { gce > $os:dev-tty 2>&1 }
+set edit:insert:binding[C-g] = { git lg | gce > $os:dev-tty 2>&1 }
 
 # pin previous cwp to facilitate jumping back
 set before-chdir = [
