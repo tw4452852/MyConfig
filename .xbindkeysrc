@@ -9,5 +9,8 @@
 "alacritty -e elvish $HOME/MyRoot/scripts/select_acme_windows.elv"
   F1
 
+"alacritty -e elvish $HOME/MyRoot/scripts/gf_of_focused_acme_window.elv"
+  F2
+
 "alacritty -e elvish $HOME/MyRoot/scripts/search_in_acme_window.elv"
   alt+space
