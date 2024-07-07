@@ -76,7 +76,13 @@ fn gce {
     nop
   }
 }
-set edit:insert:binding[C-g] = { git lg | gce > $os:dev-tty 2>&1 }
+set edit:insert:binding[C-g] = {
+  var cmd = "git lg"
+  if (!=s $edit:current-command "") {
+    set cmd = $edit:current-command
+  }
+  eval $cmd | gce > $os:dev-tty 2>&1
+}
 
 # pin previous cwp to facilitate jumping back
 set before-chdir = [
