@@ -342,7 +342,7 @@ run-parallel {
 
     } catch e {
       var reason = $e[reason]
-      if (and (==s $reason[type] flow) (==s $reason[name] continue)) {
+      if (and (has-key $e[reason] type) (==s $reason[type] flow) (==s $reason[name] continue)) {
         continue
       } else {
         put 'input thread: error:'
