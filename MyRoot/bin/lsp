@@ -84,8 +84,26 @@ run-parallel {
     }
 
     try {
-      $cbs[$m[id]] $m[result]
-      del cbs[$m[id]]
+      if (and (has-key $m method) (==s $m[method] textDocument/publishDiagnostics)) {
+        if (not (eq $m[params][diagnostics] [])) {
+          var file = $m[params][uri][7..] # skip "file://"
+          var cur_file = (str:fields (9p read acme/(9 dial unix!(9 namespace)/acmefocused)/tag) | take 1)
+          if (==s $file $cur_file) {
+            var begin = (endoffset)
+            for entry $m[params][diagnostics] {
+              var msg = (printf "%s:%d+#%d,%d+#%d: %s" $file^
+                $entry[range][start][line] $entry[range][start][character]^
+                $entry[range][end][line] $entry[range][end][character]^
+                $entry[message] | slurp)
+              append $msg
+            }
+            show $begin (endoffset)
+          }
+        }
+      } else {
+        $cbs[$m[id]] $m[result]
+        del cbs[$m[id]]
+      }
     } catch e {
       pprint $m
     }
