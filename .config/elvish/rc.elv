@@ -70,7 +70,7 @@ fn gce {
           if (re:match "^[0-9a-f]\{5,40}$" $x) { ^
            git show --color $x ^
           } ^
-        } [(str:fields (slurp < {f}))] ' | grep -o -E -e '[0-9a-f]{5,40}')
+        } [(str:fields (slurp < {f}))] ' | grep -o -E -e '[0-9a-f]{5,40}' | take 1)
     edit:insert-at-dot $sha
   } catch {
     nop
