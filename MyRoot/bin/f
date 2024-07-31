@@ -8,7 +8,7 @@ cd $dir
 
 var usage = "<a-enter>:open selected|<enter>:open selected and exit|<c-r>:reload|<a-r>:run query"
 
-fzf --with-shell 'elvish -c' ^
+fzf --with-shell 'elvish -c' --walker=file,follow ^
   --header $pwd"\n"$usage -d ':' ^
   --border bottom --color=label:black ^
   --bind 'load:clear-query' ^
