@@ -62,7 +62,7 @@ set edit:history:binding[A-n] = $edit:history:down-or-quit~
 # git commit explorer
 fn gce {
   try {
-    var sha = (fzf --ansi --with-shell 'elvish -c' ^
+    var sha = (fzf --ansi --layout=reverse-list +s --with-shell 'elvish -c' ^
       --preview-window=wrap --preview ' ^
         use re; ^
         use str; ^
