@@ -1,13 +1,20 @@
 #!/usr/bin/env elvish
 
-tiramisu -j | from-json | each {|e|
-  echo $e[summary] $e[body]
+var message = []
 
-  if (== $num-bg-jobs 0) {
+tiramisu -o "#summary\n#body\n#end\n" | while $true {
+  var line = (read-line)
+
+  if (==s $line "#end") {
     try {
-      herbe $e[summary] $e[body]
+      herbe $@message
     } catch {
       nop
-    } &
+    } finally {
+      set message = []
+    }
+  } else {
+    set message = [$@message $line]
+    echo $line
   }
 }
