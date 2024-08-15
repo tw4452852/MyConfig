@@ -55,3 +55,4 @@ herbe.font_pattern: WenQuanYi Micro Hei:size=10
 herbe.background_color: #eaffff
 herbe.font_color: #101010
 herbe.border_color: #101010
+herbe.corner: 3
