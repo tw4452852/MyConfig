@@ -128,6 +128,7 @@ fn match {|seed|
 use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
 
 set-env CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
+set-env CARAPACE_MATCH 1  # case insensitive
 eval (carapace _carapace|slurp)
 
 set edit:abbr['~config'] = '~/.config'
