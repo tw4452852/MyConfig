@@ -11,7 +11,6 @@ var usage = "<a-enter>:open selected|<enter>:open selected and exit|<c-r>:reload
 fzf --with-shell 'elvish -c' --walker=file,follow ^
   --header $pwd"\n"$usage -d ':' ^
   --border bottom --color=label:black ^
-  --bind 'load:clear-query' ^
   --bind 'focus:transform-border-label:if (!= (count {2}) 0) { echo B {1}:{2} } else { echo B {1} }' ^
   --bind 'ctrl-r:reload(fd --no-ignore)+transform-header(printf "%s\n%s" $pwd "'$usage'")' ^
   --bind 'alt-r:reload(eval {q})+transform-header(printf "%s %s\n%s" {q} $pwd "'$usage'")' ^
