@@ -41,6 +41,7 @@ else
 	cat $PLAN9/plumb/basic | 9p write plumb/rules
 fi
 
+ulimit -c unlimited
 acme -a -f $font -F $Font $* &
 acme_pid=$!
 
