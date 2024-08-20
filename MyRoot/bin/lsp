@@ -13,6 +13,9 @@ var content = (put [&jsonrpc=2.0 &id=(num 1) &method=initialize &params=[
     &general=[
       &positionEncodings=[utf-8]
     ]
+    &textDocument=[
+      &publishDiagnostics=[&]
+    ]
   ]
 ]] | to-json)
 put "-------------> main thread send: "$content
