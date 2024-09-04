@@ -35,6 +35,7 @@
 	submit = codereview submit
 	sync = codereview sync
 	cl = clone --filter=blob:none
+	fx = commit --fixup
 [apply]
 	whitespace = fix
 [push]
