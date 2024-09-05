@@ -1,3 +1,12 @@
-#!/bin/sh
+#!/usr/bin/env elvish
 
-curl -s "dict://dict.org/d:$1:wn" | grep -E "^[^0-9].*" | less
+use str
+
+var word
+if (> (count $args) 0) {
+  set word = $args[0]
+} else {
+  set word = (str:fields (slurp) | take 1)
+}
+
+curl -s "dict://dict.org/d:"$word":wn" | grep -E "^[^0-9].*" | less
