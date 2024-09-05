@@ -1,5 +1,6 @@
 use epm
 use os
+use str
 
 set E:LC_ALL = en_US.UTF-8
 set E:GOPATH = ~/go
@@ -78,7 +79,7 @@ fn gce {
 }
 set edit:insert:binding[C-g] = {
   var cmd = "git lg"
-  if (!=s $edit:current-command "") {
+  if (str:has-prefix $edit:current-command "git news") {
     set cmd = $edit:current-command
   }
   eval $cmd | gce > $os:dev-tty 2>&1
