@@ -1,4 +1,14 @@
 #!/usr/bin/env elvish
 
-alacritty -e f (try { git rev-parse --show-toplevel 2>/dev/null } catch { echo . })
+var dir
+try {
+  set dir = (git rev-parse --show-toplevel 2>/dev/null)
+  if (==s $dir $E:HOME) {
+    set dir = $pwd
+  }
+} catch {
+  set dir = $pwd
+}
+
+alacritty --working-directory $dir -e f
 
