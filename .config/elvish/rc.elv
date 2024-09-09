@@ -1,6 +1,7 @@
 use epm
 use os
 use str
+use path
 
 set E:LC_ALL = en_US.UTF-8
 set E:GOPATH = ~/go
@@ -83,6 +84,30 @@ set edit:insert:binding[C-g] = {
     set cmd = $edit:current-command
   }
   eval $cmd | gce > $os:dev-tty 2>&1
+}
+
+# fuzzy path finder
+fn fpf {|root|
+  try {
+    var can = (tmp pwd = $root; fzf +m --walker=file,dir,follow,hidden < $os:dev-tty)
+    edit:insert-at-dot ./$can
+  } catch {
+    nop
+  }
+}
+set edit:insert:binding[C-d] = {
+ try {
+  var root = .
+  if (!=s $edit:current-command[-1] ' ') {
+    var last = (str:replace '~' $E:HOME [(edit:wordify $edit:current-command)][-1])
+    if (path:is-dir $last) {
+      set root = $last
+    }
+  }
+  fpf $root > $os:dev-tty 2>&1
+ } catch {
+   nop
+ }
 }
 
 # pin previous cwp to facilitate jumping back
