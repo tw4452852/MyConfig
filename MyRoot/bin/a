@@ -21,7 +21,7 @@ mnt=/tmp/acme
 TERM=dumb
 MANPAGER=nobs
 PAGER=nobs
-EDITOR=E
+EDITOR=editinacme
 
 MANPATH=/usr/local/share/man:/usr/share/man:$PLAN9/man
 upasname=wei.tan@intel.com
