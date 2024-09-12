@@ -6,3 +6,4 @@ kvm https://tinylab.org/kvm-intro-part2
 kernel https://github.com/torvalds/linux
 nvmm https://nio.feishu.cn/wiki/wikcnmssuXqSMyDBcuQxUZHN2Pd
 esr midr smcc decoder https://esr.arm64.dev/#0x92000061
+arm-ins-reg-ref https://arm.jonpalmisc.com/

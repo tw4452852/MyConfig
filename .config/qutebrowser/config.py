@@ -7,3 +7,5 @@ c.tabs.background = False
 
 config.bind(',k', 'spawn --userscript qute-pass-with-fallback --dmenu-invocation="dmenu -b"')
 config.bind('aa', 'spawn alacritty -e def {primary}')
+
+c.content.user_stylesheets = ["font.css"]
