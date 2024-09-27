@@ -8,6 +8,7 @@ set E:GOPATH = ~/go
 set E:FLUTTER_SDK = ~/code/flutter
 set E:ANDROID_SDK_ROOT = ~/android-sdk
 set E:CHROME_EXECUTABLE = google-chrome-stable
+set E:XDEB_PKGROOT = ~/.config/xdeb
 each {|p|
 	if (not (has-value $paths $p)) {
 		set paths = [ $@paths $p ]
