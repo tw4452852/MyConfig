@@ -53,6 +53,7 @@ bind-key 4C-9		window-movetogroup-9
 bind-mouse 4-1		window-move
 bind-mouse 4-3		window-resize
 bind-mouse "4"		menu-cmd
+bind-key 4-c		menu-cmd
 bind-key 4-space	menu-ssh
 bind-mouse "5"		menu-window
 bind-key 4-w		menu-window
