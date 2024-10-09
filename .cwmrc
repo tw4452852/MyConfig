@@ -6,7 +6,7 @@ command monitor "alacritty --class monitor -e sudo htop"
 
 fontname "WenQuanYi Micro Hei"
 
-sticky yes
+sticky no
 
 ignore dclock
 autogroup 9 Dclock
