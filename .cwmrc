@@ -8,6 +8,8 @@ fontname "WenQuanYi Micro Hei"
 
 sticky no
 
+gap 1 0 0 0
+
 ignore dclock
 autogroup 9 Dclock
 ignore monitor
