@@ -63,7 +63,7 @@ bind-key 4-slash	menu-exec
 bind-key 4-Return	terminal
 bind-key 4-l		lock
 bind-key 4C-Tab		group-last
-bind-key 4-Tab		window-cycle-ingroup
+bind-key 4-Tab		window-hide
 bind-key 4-g		group-cycle
 bind-key 4-m		window-maximize
 bind-key 4-x		window-close
