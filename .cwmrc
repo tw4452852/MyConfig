@@ -15,7 +15,7 @@ autogroup 9 Dclock
 ignore monitor
 autogroup 9 monitor,monitor
 
-autogroup 1 alacritty
+autogroup 1 Alacritty
 autogroup 2 qutebrowser
 autogroup 2 Chromium
 
