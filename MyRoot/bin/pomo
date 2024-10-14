@@ -29,9 +29,9 @@ fn event {
 	case Mx MX	# button 2 in tag or body
 		switch($9) {
 		case reset
-			zpomo reset
+			_pomo reset
 		case pause
-			zpomo toggle
+			_pomo toggle
 		case *
 			winwriteevent $*
 		}
@@ -46,7 +46,7 @@ wineventloop &
 while () {
 	cmd=' pause reset |'
 	date=`{9 date| u tr -d '\n'}
-	status=`{zpomo -e 'xautolock -locknow' status}
+	status=`{_pomo status}
 
 	line=($cmd $status $date)
 	winctl cleartag >[2]/dev/null|| exit 0

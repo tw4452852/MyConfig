@@ -1,0 +1,57 @@
+#!/usr/bin/env elvish
+
+var session = "pomo"
+
+# Make sure server is created
+if (not ?(tmux has -t $session 2>/dev/null)) {
+  tmux new -d -s $session bash -c "
+    paused=0
+    function toggle_paused()
+    {
+      if [ $paused == 0 ]; then paused=1; else paused=0; fi
+    }
+    trap toggle_paused USR1
+
+    function maybe_wait()
+    {
+      while [ $paused == 1 ]; do sleep 1; done
+    }
+    function format_time()
+    {
+      ((m=${1}/60))
+      ((s=${1}%60))
+      printf "%02d:%02d" $m $s
+    }
+
+    while true; do
+      for i in {2400..1}; do
+        maybe_wait
+        echo Working: $(format_time $i)
+        sleep 1
+      done
+      xautolock -locknow
+      for i in {300..1}; do
+        maybe_wait
+        echo Resting: $(format_time $i)
+        sleep 1
+      done
+    done
+  "
+}
+
+if (< (count $args) 1) {
+  echo "_pomo [status|reset|toggle]"
+  exit 1
+}
+
+if (==s $args[0] status) {
+  echo (tmux capturep -p -t $session | grep . | tail -1)
+} elif (==s $args[0] reset) {
+  tmux respawnp -k -t $session
+} elif (==s $args[0] toggle) {
+  var pid = (tmux lsp -t $session -F '#{pane_pid}')
+  kill -USR1 $pid
+} else {
+  echo "unknown command: "$args[0]
+  exit 1
+}
