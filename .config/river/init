@@ -1,0 +1,32 @@
+#!/usr/bin/env elvish
+
+riverctl map normal Super Return spawn foot
+riverctl map normal Super Space spawn fuzzel
+riverctl map normal Super L spawn waylock
+riverctl map normal Super X close
+riverctl map normal Super+Control Q exit
+riverctl map normal Super M toggle-fullscreen
+riverctl map normal None F1 spawn 'foot elvish $HOME/MyRoot/scripts/gf_of_focused_acme_window.elv'
+riverctl map normal None F12 spawn 'foot elvish $HOME/MyRoot/scripts/select_acme_windows.elv'
+riverctl map normal Alt Space spawn 'foot elvish $HOME/MyRoot/scripts/search_in_acme_window.elv'
+for i [ normal locked ] {
+  riverctl map $i None XF86AudioRaiseVolume  spawn 'pamixer -i 5'
+  riverctl map $i None XF86AudioLowerVolume  spawn 'pamixer -d 5'
+  riverctl map $i None XF86AudioMute         spawn 'pamixer --toggle-mute'
+}
+
+riverctl map normal Super 1 focus-previous-tags
+riverctl map normal Super Tab zoom
+riverctl map normal Super+Control Tab send-to-previous-tags
+
+riverctl keyboard-layout -options 'ctrl:swapcaps' us
+riverctl focus-follows-cursor always
+riverctl set-cursor-warp on-focus-change
+
+riverctl default-layout rivertile
+for i [ 'rivertile -view-padding 0 -outer-padding 0' 'fcitx5 -r -d' 'pipewire' 'fnott' ] {
+  riverctl spawn $i
+}
+
+riverctl set-focused-tags 1
+riverctl set-focused-tags 2

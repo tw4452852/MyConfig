@@ -28,3 +28,4 @@ export RIPGREP_CONFIG_PATH=$HOME/.config/ripgrep/config
 
 # Get the aliases and functions
 [ -f $HOME/.bashrc ] && . $HOME/.bashrc
+

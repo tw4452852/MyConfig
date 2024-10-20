@@ -1,5 +1,7 @@
 #!/usr/bin/env elvish
 
+use platform
+
 var dir
 try {
   set dir = (git rev-parse --show-toplevel 2>/dev/null)
@@ -10,5 +12,13 @@ try {
   set dir = $pwd
 }
 
-alacritty --working-directory $dir -e f
+try {
+if (==s $platform:os linux) {
+  foot -D $dir f
+} else {
+  alacritty --working-directory $dir -e f
+}
+} catch {
+  nop
+}
 

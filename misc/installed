@@ -6,7 +6,6 @@ cronie
 cwm
 dbus
 elvish
-fcitx-configtool
 fcitx5
 fcitx5-chinese-addons
 fcitx5-configtool
@@ -52,3 +51,10 @@ zip
 tiramisu
 herbe
 wireplumber
+river
+foot
+fuzzel
+waylock
+seatd
+fnott
+pamixer
