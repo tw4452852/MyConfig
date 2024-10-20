@@ -33,7 +33,7 @@ unset FCEDIT VISUAL
 export tabstop acmeshell
 
 [ -z "$(pgrep fontsrv)" ] && fontsrv &
-[ -z "$(pgrep plumber)" ] && plumber
+[ -z "$(pgrep ^plumber)" ] && plumber
 
 if [ -f "$PLUMBFILE" ]; then
 	cat "$PLUMBFILE" | 9p write plumb/rules
