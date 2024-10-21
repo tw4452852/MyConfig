@@ -29,7 +29,11 @@ if (not ?(tmux has -t $session 2>/dev/null)) {
         echo Working: $(format_time $i)
         sleep 1
       done
-      xautolock -locknow
+      if [ -n $WAYLAND_DISPLAY ]; then
+        waylock
+      else
+        xautolock -locknow
+      fi
       for i in {300..1}; do
         maybe_wait
         echo Resting: $(format_time $i)
