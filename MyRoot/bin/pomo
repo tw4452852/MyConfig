@@ -29,9 +29,9 @@ fn event {
 	case Mx MX	# button 2 in tag or body
 		switch($9) {
 		case reset
-			_pomo reset
+			u _pomo reset
 		case pause
-			_pomo toggle
+			u _pomo toggle
 		case *
 			winwriteevent $*
 		}
