@@ -2,7 +2,7 @@
 
 riverctl map normal Super Return spawn foot
 riverctl map normal Super Space spawn fuzzel
-riverctl map normal Super L spawn waylock
+riverctl map normal Super L spawn waylock_wrapper
 riverctl map normal Super X close
 riverctl map normal Super+Control Q exit
 riverctl map normal Super M toggle-fullscreen
