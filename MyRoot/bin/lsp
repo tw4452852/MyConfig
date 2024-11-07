@@ -250,7 +250,7 @@ run-parallel {
         ]] | to-json)
 
         checkwin
-        append (printf "\n%s:%d+#%d def: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
+        append (printf "\n%s:%d def: %s" $file (+ 1 $parts[2]) (read_line $file $parts[2]) | slurp)
       } elif (==s $cmd ref) {
         if (< (count $parts) 4) {
           put "not enough parameters for reference, skip: "$l
@@ -274,7 +274,7 @@ run-parallel {
         ]] | to-json)
 
         checkwin
-        append (printf "\n%s:%d+#%d refs: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
+        append (printf "\n%s:%d refs: %s" $file (+ 1 $parts[2]) (read_line $file $parts[2]) | slurp)
       } elif (==s $cmd imp) {
         if (< (count $parts) 4) {
           put "not enough parameters for implementation, skip: "$l
@@ -295,7 +295,7 @@ run-parallel {
         ]] | to-json)
 
         checkwin
-        append (printf "\n%s:%d+#%d impls: %s" $file $parts[2] $parts[3] (read_line $file $parts[2]) | slurp)
+        append (printf "\n%s:%d impls: %s" $file (+ 1 $parts[2]) (read_line $file $parts[2]) | slurp)
       } elif (==s $cmd open) {
         if (has-key $opens $file) {
           continue
