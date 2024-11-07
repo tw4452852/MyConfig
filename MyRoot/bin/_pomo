@@ -23,10 +23,18 @@ if (not ?(tmux has -t $session 2>/dev/null)) {
       printf "%02d:%02d" $m $s
     }
 
+    notification_id=
     while true; do
       for i in {2400..1}; do
         maybe_wait
         echo Working: $(format_time $i)
+        if (( i <= 10 )); then
+          if (( i == 10)); then
+            notification_id=$(notify-send -p -h int:value:$((i*10)) pomo \"remainning ${i}s\")
+          else
+            notify-send -r $notification_id -h int:value:$((i*10)) pomo \"remainning ${i}s\"
+          fi
+        fi
         sleep 1
       done
       if [ -n $WAYLAND_DISPLAY ]; then
