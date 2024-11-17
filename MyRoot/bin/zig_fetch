@@ -2,6 +2,8 @@
 
 set -e
 
+global_cache_dir=$(zig env | jq -r .global_cache_dir)
+
 forceupdate=false
 if [ "$1" = "-f" ]; then
     forceupdate=true
@@ -27,7 +29,7 @@ do_fetch() {
         if [ -z "$hash" ]; then
           forceupdate=true
         fi
-        if ! $forceupdate && [ -e ~/.cache/zig/p/$hash ]; then
+        if ! $forceupdate && [ -e $global_cache_dir/p/$hash ]; then
           echo ">>> Found $url in cache, ignored"
           continue
         fi
@@ -37,8 +39,8 @@ do_fetch() {
         echo ">> hash of $d:"
         echo -e "\t$hash"
         rm $tarfile
-        if [ -e ~/.cache/zig/p/$hash/build.zig.zon ]; then
-            do_fetch ~/.cache/zig/p/$hash/build.zig.zon
+        if [ -e $global_cache_dir/p/$hash/build.zig.zon ]; then
+            do_fetch $global_cache_dir/p/$hash/build.zig.zon
         fi
     done
 
