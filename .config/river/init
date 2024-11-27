@@ -25,7 +25,13 @@ riverctl focus-follows-cursor always
 riverctl set-cursor-warp on-focus-change
 
 riverctl default-layout rivertile
-for i [ 'rivertile -view-padding 0 -outer-padding 0' 'fcitx5 -r -d' 'pipewire' 'fnott' ] {
+for i [
+  'rivertile -view-padding 0 -outer-padding 0'
+  'fcitx5 -r -d'
+  'xrdb $HOME/.Xresources'
+  'pipewire'
+  'ntf_server | vlogger -p mail'
+] {
   riverctl spawn $i
 }
 
