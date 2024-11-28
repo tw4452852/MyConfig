@@ -128,11 +128,12 @@ set terminal-title:title-during-command = {|cmd|
 # notify when long-run command finish
 epm:install &silent-if-installed=$true github.com/krader1961/elvish-lib
 use github.com/krader1961/elvish-lib/cmd-duration
+set notify-bg-job-success = $false
 set edit:after-command = [ $@edit:after-command
   {|m|
     if (>= $m[duration] 60.0) {
-      if (has-external notify-send) {
-        notify-send -a elvish $m[src][code]' took '(cmd-duration:human-readable $m[duration])
+      if (has-external herbe) {
+        { try { herbe $m[src][code]' took '(cmd-duration:human-readable $m[duration]) } catch { nop } } &
       }
     }
   }
