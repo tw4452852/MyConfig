@@ -28,12 +28,8 @@ if (not ?(tmux has -t $session 2>/dev/null)) {
       for i in {2400..1}; do
         maybe_wait
         echo Working: $(format_time $i)
-        if (( i <= 10 )); then
-          if (( i == 10)); then
-            notification_id=$(notify-send -p -h int:value:$((i*10)) pomo \"remainning ${i}s\")
-          else
-            notify-send -r $notification_id -h int:value:$((i*10)) pomo \"remainning ${i}s\"
-          fi
+        if (( i == 5 )); then
+          herbe \"remainning ${i}s\"
         fi
         sleep 1
       done
