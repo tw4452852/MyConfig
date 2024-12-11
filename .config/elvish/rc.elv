@@ -22,21 +22,9 @@ each {|p|
 	$E:FLUTTER_SDK/bin
 
 ]
-# prefer editinacme
-if (has-external editinacme) {
-	set E:EDITOR = editinacme
-} elif (has-external kak) {
+# prefer kakoune editor
+if (has-external kak) {
 	set E:EDITOR = kak
-} elif (has-external nvim) {
-	set E:CSCOPE_EDITOR = nvim
-	set E:EDITOR = nvim
-	set E:MANPAGER = "nvim -c 'set ft=man' -"
-} elif (has-external vim) {
-	set E:CSCOPE_EDITOR = vim
-	set E:EDITOR = vim
-	set E:MANPAGER = 'vim -R -'
-} else {
-	# leave as it is
 }
 if (has-external pt) {
 	set E:FZF_DEFAULT_COMMAND = 'pt -l -g ".*"'
