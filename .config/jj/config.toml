@@ -1,0 +1,38 @@
+[user]
+name = "Tw"
+email = "weii.tan@nio.com"
+
+[ui]
+diff.format = "git"
+color = "always"
+
+[fix.tools.clang-format]
+command = ["clang-format", "--assume-filename=$path"]
+patterns = ["glob:'**/*.cc'",
+            "glob:'**/*.c'",
+            "glob:'**/*.h'"]
+
+[fix.tools.zigfmt]
+command = ["zig", "fmt", "--stdin"]
+patterns = ["glob:'**/*.zig'"]
+
+[template-aliases]
+sigoff = '''
+concat(
+  "Signed-off-by: ",
+  author.name(),
+  surround(" <", ">", author.email()),
+)
+'''
+
+[templates]
+draft_commit_description = '''
+concat(
+  description,
+  if(!description.contains(sigoff), "\n"++sigoff),
+  surround(
+    "\nJJ: This commit contains the following changes:\n", "",
+    indent("JJ:     ", diff.summary()),
+  ),
+)
+'''
