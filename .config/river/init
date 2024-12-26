@@ -15,6 +15,7 @@ for i [ normal locked ] {
   riverctl map $i None XF86AudioMute         spawn 'pamixer --toggle-mute'
 }
 riverctl map normal None Print spawn 'grim -g "$(slurp)" /tmp/screenshot-$(date +%Y%m%d@%H%M%S).png'
+riverctl map normal Super Escape spawn 'pkill -SIGUSR2 herbe'
 
 riverctl map normal Super 1 focus-previous-tags
 riverctl map normal Super Tab zoom
