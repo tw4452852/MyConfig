@@ -1,0 +1,5 @@
+*~
+*.sw[op]
+zig-out/
+.zig-cache/
+.cache/
