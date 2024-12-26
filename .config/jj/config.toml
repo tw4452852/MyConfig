@@ -4,7 +4,6 @@ email = "weii.tan@nio.com"
 
 [ui]
 diff.format = "git"
-color = "always"
 
 [fix.tools.clang-format]
 command = ["clang-format", "--assume-filename=$path"]
