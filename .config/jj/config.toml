@@ -1,9 +1,10 @@
 [user]
 name = "Tw"
-email = "weii.tan@nio.com"
+email = "tw19881113@gmail.com"
 
 [ui]
 diff.format = "git"
+default-command = "log"
 
 [fix.tools.clang-format]
 command = ["clang-format", "--assume-filename=$path"]
@@ -16,22 +17,17 @@ command = ["zig", "fmt", "--stdin"]
 patterns = ["glob:'**/*.zig'"]
 
 [template-aliases]
-sigoff = '''
-concat(
-  "Signed-off-by: ",
-  author.name(),
-  surround(" <", ">", author.email()),
+_signed_off = '''
+if(!description.contains("Signed-off-by: "),
+  concat(
+    "\nSigned-off-by: ",
+    author.name(),
+    surround(" <", ">", author.email()),
+  )
 )
 '''
-
-[templates]
-draft_commit_description = '''
-concat(
-  description,
-  if(!description.contains(sigoff), "\n"++sigoff),
-  surround(
-    "\nJJ: This commit contains the following changes:\n", "",
-    indent("JJ:     ", diff.summary()),
-  ),
+_change_id = '''
+if(!description.contains("Change-Id: I"),
+  "\nChange-Id: I00000000" ++ change_id.normal_hex()
 )
 '''
