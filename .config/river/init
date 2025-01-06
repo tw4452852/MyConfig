@@ -1,6 +1,5 @@
 #!/usr/bin/env elvish
 
-riverctl map normal Super Return spawn foot
 riverctl map normal Super Space spawn fuzzel
 riverctl map normal Super L spawn waylock_wrapper
 riverctl map normal Super X close
@@ -17,7 +16,19 @@ for i [ normal locked ] {
 riverctl map normal None Print spawn 'grim -g "$(slurp)" /tmp/screenshot-$(date +%Y%m%d@%H%M%S).png'
 riverctl map normal Super Escape spawn 'pkill -SIGUSR2 herbe'
 
-riverctl map normal Super 1 focus-previous-tags
+# Shell will have tag 0b0100 with floating
+riverctl rule-add -app-id shell float
+riverctl rule-add -app-id shell tags 4
+riverctl map normal Super grave toggle-focused-tags 4
+riverctl map-pointer normal Super BTN_LEFT move-view
+riverctl map-pointer normal Super BTN_RIGHT resize-view
+
+# Editor will have tag 0b0001
+riverctl rule-add -title acme tags 1
+# Others will have tag 0b0010
+riverctl set-focused-tags 2
+# Switch between editor and others
+riverctl map normal Super 1 toggle-focused-tags 3
 riverctl map normal Super Tab zoom
 riverctl map normal Super+Control Tab send-to-previous-tags
 
@@ -32,9 +43,8 @@ for i [
   'xrdb $HOME/.Xresources'
   'pipewire'
   'ntf_server | vlogger -p mail'
+  'foot -a shell'
 ] {
   riverctl spawn $i
 }
 
-riverctl set-focused-tags 1
-riverctl set-focused-tags 2
