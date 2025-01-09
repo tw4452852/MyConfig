@@ -133,5 +133,5 @@ set-env CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
 set-env CARAPACE_MATCH 1  # case insensitive
 eval (carapace _carapace|slurp)
 
-set edit:abbr['~config'] = '~/.config'
+set edit:abbr['~c'] = '~/.config'
 set edit:command-abbr['gti'] = 'git'
