@@ -1,0 +1,1 @@
+--bind 'alt-j:next-selected' --bind 'alt-k:prev-selected'

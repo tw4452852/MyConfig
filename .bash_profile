@@ -26,6 +26,9 @@ export PATH=$PATH:$HOME/MyRoot/bin
 # Ripgrep
 export RIPGREP_CONFIG_PATH=$HOME/.config/ripgrep/config
 
+# Fzf
+export FZF_DEFAULT_OPTS_FILE=$HOME/.config/fzf/config
+
 # Get the aliases and functions
 [ -f $HOME/.bashrc ] && . $HOME/.bashrc
 
