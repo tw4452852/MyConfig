@@ -42,6 +42,18 @@ set edit:insert:binding[A-/] = { var @args = (edit:wordify $edit:current-command
 set edit:history:binding[A-p] = $edit:history:up~
 set edit:history:binding[A-n] = $edit:history:down-or-quit~
 
+fn _jj_home {|@args|
+  tmp E:NO_COLOR = ''; e:jj --config snapshot.auto-track="none()" $@args
+}
+
+fn jj {|@args|
+  if (==s (e:jj workspace root) ~) {
+    _jj_home $@args
+  } else {
+    tmp E:NO_COLOR = ''; e:jj $@args
+  }
+}
+
 # git commit explorer
 fn gce {
   try {
@@ -111,6 +123,8 @@ use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
 set-env CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
 set-env CARAPACE_MATCH 1  # case insensitive
 eval (carapace _carapace|slurp)
+# Use jj's own dynamic completer
+eval (env COMPLETE=elvish jj | slurp)
 
 set edit:abbr['~c'] = '~/.config'
 set edit:command-abbr['gti'] = 'git'
