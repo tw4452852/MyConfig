@@ -26,14 +26,6 @@ each {|p|
 if (has-external kak) {
 	set E:EDITOR = kak
 }
-if (has-external pt) {
-	set E:FZF_DEFAULT_COMMAND = 'pt -l -g ".*"'
-}
-#E:MANPATH = (get-env MANPATH):{~}/MyRoot/usr/share/man
-
-fn l {|@args|
-	ls --color $@args
-}
 
 set edit:insert:binding[C-a] = $edit:move-dot-sol~
 set edit:insert:binding[C-e] = $edit:move-dot-eol~
@@ -114,19 +106,6 @@ set terminal-title:title-during-command = {|cmd|
 }
 
 epm:install &silent-if-installed=$true github.com/xiaq/edit.elv
-
-fn match {|seed|
-  var inputs = [(all)]
-  var results = [(to-lines $inputs | try { e:fzf -0 -1 --no-sort -f $seed } catch { nop } )]
-  each {|x|
-    if (has-value $results $x) {
-      put $true
-    } else {
-      put $false
-    }
-  } $inputs
-}
-#set edit:completion:matcher[''] = $match~
 use github.com/xiaq/edit.elv/smart-matcher; smart-matcher:apply
 
 set-env CARAPACE_BRIDGES 'zsh,fish,bash,inshellisense' # optional
