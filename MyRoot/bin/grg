@@ -21,13 +21,12 @@ try {
 }
 
 fn _main {|dir cmd|
-  tmp pwd = $dir
   tmp E:FZF_GHOST = $cmd
 
   if (has-env WAYLAND_DISPLAY) {
-    foot -d error  sh -c $cmd" | f || exit 0"
+    foot -d error -D $dir sh -c $cmd" | f || exit 0"
   } else {
-    alacritty -e sh -c $cmd" | f"
+    alacritty --working-directory $dir -e sh -c $cmd" | f "
   }
 }
 
