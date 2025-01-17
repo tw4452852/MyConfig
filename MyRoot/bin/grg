@@ -17,14 +17,14 @@ try {
   # use git grep if inside a git repository
   var cmd = 'git grep -n -I -w -e "'$pattern'"'
   if (has-env WAYLAND_DISPLAY) {
-    foot -D $dir sh -c $cmd" | f || exit 0"
+    foot -d error -D $dir sh -c $cmd" | f || exit 0"
   } else {
     alacritty --working-directory $dir -e sh -c $cmd" | f"
   }
 } catch {
   var cmd = 'rg -w "'$pattern'"'
   if (has-env WAYLAND_DISPLAY) {
-    foot -D $pwd sh -c $cmd" | f || exit 0"
+    foot -d error -D $pwd sh -c $cmd" | f || exit 0"
   } else {
     alacritty --working-directory $pwd -e sh -c $cmd" | f"
   }

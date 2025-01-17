@@ -14,7 +14,7 @@ try {
 
 try {
 if (==s $platform:os linux) {
-  foot -D $dir f
+  foot -d error -D $dir f
 } else {
   alacritty --working-directory $dir -e f
 }
