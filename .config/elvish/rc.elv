@@ -54,23 +54,6 @@ fn jj {|@args|
   }
 }
 
-fn ssh {|@args|
-  if (has-env TMUX) {
-    tmux set-hook -p pane-focus-in "bind -T root M-h send Left; bind -T root M-j send Down; bind -T root M-k send Up; bind -T root M-l send Right"
-    tmux set-hook -p pane-focus-out "unbind -T root M-h; unbind -T root M-j; unbind -T root M-k; unbind -T root M-l"
-    tmux set-hook -R pane-focus-in
-  }
-  try {
-    e:ssh $@args
-  } finally {
-    if (has-env TMUX) {
-      tmux set-hook -R pane-focus-out
-      tmux set-hook -pu pane-focus-in
-      tmux set-hook -pu pane-focus-out
-    }
-  }
-}
-
 # git commit explorer
 fn gce {
   try {
