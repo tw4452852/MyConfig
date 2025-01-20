@@ -49,7 +49,7 @@ sleep 1
 [ -z "$(pgrep acmefocused)" ] && acmefocused &
 
 [ -d $mnt ] || mkdir $mnt
-9 umount -q $mnt
+u umount -q $mnt
 9 mount `9 namespace`/acme $mnt
 
 wait $acme_pid
