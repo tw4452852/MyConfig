@@ -110,6 +110,9 @@ set before-chdir = [
 	}
 ]
 
+# Support prompt jumping in tmux
+set edit:before-readline = [{ print "\033]133;A\033\\" }]
+
 # set window title for tmux
 epm:install &silent-if-installed=$true github.com/zzamboni/elvish-modules
 use github.com/zzamboni/elvish-modules/terminal-title
