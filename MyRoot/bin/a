@@ -42,7 +42,7 @@ else
 fi
 
 ulimit -c unlimited
-acme -a -f $font -F $Font $* 2>/tmp/acme.log &
+acme -f $font -F $Font $* 2>/tmp/acme.log &
 acme_pid=$!
 
 sleep 1
