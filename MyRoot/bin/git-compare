@@ -1,0 +1,37 @@
+#!/usr/bin/env elvish
+
+use flag
+use str
+use os
+
+fn get_hunk_ids {|commit|
+  # Strip the context by removing the line number information
+  git show $commit 2>$os:dev-null | grep -v '^@@' | git patch-id | each {|l| str:fields $l | take 1 } | order
+}
+
+fn main {|up cur|
+  var @patches = (git cherry -v $up $cur | grep +)
+  var @candidates = []
+  if (> (count $patches) 0) {
+    var common_base = (git merge-base $up $cur)
+    set candidates = [(git log --format='%h' $common_base..$up | peach {|commit|
+      var @hunk_ids = (get_hunk_ids $commit)
+      put $hunk_ids
+    })]
+  }
+
+  peach {|l|
+    var @fields = (str:split &max=3 ' ' $l)
+    try {
+      var @source_hunk_ids = (get_hunk_ids $fields[1])
+
+      if (not (has-value $candidates $source_hunk_ids)) {
+        fail ""
+      }
+    } catch e {
+      echo $fields[1]' '$fields[2]
+    }
+  } $patches
+}
+
+flag:call $main~ $args
