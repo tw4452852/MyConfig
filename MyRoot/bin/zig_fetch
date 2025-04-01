@@ -61,11 +61,25 @@ pub fn main() !void {
 }
 '
 
-var zf = (os:temp-file '*.zig')
-echo $content > $zf[name]
+var project_dir = /tmp/zig_fetch
+var bin = $project_dir/main
+var src = $project_dir/main.zig
+fn jit {
+  mkdir -p $project_dir
+  tmp pwd = $project_dir
+  var need_build = $true
+  if (and (os:exists $src) (==s $content (cat $src | slurp))) {
+    set need_build = $false
+  }
+  if $need_build {
+    put Building binary...
+    print $content > $src
+    zig build-exe $src
+  }
+}
 
 fn do_fetch {|&zon="build.zig.zon" &f=$false|
-  var m = (zig run $zf[name] -- $zon | from-json)
+  var m = ($bin $zon | from-json)
   for k [(keys $m)] {
     
     var expected_hash = "undefined"
@@ -114,8 +128,5 @@ fn do_fetch {|&zon="build.zig.zon" &f=$false|
 }
 
 
-try {
-  flag:call $do_fetch~ $args
-} finally {
-  os:remove $zf[name]
-}
+jit
+flag:call $do_fetch~ $args
