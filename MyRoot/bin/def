@@ -9,4 +9,5 @@ if (> (count $args) 0) {
   set word = (str:fields (slurp) | take 1)
 }
 
-curl -s "dict://dict.org/d:"$word":wn" | grep -E "^[^0-9].*" | less
+#curl -s "dict://dict.org/d:"$word":gcide" "dict://dict.org/d:"$word":wn" | grep -E "^[^0-9].*" | less
+sdcv --non-interactive --only-data-dir --data-dir ~/t/mwal $word | less
