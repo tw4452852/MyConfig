@@ -25,6 +25,9 @@ if (not ?(tmux has -t $session 2>/dev/null)) {
         maybe_wait
         echo working $i 2400
         sleep 1
+        if (( i == 2395 )); then
+          herbe \"about to rest\"
+        fi
       done
       if [ -n $WAYLAND_DISPLAY ]; then
         waylock_wrapper
