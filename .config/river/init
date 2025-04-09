@@ -15,6 +15,7 @@ for i [ normal locked ] {
 }
 riverctl map normal None Print spawn 'grim -g "$(slurp)" /tmp/screenshot-$(date +%Y%m%d@%H%M%S).png'
 riverctl map normal Super Escape spawn 'pkill -SIGUSR2 herbe'
+riverctl map normal None Pause spawn '_pomo toggle'
 
 # Shell will have tag 0b0100 with floating
 riverctl rule-add -app-id shell float
