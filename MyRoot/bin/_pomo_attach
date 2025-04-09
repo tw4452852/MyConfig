@@ -1,0 +1,6 @@
+#!/usr/bin/env elvish
+
+use path
+
+var _pomo_bin = (path:join (path:dir (src)[name]) _pomo)
+$_pomo_bin attach | statusbar pomo
