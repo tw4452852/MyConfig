@@ -4,9 +4,9 @@ use flag
 use str
 use os
 
-fn get_hunk_ids {|commit|
+fn get_changes {|commit|
   # Strip the context by removing the line number information
-  git show $commit 2>$os:dev-null | grep -v '^@@' | git patch-id | each {|l| str:fields $l | take 1 } | order
+  git show $commit 2>$os:dev-null | grep -E '^[+-][^+-]' | order
 }
 
 fn main {|up cur|
@@ -15,17 +15,17 @@ fn main {|up cur|
   if (> (count $patches) 0) {
     var common_base = (git merge-base $up $cur)
     set candidates = [(git log --format='%h' $common_base..$up | peach {|commit|
-      var @hunk_ids = (get_hunk_ids $commit)
-      put $hunk_ids
+      var @changes = (get_changes $commit)
+      put $changes
     })]
   }
 
   peach {|l|
     var @fields = (str:split &max=3 ' ' $l)
     try {
-      var @source_hunk_ids = (get_hunk_ids $fields[1])
+      var @changes = (get_changes $fields[1])
 
-      if (not (has-value $candidates $source_hunk_ids)) {
+      if (not (has-value $candidates $changes)) {
         fail ""
       }
     } catch e {
