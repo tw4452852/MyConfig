@@ -9,18 +9,18 @@ fn get_changes {|commit|
   git show $commit 2>$os:dev-null | grep -E '^[+-][^+-]' | order
 }
 
-fn main {|up cur|
+fn main {|&j=(num +inf) up cur|
   var @patches = (git cherry -v $up $cur | grep +)
   var @candidates = []
   if (> (count $patches) 0) {
     var common_base = (git merge-base $up $cur)
-    set candidates = [(git log --format='%h' $common_base..$up | peach {|commit|
+    set candidates = [(git log --format='%h' $common_base..$up | peach &num-workers=$j {|commit|
       var @changes = (get_changes $commit)
       put $changes
     })]
   }
 
-  peach {|l|
+  peach &num-workers=$j {|l|
     var @fields = (str:split &max=3 ' ' $l)
     try {
       var @changes = (get_changes $fields[1])
