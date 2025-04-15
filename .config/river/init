@@ -1,6 +1,7 @@
 #!/usr/bin/env elvish
 
 riverctl map normal Super Space spawn fuzzel
+riverctl map normal Super Right focus-output next
 riverctl map normal Super backslash spawn waylock_wrapper
 riverctl map normal Super X close
 riverctl map normal Super+Control Q exit
