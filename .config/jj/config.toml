@@ -16,18 +16,7 @@ patterns = ["glob:'**/*.cc'",
 command = ["zig", "fmt", "--stdin"]
 patterns = ["glob:'**/*.zig'"]
 
-[template-aliases]
-_signed_off = '''
-if(!description.contains("Signed-off-by: "),
-  concat(
-    "\nSigned-off-by: ",
-    author.name(),
-    surround(" <", ">", author.email()),
-  )
-)
-'''
-_change_id = '''
-if(!description.contains("Change-Id: I"),
-  "\nChange-Id: I00000000" ++ change_id.normal_hex()
-)
-'''
+[templates]
+commit_trailers = '''
+format_signed_off_by_trailer(self)
+++ if(!trailers.contains_key("Change-Id"), format_gerrit_change_id_trailer(self))'''
