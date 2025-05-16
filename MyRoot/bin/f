@@ -1,19 +1,25 @@
 #!/usr/bin/env elvish
 
-var dir = .
-if (>= (count $args) 1) {
-  set dir = $args[0]
+use flag
+
+fn main {|&d="."|
+  tmp pwd = $d
+  var usage = "<a-enter>:open selected|<enter>:open selected and exit|<c-r>:reload|<a-r>:run query|<up>:previous query"
+  var ghost = ''
+  if (has-env FZF_GHOST) {
+    set ghost = $E:FZF_GHOST
+  }
+  
+  fzf --with-shell 'elvish -c' --walker=file,follow ^
+    --header $pwd"\n"$usage -d ':' --ghost=$ghost ^
+    --border bottom --color=label:black ^
+    --bind 'load:transform-border-label:if (!= (count {2}) 0) { echo B {1}:{2} } else { echo B {1} }' ^
+    --bind 'focus:transform-border-label:if (!= (count {2}) 0) { echo B {1}:{2} } else { echo B {1} }' ^
+    --bind 'ctrl-r:reload(fd --no-ignore)+transform-header(printf "%s\n%s" $pwd "'$usage'")'+clear-query ^
+    --bind 'alt-r:reload(eval {q})+transform-header(printf "%s %s\n%s" {q} $pwd "'$usage'")+transform-ghost(print {q})+clear-query' ^
+    --bind 'up:transform-query(print $E:FZF_GHOST)' ^
+    --bind 'enter:become(eval $E:FZF_BORDER_LABEL)' ^
+    --bind 'alt-enter:execute(eval $E:FZF_BORDER_LABEL)'
 }
-cd $dir
 
-var usage = "<a-enter>:open selected|<enter>:open selected and exit|<c-r>:reload|<a-r>:run query"
-
-fzf --with-shell 'elvish -c' --walker=file,follow ^
-  --header $pwd"\n"$usage -d ':' ^
-  --border bottom --color=label:black ^
-  --bind 'load:transform-border-label:if (!= (count {2}) 0) { echo B {1}:{2} } else { echo B {1} }' ^
-  --bind 'focus:transform-border-label:if (!= (count {2}) 0) { echo B {1}:{2} } else { echo B {1} }' ^
-  --bind 'ctrl-r:reload(fd --no-ignore)+transform-header(printf "%s\n%s" $pwd "'$usage'")'+clear-query ^
-  --bind 'alt-r:reload(eval {q})+transform-header(printf "%s %s\n%s" {q} $pwd "'$usage'")'+clear-query ^
-  --bind 'enter:become(eval $E:FZF_BORDER_LABEL)' ^
-  --bind 'alt-enter:execute(eval $E:FZF_BORDER_LABEL)'
+flag:call $main~ $args
