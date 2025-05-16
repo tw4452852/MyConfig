@@ -8,6 +8,7 @@ if (> (count $args) 0) {
 } else {
   set pattern = (slurp)
 }
+var cmd = 'rg --no-ignore -e "'$pattern'" -w'
 
 var dir
 try {
@@ -19,10 +20,15 @@ try {
   set dir = $pwd
 }
 
-var cmd = 'rg --no-ignore -e "'$pattern'"'
-if (has-env WAYLAND_DISPLAY) {
-  foot -d error -D $dir sh -c $cmd" | f || exit 0"
-} else {
-  alacritty --working-directory $dir -e sh -c $cmd" | f"
+fn _main {|dir cmd|
+  tmp pwd = $dir
+  tmp E:FZF_GHOST = $cmd
+
+  if (has-env WAYLAND_DISPLAY) {
+    foot -d error  sh -c $cmd" | f || exit 0"
+  } else {
+    alacritty -e sh -c $cmd" | f"
+  }
 }
 
+_main $dir $cmd
