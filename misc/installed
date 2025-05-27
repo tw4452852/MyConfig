@@ -74,3 +74,10 @@ wdisplays
 avahi
 avahi-utils
 nss-mdns
+wayland-protocols
+pkg-config
+libev-devel
+libinput-devel
+pixman-devel
+libevdev-devel
+wlroots0.18-devel
