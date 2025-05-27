@@ -71,3 +71,6 @@ pass
 python3-tldextract
 dmenu
 wdisplays
+avahi
+avahi-utils
+nss-mdns
