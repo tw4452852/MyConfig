@@ -67,3 +67,5 @@ lswt
 wayland-devel
 libxkbcommon-devel
 fontconfig-devel
+pass
+python3-tldextract
