@@ -64,3 +64,6 @@ wl-clipboard
 jujutsu
 carapace
 lswt
+wayland-devel
+libxkbcommon-devel
+fontconfig-devel
