@@ -5,7 +5,11 @@ use os
 use re
 use str
 
-var global_cache_dir = (zig env | jq -r .global_cache_dir)
+var zig = (which zig)
+if (has-env ZIG) {
+	set zig = $E:ZIG
+}
+var global_cache_dir = ($zig env | jq -r .global_cache_dir)
 var fetched = [&]
 var content = '
 const std = @import("std");
@@ -74,7 +78,7 @@ fn jit {
   if $need_build {
     put Building binary...
     print $content > $src
-    zig build-exe $src
+    $zig build-exe $src
   }
 }
 
@@ -86,7 +90,7 @@ fn do_fetch {|&zon="build.zig.zon" &f=$false|
     if (has-key $m[$k] hash) {
       set expected_hash = $m[$k][hash]
     } elif (has-key $m[$k] path) {
-      set expected_hash = (zig fetch --debug-hash $m[$k][path] | tail -n 1)
+      set expected_hash = ($zig fetch --debug-hash $m[$k][path] | tail -n 1)
     } else {
       fail "Neither path nor hash has been found"
     }
@@ -109,7 +113,7 @@ fn do_fetch {|&zon="build.zig.zon" &f=$false|
         var tmpdir = (os:temp-dir 'zig_fetch-*')
         defer { os:remove-all $tmpdir }
         curl -L -O --output-dir $tmpdir $url
-        var hash = (zig fetch --debug-hash $tmpdir/* | tail -n 1)
+        var hash = ($zig fetch --debug-hash $tmpdir/* | tail -n 1)
         if (!=s $hash $expected_hash) {
           fail "Expected: "$expected_hash" but got: "$hash
         }
