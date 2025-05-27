@@ -1,0 +1,5 @@
+#!/bin/bash
+
+qutebrowser --temp-basedir \
+	--set input.mode_override passthrough \
+	--target window https://notes.totorow.xyz
