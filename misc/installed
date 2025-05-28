@@ -81,3 +81,4 @@ libinput-devel
 pixman-devel
 libevdev-devel
 wlroots0.18-devel
+sdcv
