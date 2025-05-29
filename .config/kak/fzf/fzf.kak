@@ -10,7 +10,7 @@ define-command -hidden find_in_buffer %{
 
 define-command -hidden find_file %{
 	evaluate-commands %sh{
-		line=$(fd -t f | fzf-tmux -p)
+		line=$(fd --no-ignore -t f | fzf-tmux -p)
 		if [ -n "$line" ]; then
 			printf "edit %s" $line
 		fi
