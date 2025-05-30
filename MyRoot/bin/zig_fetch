@@ -42,7 +42,10 @@ pub fn main() !void {
             if (std.mem.eql(u8, name.get(zoir), "dependencies")) {
                 break :deps root_node.struct_literal.vals.at(@intCast(i));
             }
-        } else return error.DepedenciesNotFound;
+        } else {
+            try writer.writeAll("{}\n");
+            return;
+        }
     };
     try writer.writeAll("{\n");
     const dependencies_node = dependencies_idx.get(zoir);
@@ -76,7 +79,7 @@ fn jit {
     set need_build = $false
   }
   if $need_build {
-    put Building binary...
+    put "Building binary..."
     print $content > $src
     $zig build-exe $src
   }
