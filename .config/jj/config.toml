@@ -3,7 +3,7 @@ name = "Tw"
 email = "tw19881113@gmail.com"
 
 [ui]
-diff.format = "git"
+diff-formatter = ":git"
 default-command = "log"
 
 [fix.tools.clang-format]
