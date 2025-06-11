@@ -39,7 +39,7 @@ riverctl focus-follows-cursor always
 riverctl set-cursor-warp on-focus-change
 
 riverctl default-layout rivertile
-riverctl default-attach-mode below
+riverctl default-attach-mode bottom
 for i [
   'rivertile -view-padding 0 -outer-padding 0'
   'fcitx5 -r -d'
