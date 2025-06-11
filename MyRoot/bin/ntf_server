@@ -1,20 +1,20 @@
 #!/usr/bin/env elvish
 
-var message = []
-
-tiramisu -o "#summary\n#body\n#end\n" | while $true {
+try { tiramisu -o "#summary\n#body\n#end\n" } catch { echo "#exit" } | while $true {
   var line = (read-line)
 
   if (==s $line "#end") {
     try {
-      herbe $@message
+      foot sh -c 'xsel --secondary --output | timeout --foreground 5s less'
     } catch {
       nop
     } finally {
-      set message = []
+      xsel --secondary --clear
     }
+  } elif (==s $line "#exit") {
+    break
   } else {
-    set message = [$@message $line]
+    print $line | xsel --secondary --append
     echo $line
   }
 }
