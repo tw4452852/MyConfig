@@ -6,9 +6,6 @@ riverctl map normal Super backslash spawn waylock_wrapper
 riverctl map normal Super X close
 riverctl map normal Super+Control Q exit
 riverctl map normal Super M toggle-fullscreen
-riverctl map normal None F1 spawn 'foot -d error elvish $HOME/MyRoot/scripts/gf_of_focused_acme_window.elv'
-riverctl map normal None F12 spawn 'foot -d error elvish $HOME/MyRoot/scripts/select_acme_windows.elv'
-riverctl map normal Alt Space spawn 'foot -d error elvish $HOME/MyRoot/scripts/search_in_acme_window.elv'
 for i [ normal locked ] {
   riverctl map $i None XF86AudioRaiseVolume  spawn 'pamixer -i 5'
   riverctl map $i None XF86AudioLowerVolume  spawn 'pamixer -d 5'
