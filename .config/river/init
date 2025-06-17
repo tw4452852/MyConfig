@@ -21,7 +21,7 @@ riverctl map normal None Pause spawn '_pomo toggle'
 # Shell will have tag 0b0100 with floating
 riverctl rule-add -app-id shell float
 riverctl rule-add -app-id shell tags 4
-riverctl map normal Super grave toggle-focused-tags 4
+riverctl map normal Super grave spawn 'riverctl toggle-focused-tags 4;wlrctl toplevel focus app_id:shell'
 riverctl map-pointer normal Super BTN_LEFT move-view
 riverctl map-pointer normal Super BTN_RIGHT resize-view
 
