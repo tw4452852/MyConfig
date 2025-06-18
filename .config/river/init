@@ -35,6 +35,7 @@ riverctl keyboard-layout -options 'ctrl:swapcaps' us
 riverctl focus-follows-cursor always
 riverctl set-cursor-warp on-focus-change
 
+riverctl xcursor-theme Adwaita
 riverctl default-layout rivertile
 riverctl default-attach-mode bottom
 for i [
