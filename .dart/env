@@ -10,6 +10,6 @@ case ":${PATH}:" in
         ;;
     *)
         # Prepending path in case a system-installed rustc needs to be overridden
-        export PATH="$DART_SDK/bin:$FLUTTER_SDK/bin:$PATH"
+        export PATH="$PATH:$DART_SDK/bin:$FLUTTER_SDK/bin"
         ;;
 esac
