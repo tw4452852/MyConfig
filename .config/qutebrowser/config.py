@@ -10,5 +10,4 @@ config.bind(',k', 'spawn --userscript qute-pass-with-fallback --dmenu-invocation
 config.bind('aa', 'spawn foot def {primary}')
 config.bind('<Ctrl-n>', 'completion-item-focus next', mode='command')
 config.bind('<Ctrl-p>', 'completion-item-focus prev', mode='command')
-
-c.content.user_stylesheets = ["font.css"]
+config.bind('<F12>', 'config-cycle --temp --print content.user_stylesheets [] ["user.css"]')
