@@ -9,7 +9,7 @@ fn main {|&d="."|
   if (has-env FZF_GHOST) {
     set ghost = $E:FZF_GHOST
   }
-  
+ 
   fzf --with-shell 'elvish -c' --walker=file,follow ^
     --header $pwd"\n"$usage -d ':' --ghost=$ghost ^
     --border bottom --color=label:black ^
@@ -22,4 +22,4 @@ fn main {|&d="."|
     --bind 'alt-enter:execute(eval $E:FZF_BORDER_LABEL)'
 }
 
-flag:call $main~ $args
+try { flag:call $main~ $args } catch { nop }
