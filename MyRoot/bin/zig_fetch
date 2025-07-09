@@ -5,9 +5,9 @@ use os
 use re
 use str
 
-var zig = (which zig)
+var zig = (external zig)
 if (has-env ZIG) {
-	set zig = $E:ZIG
+	set zig = (external $E:ZIG)
 }
 var global_cache_dir = ($zig env | jq -r .global_cache_dir)
 var fetched = [&]
@@ -85,10 +85,11 @@ fn jit {
   }
 }
 
-fn do_fetch {|&zon="build.zig.zon" &f=$false|
+fn do_fetch {|&zon="build.zig.zon" &f=$false &name="main" &level=0|
   var m = ($bin $zon | from-json)
+  var ident = (str:join '' [(repeat $level ' ')])
+  echo $ident$name' depends on:'
   for k [(keys $m)] {
-    
     var expected_hash = "undefined"
     if (has-key $m[$k] hash) {
       set expected_hash = $m[$k][hash]
@@ -99,19 +100,19 @@ fn do_fetch {|&zon="build.zig.zon" &f=$false|
     }
 
     if (has-key $fetched $expected_hash) {
+	  echo $ident$k": fetched"
       continue
     } elif (and (not $f) (os:exists $global_cache_dir/p/$expected_hash)) {
-      echo "Found in cache: "$expected_hash
+      echo $ident$k": Found in cache: "$expected_hash
     } else {
-      echo "Fetching "$k from $m[$k][url]
+      echo $ident$k": Fetching from "$m[$k][url]
       if (has-key $m[$k] url) {
-	var url = $m[$k][url]
-	# Convert git+https of github to commit tar.gz
-	if (str:has-prefix $url 'git+https://github.com') {
-	  var m = (re:find '^git\+https://(.*)#(.*)$' $url)
-	  set url = 'https://'$m[groups][1][text]'/archive/'$m[groups][2][text]'.tar.gz'
-	  echo "Convert to "$url
-	}
+		var url = $m[$k][url]
+		# Convert git+https of github to commit tar.gz
+		if (str:has-prefix $url 'git+https://github.com') {
+		  var m = (re:find '^git\+https://(.*)#(.*)$' $url)
+		  set url = 'https://'$m[groups][1][text]'/archive/'$m[groups][2][text]'.tar.gz'
+		}
 
         var tmpdir = (os:temp-dir 'zig_fetch-*')
         defer { os:remove-all $tmpdir }
@@ -129,7 +130,7 @@ fn do_fetch {|&zon="build.zig.zon" &f=$false|
 
     var dep_zon = $global_cache_dir/p/$expected_hash/build.zig.zon
     if (os:exists $dep_zon) {
-      do_fetch &zon=$dep_zon &f=$f
+      do_fetch &zon=$dep_zon &f=$f &name=$k &level=(+ $level 1)
     }
   }
 }
