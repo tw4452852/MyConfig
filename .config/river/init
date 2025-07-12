@@ -1,50 +1,90 @@
-#!/usr/bin/env elvish
+#!/usr/bin/env -S elvish -norc
 
+# win+space  => app launcher
 riverctl map normal Super Space spawn fuzzel
+
+# win+right => switch to another monitor
 riverctl map normal Super Right focus-output next
+
+# win+\ => lock screen
 riverctl map normal Super backslash spawn waylock_wrapper
+
+# win+x => close current window
 riverctl map normal Super X close
+
+# win+ctrl+q => exit river
 riverctl map normal Super+Control Q exit
+
+# win+m => fullscreen
 riverctl map normal Super M toggle-fullscreen
+
+# Audio related function keys
 for i [ normal locked ] {
   riverctl map $i None XF86AudioRaiseVolume  spawn 'pamixer -i 5'
   riverctl map $i None XF86AudioLowerVolume  spawn 'pamixer -d 5'
   riverctl map $i None XF86AudioMute         spawn 'pamixer --toggle-mute'
 }
+
+# Print => screenshot
 riverctl map normal None Print spawn 'grim -g "$(slurp)" /tmp/screenshot-$(date +%Y%m%d@%H%M%S).png'
-riverctl map normal Super Escape spawn 'pkill -SIGUSR2 herbe'
+
+# Pause/Break => [un]pause pomo clock
 riverctl map normal None Pause spawn '_pomo toggle'
+
+# win+mouse-left => move current window
+riverctl map-pointer normal Super BTN_LEFT move-view
+# win+mouse-right => resize current window
+riverctl map-pointer normal Super BTN_RIGHT resize-view
+
+# Window with app-id of `_float` will be floating
+riverctl rule-add -app-id _float float
 
 # Shell will have tag 0b0100 with floating
 riverctl rule-add -app-id shell float
 riverctl rule-add -app-id shell tags 4
+
+# win+~ => switch to shell
 riverctl map normal Super grave spawn 'riverctl toggle-focused-tags 4;wlrctl toplevel focus app_id:shell'
-riverctl map-pointer normal Super BTN_LEFT move-view
-riverctl map-pointer normal Super BTN_RIGHT resize-view
 
 # Editor will have tag 0b0001
 riverctl rule-add -title acme tags 1
-# Others will have tag 0b0010
+# Set current tag, so newly spawned windows will have tag 0b0010
 riverctl set-focused-tags 2
-# Switch between editor and others
+# Newly spawned window will not have shell's tag
+riverctl spawn-tagmask 3
+# win+1 => Switch between editor and others
 riverctl map normal Super 1 toggle-focused-tags 3
+
+# win+tab => switch between current and second one in the stack
 riverctl map normal Super Tab zoom
+
+# win+ctrl+tab => set current window's tag to previous focused tag
 riverctl map normal Super+Control Tab send-to-previous-tags
 
+# Switch ctrl and capslock key
 riverctl keyboard-layout -options 'ctrl:swapcaps' us
+
+# Focus follows mouse
 riverctl focus-follows-cursor always
 riverctl set-cursor-warp on-focus-change
 
+# Set default cursor theme, otherwise some cursor shapes will not show
 riverctl xcursor-theme Adwaita
+
+# Use rivertile as layout engin
 riverctl default-layout rivertile
+
+# Newly spawned tiling window will be put in the tail of current stack
 riverctl default-attach-mode bottom
+
+# Initialization stuff
 for i [
   'rivertile -view-padding 0 -outer-padding 0'
   'fcitx5 -r -d'
   'xrdb $HOME/.Xresources'
   'pipewire'
-  'ntf_server | vlogger -p mail'
-  'foot -a shell'
+  '~/MyRoot/bin/ntf_server | vlogger -p mail'
+  'foot --app-id shell'
 ] {
   riverctl spawn $i
 }
