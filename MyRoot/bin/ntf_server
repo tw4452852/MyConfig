@@ -5,7 +5,7 @@ try { tiramisu -o "#summary\n#body\n#end\n" } catch { echo "#exit" } | while $tr
 
   if (==s $line "#end") {
     try {
-      foot sh -c 'xsel --secondary --output | timeout --foreground 5s less'
+      foot --log-level=error --app-id=_float sh -c 'xsel --secondary --output | timeout --foreground 5s less'
     } catch {
       nop
     } finally {
