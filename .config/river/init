@@ -3,6 +3,9 @@
 # win+space  => app launcher
 riverctl map normal Super Space spawn fuzzel
 
+# win+F1 => htop
+riverctl map normal Super F1 spawn 'foot --app-id=_float --window-size-pixels=1500x1000 sudo htop'
+
 # win+right => switch to another monitor
 riverctl map normal Super Right focus-output next
 
