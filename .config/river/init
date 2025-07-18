@@ -81,7 +81,6 @@ riverctl default-attach-mode bottom
 for i [
   'rivertile -view-padding 0 -outer-padding 0'
   'fcitx5 -r -d'
-  'xrdb $HOME/.Xresources'
   'pipewire'
   '~/MyRoot/bin/ntf_server | vlogger -p mail'
   'foot --app-id shell'
