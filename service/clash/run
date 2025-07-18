@@ -1,4 +1,5 @@
 #!/bin/bash
 
-# wget -O /tmp/jms.conf 'http://sub.totorow.xyz:25500/getprofile?name=profiles/jms.ini&token=xxx'
-exec ~/go/bin/mihomo -f ~/.config/clash/jms.conf 2>&1
+# curl -o /tmp/jms.conf 'http://sub.totorow.xyz:25500/getprofile?name=profiles/jms.ini&token=xxx'
+# web dashboard: docker run --network internal --restart unless-stopped --detach -p 8080:80 ghcr.io/zephyruso/zashboard:latest
+exec ~/d/mihomo-linux-amd64-v1.19.9 -f /tmp/jms.conf 2>&1
