@@ -1,0 +1,4 @@
+#!/bin/sh
+mkdir -p /home/tw/cron/snooze
+exec snooze -d 1 -s 28d -t /home/tw/cron/snooze/monthly -- sh -c \
+	"test -d /home/tw/cron/monthly && run-parts /home/tw/cron/monthly; : > /home/tw/cron/snooze/monthly"

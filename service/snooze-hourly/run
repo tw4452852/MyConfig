@@ -1,0 +1,4 @@
+#!/bin/sh
+mkdir -p /home/tw/cron/snooze
+exec snooze -H \* -s 1h -t /home/tw/cron/snooze/hourly -- sh -c \
+	"test -d /home/tw/cron/hourly && run-parts /home/tw/cron/hourly; : > /home/tw/cron/snooze/hourly"
