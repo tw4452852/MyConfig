@@ -9,7 +9,8 @@ var zig = (external zig)
 if (has-env ZIG) {
 	set zig = (external $E:ZIG)
 }
-var global_cache_dir = ($zig env | jq -r .global_cache_dir)
+var m = (re:find &max=1 '.*global_cache_dir.*"(.*)".*' ($zig env|slurp))
+var global_cache_dir = $m[groups][1][text]
 var fetched = [&]
 var content = '
 const std = @import("std");
