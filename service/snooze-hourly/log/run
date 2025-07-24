@@ -1,2 +1,2 @@
 #!/bin/sh
-exec vlogger -p cron.notice
+exec vlogger -p cron.notice -t snooze-hourly
