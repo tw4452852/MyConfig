@@ -51,9 +51,9 @@ riverctl map normal Super grave spawn 'riverctl toggle-focused-tags 4;wlrctl top
 
 # Editor will have tag 0b0001
 riverctl rule-add -title acme tags 1
-# Set current tag, so newly spawned windows will have tag 0b0010
-riverctl set-focused-tags 2
-# Newly spawned window will not have shell's tag
+# Set current tag (2 + 4) which will show shell
+riverctl set-focused-tags 6
+# Newly spawned window will not have shell's tag, so newly spawned windows will have tag 0b0010
 riverctl spawn-tagmask 3
 # win+1 => Switch between editor and others
 riverctl map normal Super 1 toggle-focused-tags 3
