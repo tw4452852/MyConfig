@@ -6,4 +6,4 @@ export QT_IM_MODULES="wayland;fcitx"
 
 export FREETYPE_PROPERTIES="cff:no-stem-darkening=0 autofitter:no-stem-darkening=0"
 
-exec dbus-run-session -- river
+exec dbus-run-session -- river -no-xwayland -log-level warning 2>&1
