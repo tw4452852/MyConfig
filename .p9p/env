@@ -1,5 +1,8 @@
 #!/bin/sh
 
+mkdir -p /tmp/local_ns
+export NAMESPACE=/tmp/local_ns
+
 export PLAN9="$HOME/code/plan9port"
 # affix colons on either side of $PATH to simplify matching
 case ":${PATH}:" in
