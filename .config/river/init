@@ -82,7 +82,6 @@ riverctl default-attach-mode bottom
 
 # Initialization stuff
 for i [
-  'rivertile -view-padding 0 -outer-padding 0'
   'fcitx5 -r -d'
   'pipewire'
   '~/MyRoot/bin/ntf_server | vlogger -p mail'
@@ -90,4 +89,7 @@ for i [
 ] {
   riverctl spawn $i
 }
+
+rivertile -view-padding 0 -outer-padding 0
+
 
