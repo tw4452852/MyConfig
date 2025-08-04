@@ -83,11 +83,11 @@ riverctl default-attach-mode bottom
 # Initialization stuff
 for i [
   'fcitx5 -r -D 2>&1 | vlogger -p daemon -t fcitx5'
-  'pkill pipewire; pipewire 2>&1 | vlogger -p daemon -t pipewire'
+  'pipewire 2>&1 | vlogger -p daemon -t pipewire'
   '~/MyRoot/bin/ntf_server | vlogger -p mail'
   'foot --app-id shell'
 ] {
-  riverctl spawn $i
+  sh -c $i"&"
 }
 
 rivertile -view-padding 0 -outer-padding 0
