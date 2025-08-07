@@ -1,5 +1,5 @@
 #!/bin/bash
 
 # curl -o ~/.config/clash/jms.conf 'http://sub.totorow.xyz:25500/getprofile?name=profiles/jms.ini&token=xxx'
-# web dashboard: docker run --network internal --restart unless-stopped --detach -p 8080:80 ghcr.io/zephyruso/zashboard:latest
+# web dashboard: podman run --name zashboard --userns=keep-id --network internal --restart unless-stopped --detach -p 8080:80 ghcr.io/zephyruso/zashboard:latest
 exec ~/d/mihomo-linux-amd64-v1.19.9 -f ~/.config/clash/jms.conf 2>&1
