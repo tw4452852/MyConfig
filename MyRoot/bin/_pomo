@@ -4,6 +4,8 @@ use str
 
 var session = "pomo"
 
+var file = /tmp/pomo
+
 # Make sure server is created
 if (not ?(tmux has -t $session 2>/dev/null)) {
   tmux new -d -s $session bash -c "
@@ -19,24 +21,23 @@ if (not ?(tmux has -t $session 2>/dev/null)) {
       while [ $paused == 1 ]; do sleep 1; done
     }
 
-    notification_id=
+    work_secs=3600
+    rest_secs=300
     while true; do
-      for i in {1..2400}; do
+      for i in `seq 1 ${work_secs}`; do
         maybe_wait
-        echo working $i 2400
+        echo working $i $work_secs  > "$file"
         sleep 1
-        if (( i == 2395 )); then
-          foot --log-level=error --app-id=_float sh -c 'echo about to rest | less'
-        fi
       done
+      foot --log-level=error --app-id=_float sh -c 'echo about to rest | less'
       if [ -n $WAYLAND_DISPLAY ]; then
         waylock_wrapper
       else
         xautolock -locknow
       fi
-      for i in {1..300}; do
+      for i in `seq 1 $rest_secs}`; do
         maybe_wait
-        echo resting $i 300
+        echo resting $i $rest_secs > "$file"
         sleep 1
       done
     done
@@ -49,7 +50,7 @@ if (< (count $args) 1) {
 }
 
 if (==s $args[0] status) {
-  var l = (tmux capturep -p -t $session | grep . | tail -1)
+  var l = (tail -1 $file)
   var @parts = (str:fields $l)
   echo $parts[0] $parts[1]/$parts[2]
 } elif (==s $args[0] reset) {
@@ -59,9 +60,11 @@ if (==s $args[0] status) {
   kill -USR1 $pid
 } elif (==s $args[0] attach) {
   while $true {
-    var l = (tmux capturep -p -t $session | grep . | tail -1)
-    var @parts = (str:fields $l)
-    echo $parts[1] $parts[2]
+    try {
+      var l = (tail -1 $file)
+      var @parts = (str:fields $l)
+      echo $parts[1] $parts[2]
+    } catch { nop }
     sleep 1
   }
 } else {
