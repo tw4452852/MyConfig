@@ -1,0 +1,9 @@
+#!/usr/bin/env -S elvish -norc
+
+use flag
+
+fn main {|word|
+  curl -Ss 'https://unofficialurbandictionaryapi.com/api/search?term='$word | jq .data
+}
+
+flag:call $main~ $args
