@@ -19,16 +19,16 @@ pub fn main() !void {
     defer arena.deinit();
 
     const gpa = arena.allocator();
-    const stdout = std.io.getStdOut();
-    const writer = stdout.writer();
+    var writer = std.fs.File.stdout().writer(&.{});
+    const stdout = &writer.interface;
 
     const zon_file = try std.fs.cwd().openFile(std.mem.span(std.os.argv[1]), .{});
     defer zon_file.close();
-    const stat = try zon_file.stat();
+    var buf: [1024]u8 = undefined;
+    var file_reader: std.fs.File.Reader = zon_file.reader(&buf);
     const zon_source = try std.zig.readSourceFileToEndAlloc(
         gpa,
-        zon_file,
-        std.math.cast(usize, stat.size) orelse return error.FileTooBig,
+        &file_reader,
     );
     defer gpa.free(zon_source);
 
@@ -44,28 +44,28 @@ pub fn main() !void {
                 break :deps root_node.struct_literal.vals.at(@intCast(i));
             }
         } else {
-            try writer.writeAll("{}\n");
+            try stdout.writeAll("{}\n");
             return;
         }
     };
-    try writer.writeAll("{\n");
+    try stdout.writeAll("{\n");
     const dependencies_node = dependencies_idx.get(zoir);
     if (dependencies_node == .struct_literal) for (dependencies_node.struct_literal.names, 0..) |name, i| {
         const dep_idx = dependencies_node.struct_literal.vals.at(@intCast(i));
         const dep_node = dep_idx.get(zoir);
-        try writer.print("{s}\"{s}\": {{", .{if (i != 0) "," else "", name.get(zoir)});
+        try stdout.print("{s}\"{s}\": {{", .{ if (i != 0) "," else "", name.get(zoir) });
         for (dep_node.struct_literal.names, 0..) |field_name, fi| {
             const field_idx = dep_node.struct_literal.vals.at(@intCast(fi));
             const field_node = field_idx.get(zoir);
             const attr_name = field_name.get(zoir);
 
             if (std.mem.eql(u8, attr_name, "url") or std.mem.eql(u8, attr_name, "path") or std.mem.eql(u8, attr_name, "hash")) {
-                try writer.print("{s}\"{s}\": \"{s}\"", .{ if (fi != 0) "," else "", attr_name, field_node.string_literal });
+                try stdout.print("{s}\"{s}\": \"{s}\"", .{ if (fi != 0) "," else "", attr_name, field_node.string_literal });
             }
         }
-        try writer.writeAll("}");
+        try stdout.writeAll("}");
     };
-    try writer.writeAll("\n}");
+    try stdout.writeAll("\n}");
 }
 '
 
