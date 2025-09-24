@@ -3,9 +3,6 @@
 # win+space  => app launcher
 riverctl map normal Super Space spawn fuzzel
 
-# win+Esc => htop
-riverctl map normal Super Escape spawn 'foot --app-id=_float --window-size-pixels=1500x1000 sudo htop'
-
 # win+right => switch to another monitor
 riverctl map normal Super Right focus-output next
 
@@ -58,6 +55,12 @@ riverctl spawn-tagmask 3
 # win+1 => Switch between editor and others
 riverctl map normal Super 1 toggle-focused-tags 3
 
+# Monitor will have tag 0b1000 with floating
+riverctl rule-add -app-id monitor float
+riverctl rule-add -app-id monitor tags 8
+# win+Esc => toggle monitor
+riverctl map normal Super Escape toggle-focused-tags 8
+
 # win+tab => switch between current and second one in the stack
 riverctl map normal Super Tab zoom
 
@@ -85,7 +88,8 @@ for i [
   'fcitx5 -r -D 2>&1 | vlogger -p daemon -t fcitx5'
   'pipewire 2>&1 | vlogger -p daemon -t pipewire'
   '~/MyRoot/bin/ntf_server | vlogger -p mail'
-  'foot --app-id shell'
+  'foot --app-id=shell'
+  'foot --app-id=monitor --window-size-pixels=1500x1000 btop'
 ] {
   sh -c $i"&"
 }
