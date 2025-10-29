@@ -61,6 +61,12 @@ riverctl rule-add -app-id monitor tags 8
 # win+Esc => toggle monitor
 riverctl map normal Super Escape toggle-focused-tags 8
 
+# Wiki will have tag 0b10000 with floating
+riverctl rule-add -app-id TiddlyDesktop float
+riverctl rule-add -app-id TiddlyDesktop tags 16
+# win+Enter => toggle wiki
+riverctl map normal Super Return toggle-focused-tags 16
+
 # win+tab => switch between current and second one in the stack
 riverctl map normal Super Tab zoom
 
