@@ -18,6 +18,9 @@ riverctl map normal Super+Control Q exit
 # win+m => fullscreen
 riverctl map normal Super M toggle-fullscreen
 
+# win+f => toggle floating
+riverctl map normal Super F toggle-float
+
 # Audio related function keys
 for i [ normal locked ] {
   riverctl map $i None XF86AudioRaiseVolume  spawn 'pamixer -i 5'
