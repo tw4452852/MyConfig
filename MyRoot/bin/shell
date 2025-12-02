@@ -1,0 +1,117 @@
+#!/usr/bin/env janet
+
+(import spork)
+
+## Completion context capture
+
+(def- sym-prefix-peg
+  (peg/compile
+    ~{:symchar (+ (range "AZ" "az" "09") (set "~+-./_?"))
+      :anchor (drop (cmt ($) ,|(= $ 0)))
+      :cap (* (+ (> -1 (not :symchar)) :anchor) (* ($) '(some :symchar)))
+      :recur (+ :cap (> -1 :recur))
+      :main (> -1 :recur)}))
+
+(defn- my-autocomplete-context
+  `Given a buffer and a cursor position, extract a string that will be used as context for autocompletion.
+  Return a position and substring from the buffer to use for autocompletion.`
+  [buf pos]
+  (peg/match sym-prefix-peg buf pos))
+
+## Helpers
+
+(defn- in-janet? [s] (= (chr "(") (s 0)))
+(defn- like-dir? [s] (has-value? s (chr "/")))
+(defn- replace-tide-maybe [s] (string/replace "~" (os/getenv "HOME") s))
+(var- cmds @[])
+(defn- populate-available-cmds
+  []
+  (def t @{})
+  (def paths (string/split ":" (os/getenv "PATH")))
+  (loop [p :in paths
+         :when (= (os/stat p :mode) :directory)
+         e :in (os/dir p)
+         :let [abs (spork/path/posix/join p e)]
+         :when (= (os/stat abs :mode) :file)]
+    (set (t e) true))
+  (set cmds (-> t keys sort)))
+(populate-available-cmds)
+
+## Completers
+
+(defn- complete-file
+  [prefix]
+  (def ret @[])
+  (def dir (spork/path/dirname prefix))
+  (def abs-dirname (-> prefix replace-tide-maybe spork/path/posix/dirname spork/path/posix/abspath))
+  (def last-component-prefix (spork/path/basename prefix))
+  (each e (os/dir abs-dirname)
+    (def suffix (if (= :directory (os/stat (string abs-dirname "/" e) :mode)) "/" ""))
+    (when (string/has-prefix? last-component-prefix e) (array/push ret (string dir e suffix))))
+  ret)
+
+(defn- complete-command
+  [prefix]
+  (def ret @[])
+  (def has-prefix? (fn [cmd] (string/has-prefix? prefix cmd)))
+  (if-let [start-index (find-index has-prefix? cmds)]
+    (take-while has-prefix? (array/slice cmds start-index))
+    ret))
+
+(defn- complete-command-options
+  [prefix line pos]
+  (def ret @[])
+  (def ps (spork/sh/split (string/slice line 0 pos)))
+  (def cmd (spork/path/posix/basename (ps 0)))
+  (def opts (-> (spork/sh/exec-slurp "carapace" cmd "export" ;ps) spork/json/decode))
+  (each v (opts "values")
+    (array/push ret (v "value")))
+  ret)
+
+(defn my-autocomplete-options
+  "Handler to get available autocomplete options for a given substring."
+  [prefix line pos]
+  (try
+    (cond
+      (in-janet? line)
+      (spork/getline/default-autocomplete-options prefix)
+
+      (like-dir? prefix)
+      (complete-file prefix)
+
+      (= (length prefix) pos)
+      (complete-command prefix)
+
+      (complete-command-options prefix line pos))
+
+    ([e f] @[])))
+
+## Main loop
+
+(defn- prompt []
+  (string (os/cwd) " > "))
+
+(def- gl (spork/getline/make-getline my-autocomplete-context my-autocomplete-options))
+
+(forever
+  (def buf @"")
+  (def l (gl (prompt) buf))
+  (when (and (= l buf) (not (empty? (string/trim l))))
+    (do
+      (def ps (spork/sh/split l))
+      (def ps0 (replace-tide-maybe (ps 0)))
+
+      (cond
+        (and (= 1 (length ps)) (= :directory (os/stat ps0 :mode))) # cd to it if only directory exists
+        (os/cd ps0)
+
+        (in-janet? ps0)
+        (try
+          (do
+            (def r (eval-string l))
+            (pp r))
+          ([e f]
+            (debug/stacktrace f e "")))
+
+        (os/shell (slice l 0 (- (length l) 1))))))) # Delegate to system shell
+
