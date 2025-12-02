@@ -5,6 +5,7 @@ email = "tw19881113@gmail.com"
 [ui]
 diff-formatter = ":git"
 default-command = "log"
+color = "always"
 
 [fix.tools.clang-format]
 command = ["clang-format", "--assume-filename=$path"]
