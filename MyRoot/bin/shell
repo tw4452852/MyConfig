@@ -157,7 +157,6 @@
           ([e f]
             (debug/stacktrace f e "")))
 
-        (let [ret (os/shell l)] # Delegate to system shell
-          (unless
-            (zero? ret)
+        (let [ret (spork/sh/exec "bash" "-c" l)] # Delegate to system shell
+          (if-not (zero? ret)
             (printf "Error: %d" ret)))))))
