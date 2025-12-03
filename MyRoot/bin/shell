@@ -2,6 +2,11 @@
 
 (import spork)
 
+## Globals
+
+(var- cmds @[])
+(var- history @{})
+
 ## Completion context capture
 
 (def- sym-prefix-peg
@@ -27,7 +32,6 @@
     (has-value? prefix (chr "/"))
     (find |(string/has-prefix? prefix $) (os/dir ".") false)))
 (defn- replace-tide-maybe [s] (string/replace "~" (os/getenv "HOME") s))
-(var- cmds @[])
 (defn- populate-available-cmds
   []
   (def t @{})
@@ -39,7 +43,13 @@
          :when (= (os/stat abs :mode) :file)]
     (set (t e) true))
   (set cmds (-> t keys sort)))
-(populate-available-cmds)
+(def- history-path (spork/path/join (os/getenv "HOME") ".shell_history"))
+(defn- load-history
+  []
+  (set history (-> history-path slurp unmarshal)))
+(defn- save-history
+  []
+  (->> history marshal (spit history-path)))
 
 ## Completers
 
@@ -64,6 +74,7 @@
 
 (defn- complete-command-options
   [prefix line pos]
+
   (def ret @[])
   (def ps (spork/sh/split (string/slice line 0 pos)))
   (def cmd (spork/path/basename (ps 0)))
@@ -97,11 +108,40 @@
 
 (def- gl (spork/getline/make-getline my-autocomplete-context my-autocomplete-options))
 
+(populate-available-cmds)
+(if (spork/sh/exists? history-path)
+  (load-history)
+  (with [_ (spork/sh/make-new-file history-path)]))
+
 (forever
   (def buf @"")
-  (def l (gl (prompt) buf))
-  (when (and (= l buf) (not (empty? (string/trim l))))
+  (def r (gl (prompt) buf))
+
+  (var- l "")
+  (cond
+    (= :cancel r)
+    (with [proc (os/spawn ["fzf"] :p {:in :pipe :out :pipe})]
+      (->> (keys history) (map |(string $ "\n")) string/join (ev/write (proc :in)))
+      (let [[out] (ev/gather
+                    (ev/read (proc :out) :all)
+                    (os/proc-wait proc))]
+        (set l (if out (string/trim out) "")))
+      (print (prompt) l))
+
+    (= buf r)
     (do
+      (set l (string/trim r))
+      (if (and
+            (not (empty? l))
+            (not (string/has-prefix? "#" l))
+            (not (has-key? history l)))
+        (ev/spawn (save-history))))
+
+    (assert (string "Unexpected result from getline: " r)))
+
+  (if-not (empty? l)
+    (do
+      (set (history l) true)
       (def ps (spork/sh/split l))
       (def ps0 (replace-tide-maybe (ps 0)))
 
@@ -117,5 +157,7 @@
           ([e f]
             (debug/stacktrace f e "")))
 
-        (os/shell (slice l 0 (- (length l) 1))))))) # Delegate to system shell
-
+        (let [ret (os/shell l)] # Delegate to system shell
+          (unless
+            (zero? ret)
+            (printf "Error: %d" ret)))))))
