@@ -20,8 +20,12 @@
 
 ## Helpers
 
-(defn- in-janet? [s] (= (chr "(") (s 0)))
-(defn- like-dir? [s] (has-value? s (chr "/")))
+(defn- in-janet? [s] (string/has-prefix? "(" s))
+(defn- like-dir?
+  [prefix]
+  (or
+    (has-value? prefix (chr "/"))
+    (find |(string/has-prefix? prefix $) (os/dir ".") false)))
 (defn- replace-tide-maybe [s] (string/replace "~" (os/getenv "HOME") s))
 (var- cmds @[])
 (defn- populate-available-cmds
@@ -31,7 +35,7 @@
   (loop [p :in paths
          :when (= (os/stat p :mode) :directory)
          e :in (os/dir p)
-         :let [abs (spork/path/posix/join p e)]
+         :let [abs (spork/path/join p e)]
          :when (= (os/stat abs :mode) :file)]
     (set (t e) true))
   (set cmds (-> t keys sort)))
@@ -42,12 +46,12 @@
 (defn- complete-file
   [prefix]
   (def ret @[])
-  (def dir (spork/path/dirname prefix))
-  (def abs-dirname (-> prefix replace-tide-maybe spork/path/posix/dirname spork/path/posix/abspath))
+  (def abs-dirname (-> prefix replace-tide-maybe spork/path/dirname spork/path/abspath))
   (def last-component-prefix (spork/path/basename prefix))
+  (def leading (string/slice prefix 0 (- -1 (length last-component-prefix))))
   (each e (os/dir abs-dirname)
     (def suffix (if (= :directory (os/stat (string abs-dirname "/" e) :mode)) "/" ""))
-    (when (string/has-prefix? last-component-prefix e) (array/push ret (string dir e suffix))))
+    (when (string/has-prefix? last-component-prefix e) (array/push ret (string leading e suffix))))
   ret)
 
 (defn- complete-command
@@ -62,7 +66,7 @@
   [prefix line pos]
   (def ret @[])
   (def ps (spork/sh/split (string/slice line 0 pos)))
-  (def cmd (spork/path/posix/basename (ps 0)))
+  (def cmd (spork/path/basename (ps 0)))
   (def opts (-> (spork/sh/exec-slurp "carapace" cmd "export" ;ps) spork/json/decode))
   (each v (opts "values")
     (array/push ret (v "value")))
