@@ -52,6 +52,14 @@
 (defn- save-history
   []
   (->> history marshal (spit history-path)))
+(defn- add-to-history
+  [l]
+  (when (and
+          (not (empty? l))
+          (not (string/has-prefix? "#" l))
+          (not (has-key? history l)))
+    (set (history l) true)
+    (ev/spawn (save-history))))
 
 
 ## Completers
@@ -143,14 +151,7 @@
       (print (prompt) l))
 
     (= buf r)
-    (do
-      (set l (string/trim r))
-      (when (and
-              (not (empty? l))
-              (not (string/has-prefix? "#" l))
-              (not (has-key? history l)))
-        (set (history l) true)
-        (ev/spawn (save-history))))
+    (set l (string/trim r))
 
     (assert (string "Unexpected result from getline: " r)))
 
@@ -162,7 +163,9 @@
       (try
         (cond
           (and (= 1 (length ps)) (= :directory (os/stat ps0 :mode))) # cd to it if only directory exists
-          (os/cd ps0)
+          (do
+            (os/cd ps0)
+            (add-to-history (spork/path/abspath ps0))) # Only add absolutive path to avoid duplications
 
           (in-janet? ps0)
           (do
@@ -171,8 +174,9 @@
 
           (do
             (run-pre-cmd-hooks l)
-            (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to system shell
-            (if-not (zero? ret)
+            (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to bash
+            (if (zero? ret)
+              (add-to-history l) # Only add successful command to avoid duplications
               (printf "Error: %d" ret))))
 
         ([e f]
