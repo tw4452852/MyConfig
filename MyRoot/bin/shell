@@ -7,6 +7,7 @@
 (var- cmds @[])
 (var- history @{})
 
+
 ## Completion context capture
 
 (def- sym-prefix-peg
@@ -22,6 +23,7 @@
   Return a position and substring from the buffer to use for autocompletion.`
   [buf pos]
   (peg/match sym-prefix-peg buf pos))
+
 
 ## Helpers
 
@@ -50,6 +52,7 @@
 (defn- save-history
   []
   (->> history marshal (spit history-path)))
+
 
 ## Completers
 
@@ -101,6 +104,16 @@
 
     ([e f] @[])))
 
+
+## Hooks
+
+(defn- run-pre-cmd-hooks
+  []
+  (when (os/getenv "TMUX") # Tell tmux the prompt location
+    (eprinf "\x1B]133;A\x1B\\")
+    (eflush)))
+
+
 ## Main loop
 
 (defn- prompt []
@@ -145,18 +158,21 @@
       (def ps (spork/sh/split l))
       (def ps0 (replace-tide-maybe (ps 0)))
 
-      (cond
-        (and (= 1 (length ps)) (= :directory (os/stat ps0 :mode))) # cd to it if only directory exists
-        (os/cd ps0)
+      (try
+        (cond
+          (and (= 1 (length ps)) (= :directory (os/stat ps0 :mode))) # cd to it if only directory exists
+          (os/cd ps0)
 
-        (in-janet? ps0)
-        (try
+          (in-janet? ps0)
           (do
             (def r (eval-string l))
             (pp r))
-          ([e f]
-            (debug/stacktrace f e "")))
 
-        (let [ret (spork/sh/exec "bash" "-c" l)] # Delegate to system shell
-          (if-not (zero? ret)
-            (printf "Error: %d" ret)))))))
+          (do
+            (run-pre-cmd-hooks)
+            (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to system shell
+            (if-not (zero? ret)
+              (printf "Error: %d" ret))))
+
+        ([e f]
+          (debug/stacktrace f e ""))))))
