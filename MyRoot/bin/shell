@@ -157,20 +157,21 @@
 
   (if-not (empty? l)
     (let
-      [ps (spork/sh/split l)
+      [rps (spork/sh/split l)
+       ps (if (= "cd" (rps 0)) (slice rps 1) rps) # Skip the first "cd" to adapt to the following cd case
        ps0 (replace-tide-maybe (ps 0))]
 
       (try
         (cond
-          (and (= 1 (length ps)) (= :directory (os/stat ps0 :mode))) # cd to it if only directory exists
-          (do
-            (os/cd ps0)
-            (add-to-history (spork/path/abspath ps0))) # Only add absolutive path to avoid duplications
-
           (in-janet? ps0)
           (do
             (def r (eval-string l))
             (pp r))
+
+          (and (= 1 (length ps)) (= :directory (os/stat ps0 :mode))) # cd to it if only directory exists
+          (do
+            (add-to-history (spork/path/abspath ps0)) # Only add absolutive path to avoid duplications
+            (os/cd ps0))
 
           (do
             (run-pre-cmd-hooks l)
