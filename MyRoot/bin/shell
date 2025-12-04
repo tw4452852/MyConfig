@@ -145,19 +145,19 @@
     (= buf r)
     (do
       (set l (string/trim r))
-      (if (and
-            (not (empty? l))
-            (not (string/has-prefix? "#" l))
-            (not (has-key? history l)))
+      (when (and
+              (not (empty? l))
+              (not (string/has-prefix? "#" l))
+              (not (has-key? history l)))
+        (set (history l) true)
         (ev/spawn (save-history))))
 
     (assert (string "Unexpected result from getline: " r)))
 
   (if-not (empty? l)
-    (do
-      (set (history l) true)
-      (def ps (spork/sh/split l))
-      (def ps0 (replace-tide-maybe (ps 0)))
+    (let
+      [ps (spork/sh/split l)
+       ps0 (replace-tide-maybe (ps 0))]
 
       (try
         (cond
