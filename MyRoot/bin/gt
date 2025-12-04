@@ -1,0 +1,27 @@
+#!/usr/bin/env elvish
+
+## Launch a terminal emulator to run specified command
+
+use platform
+use flag
+
+var dir
+try {
+  set dir = (git rev-parse --show-toplevel 2>/dev/null)
+  if (==s $dir $E:HOME) {
+    set dir = $pwd
+  }
+} catch {
+  set dir = $pwd
+}
+
+try {
+  if (==s $platform:os linux) {
+    foot --log-level error --working-directory $dir $@args
+  } else {
+    alacritty --working-directory $dir --command $@args
+  }
+} catch {
+  nop
+}
+
