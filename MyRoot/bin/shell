@@ -108,9 +108,10 @@
 ## Hooks
 
 (defn- run-pre-cmd-hooks
-  []
-  (when (os/getenv "TMUX") # Tell tmux the prompt location
-    (eprinf "\x1B]133;A\x1B\\")
+  [l]
+  (when (os/getenv "TMUX")
+    (eprinf "\x1B]133;A\x1B\\") # Tell tmux the prompt location
+    (eprinf "\x1B]2;%q\x1B\\" l) # Set panel title
     (eflush)))
 
 
@@ -169,7 +170,7 @@
             (pp r))
 
           (do
-            (run-pre-cmd-hooks)
+            (run-pre-cmd-hooks l)
             (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to system shell
             (if-not (zero? ret)
               (printf "Error: %d" ret))))
