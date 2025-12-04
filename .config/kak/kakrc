@@ -49,4 +49,4 @@ cursorline
 # fzf for files and searches
 pathogen-infect "%val{config}/fzf"
 
-map global user g ":git grep <c-r>/<ret>" -docstring 'git grep search'
+map global user g "<a-i>w:git grep <c-r>.<ret>" -docstring 'git grep search'
