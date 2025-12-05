@@ -74,11 +74,6 @@
 ## Helpers
 
 (defn- in-janet? [s] (string/has-prefix? "(" s))
-(defn- like-dir?
-  [prefix]
-  (or
-    (has-value? prefix (chr "/"))
-    (find |(string/has-prefix? prefix $) (os/dir ".") false)))
 (defn- replace-tide-maybe [s] (string/replace "~" (os/getenv "HOME") s))
 (defn- populate-available-cmds
   []
@@ -133,13 +128,14 @@
       (in-janet? line)
       (spork/getline/default-autocomplete-options prefix)
 
-      (like-dir? prefix)
-      (complete-file prefix)
-
       (= (length prefix) pos)
       (complete-command prefix)
 
-      (complete-command-options prefix line pos))
+      (do
+        (def ret (complete-command-options prefix line pos))
+        (if (empty? ret)
+          (complete-file prefix)
+          ret)))
 
     ([e f] @[])))
 
