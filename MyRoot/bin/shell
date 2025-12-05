@@ -156,14 +156,16 @@
 
 ## Main loop
 
+(defn- sig_nop_handler [])
+
 (defn- prompt []
   (string (os/cwd) " > "))
 
 (def- gl (spork/getline/make-getline my-autocomplete-context my-autocomplete-options))
 
-(populate-available-cmds)
-
 (with [c (history-client)]
+  (os/sigaction :int sig_nop_handler) # Ignore Ctrl-C
+  (populate-available-cmds)
   (forever
     (def buf @"")
     (def r (gl (prompt) buf))
