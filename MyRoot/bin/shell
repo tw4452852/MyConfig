@@ -2,11 +2,57 @@
 
 (import spork)
 
-## Globals
+## History server
+
+(defn- history-server
+  [started-ch]
+
+  (var history @{})
+  (def history-path (spork/path/join (os/getenv "HOME") ".shell_history"))
+  (defn load-history
+    []
+    (set history (-> history-path slurp unmarshal)))
+  (defn save-history
+    []
+    (->> history marshal (spit history-path)))
+  (defn add-to-history
+    [l]
+    (when (and
+            (not (empty? l))
+            (not (string/has-prefix? "#" l))
+            (not (has-key? history l)))
+      (set (history l) true)
+      (ev/spawn (save-history))))
+
+  (def fns
+    {:get-all (fn [self]
+                (keys history))
+     :add-one (fn [self l]
+                (add-to-history l))})
+
+  (if (spork/sh/exists? history-path)
+    (load-history)
+    (with [_ (spork/sh/make-new-file history-path)]))
+
+  (spork/rpc/server fns)
+  (ev/give started-ch true)) # Signal server is up
+
+(defn- history-client
+  []
+
+  (def [connected c] (protect (spork/rpc/client)))
+  (if connected
+    c
+    (do
+      (def started-ch (ev/thread-chan))
+      (ev/thread history-server started-ch :n)
+      (ev/take started-ch) # Wait server up
+      (spork/rpc/client))))
+
+
+## Client Globals
 
 (var- cmds @[])
-(var- history @{})
-
 
 ## Completion context capture
 
@@ -45,21 +91,6 @@
          :when (= (os/stat abs :mode) :file)]
     (set (t e) true))
   (set cmds (-> t keys sort)))
-(def- history-path (spork/path/join (os/getenv "HOME") ".shell_history"))
-(defn- load-history
-  []
-  (set history (-> history-path slurp unmarshal)))
-(defn- save-history
-  []
-  (->> history marshal (spit history-path)))
-(defn- add-to-history
-  [l]
-  (when (and
-          (not (empty? l))
-          (not (string/has-prefix? "#" l))
-          (not (has-key? history l)))
-    (set (history l) true)
-    (ev/spawn (save-history))))
 
 
 ## Completers
@@ -131,54 +162,52 @@
 (def- gl (spork/getline/make-getline my-autocomplete-context my-autocomplete-options))
 
 (populate-available-cmds)
-(if (spork/sh/exists? history-path)
-  (load-history)
-  (with [_ (spork/sh/make-new-file history-path)]))
 
-(forever
-  (def buf @"")
-  (def r (gl (prompt) buf))
+(with [c (history-client)]
+  (forever
+    (def buf @"")
+    (def r (gl (prompt) buf))
 
-  (var- l "")
-  (cond
-    (= :cancel r) # Take advantage of unused :cancel result to trigger fuzzy history finder
-    (with [proc (os/spawn ["fzf" "--bind" "alt-c:replace-query" "--bind" "enter:accept-or-print-query" "--header" "<a-c>: Fill query"] :p {:in :pipe :out :pipe})]
-      (->> (keys history) (map |(string $ "\n")) string/join (ev/write (proc :in)))
-      (let [[out] (ev/gather
-                    (ev/read (proc :out) :all)
-                    (os/proc-wait proc))]
-        (set l (if out (string/trim out) "")))
-      (print (prompt) l))
+    (var- l "")
+    (cond
+      (= :cancel r) # Take advantage of unused :cancel result to trigger fuzzy history finder
+      (with [proc (os/spawn ["fzf" "--bind" "alt-c:replace-query" "--bind" "enter:accept-or-print-query" "--header" "<a-c>: Fill query"] :p {:in :pipe :out :pipe})]
+        (->> (:get-all c) (map |(string $ "\n")) string/join (ev/write (proc :in)))
+        (let [[out] (ev/gather
+                      (ev/read (proc :out) :all)
+                      (os/proc-wait proc))]
+          (set l (if out (string/trim out) "")))
+        (print (prompt) l))
 
-    (= buf r)
-    (set l (string/trim r))
+      (= buf r)
+      (set l (string/trim r))
 
-    (assert (string "Unexpected result from getline: " r)))
+      (assert (string "Unexpected result from getline: " r)))
 
-  (if-not (empty? l)
-    (let
-      [rps (spork/sh/split l)
-       ps (if (= "cd" (rps 0)) (slice rps 1) rps) # Skip the first "cd" to adapt to the following cd case
-       ps0 (replace-tide-maybe (ps 0))]
+    (if-not (empty? l)
+      (let
+        [rps (spork/sh/split l)
+         ps (if (= "cd" (rps 0)) (slice rps 1) rps) # Skip the first "cd" to adapt to the following cd case
+         ps0 (replace-tide-maybe (ps 0))]
 
-      (try
-        (cond
-          (in-janet? ps0)
-          (do
-            (def r (eval-string l))
-            (pp r))
+        (try
+          (cond
+            (in-janet? ps0)
+            (do
+              (def r (eval-string l))
+              (pp r))
 
-          (and (= 1 (length ps)) (= :directory (os/stat ps0 :mode))) # cd to it if only directory exists
-          (do
-            (add-to-history (spork/path/abspath ps0)) # Only add absolutive path to avoid duplications
-            (os/cd ps0))
+            (and (= 1 (length ps)) (= :directory (os/stat ps0 :mode))) # cd to it if only directory exists
+            (do
+              (:add-one c (spork/path/abspath ps0)) # Only add absolutive path to avoid duplications
+              (os/cd ps0))
 
-          (do
-            (run-pre-cmd-hooks l)
-            (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to bash
-            (if (zero? ret)
-              (add-to-history l) # Only add successful command to avoid duplications
-              (printf "Error: %d" ret))))
+            (do
+              (run-pre-cmd-hooks l)
+              (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to bash
+              (if (zero? ret)
+                (:add-one c l) # Only add successful command to avoid duplications
+                (printf "Error: %d" ret))))
 
-        ([e f]
-          (debug/stacktrace f e ""))))))
+          ([e f]
+            (debug/stacktrace f e "")))))))
