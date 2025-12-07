@@ -1,4 +1,4 @@
-# Mirror of my $HOME
+# My $HOME
 
 ```
 cd ~
