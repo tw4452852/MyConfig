@@ -75,15 +75,19 @@
 (defdyn *cmds* "commands found in PATH")
 (defn- populate-available-cmds
   []
-  (def t @{})
+  (def t @{}) # Use table to prevent duplicates
+  (def old (frequencies (dyn *cmds* {}))) # Utilize `frequencies` to convert array to table
+  (def newly-added @{})
   (def paths (string/split ":" (os/getenv "PATH")))
   (loop [p :in paths
          :when (= (os/stat p :mode) :directory)
          e :in (os/dir p)
          :let [abs (spork/path/join p e)]
          :when (= (os/stat abs :mode) :file)]
-    (set (t e) true))
-  (setdyn *cmds* (-> t keys sort)))
+    (set (t e) true)
+    (if-not (in old e) (set (newly-added abs) true)))
+  (setdyn *cmds* (-> t keys sort))
+  (keys newly-added))
 
 
 ## Completers
@@ -110,7 +114,7 @@
   (def cmds (dyn *cmds*))
   (defn has-prefix? [cmd] (string/has-prefix? prefix cmd))
   (when-let [start-index (find-index has-prefix? cmds)]
-    (def candidates (take-while has-prefix? (array/slice cmds start-index)))
+    (def candidates (take-while has-prefix? (array/slice cmds start-index))) # Assuming cmds are sorted
     (array/concat ret candidates)
     (set found true))
   found)
@@ -205,7 +209,7 @@
                 (if-not (empty? out)
                   # Add carriage by default unless the result starts with '#' which is triggered by <alt-enter> from fzf.
                   (set prefill (string buf
-			(if (string/has-prefix? "#" out) (string/slice out 1) (string out "\x0d"))))
+                                       (if (string/has-prefix? "#" out) (string/slice out 1) (string out "\x0d"))))
                   (return :gl)))))
 
           (= buf r)
