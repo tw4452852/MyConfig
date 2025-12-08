@@ -23,11 +23,7 @@ try {
 fn _main {|dir cmd|
   tmp E:FZF_GHOST = $cmd
 
-  if (has-env WAYLAND_DISPLAY) {
-    foot -d error -D $dir sh -c $cmd" | f || exit 0"
-  } else {
-    alacritty --working-directory $dir -e sh -c $cmd" | f "
-  }
+  gt sh -c $cmd" | f || exit 0"
 }
 
 _main $dir $cmd
