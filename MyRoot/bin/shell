@@ -184,21 +184,21 @@
 
     (if-not (empty? l)
       (let
-        [rps (spork/sh/split l)
-         ps (if (= "cd" (rps 0)) (slice rps 1) rps) # Skip the first "cd" to adapt to the following cd case
-         ps0 (replace-tide-maybe (ps 0))]
+        [args (spork/sh/split l)
+         arg0 (replace-tide-maybe (args 0))]
 
         (try
           (cond
-            (in-janet? ps0)
+            (in-janet? arg0)
             (do
               (def r (eval-string l))
               (pp r))
 
-            (and (= 1 (length ps)) (= :directory (os/stat ps0 :mode))) # cd to it if only directory exists
+            (= "cd" arg0)
             (do
-              (:add-one c (spork/path/abspath ps0)) # Only add absolutive path to avoid duplications
-              (os/cd ps0))
+              (def abs_path (-> (or (get args 1) "~") replace-tide-maybe spork/path/abspath))
+              (os/cd abs_path)
+              (:add-one c (string "cd " abs_path)))
 
             (do
               (run-pre-cmd-hooks l)
