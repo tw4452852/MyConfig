@@ -8,6 +8,7 @@
   [started-ch]
 
   (var history @{})
+  (def lock (ev/rwlock))
   (def history-path (spork/path/join (os/getenv "HOME") ".shell_history"))
   (defn load-history
     []
@@ -22,13 +23,13 @@
             (not (string/has-prefix? "#" l))
             (not (has-key? history l)))
       (set (history l) true)
-      (ev/spawn (save-history))))
+      (save-history)))
 
   (def fns
     {:get-all (fn [self]
-                (keys history))
+                (ev/with-rlock lock (keys history)))
      :add-one (fn [self l]
-                (add-to-history l))})
+                (ev/with-wlock lock (add-to-history l)))})
 
   (if (spork/sh/exists? history-path)
     (load-history)
