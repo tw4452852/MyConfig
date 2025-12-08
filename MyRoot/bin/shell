@@ -132,10 +132,10 @@
       (complete-command prefix)
 
       (do
-        (def ret (complete-command-options prefix line pos))
-        (if (empty? ret)
-          (complete-file prefix)
-          ret)))
+        (def [success ret] (protect (complete-command-options prefix line pos)))
+        (if (and success (not (empty? ret)))
+          ret
+          (complete-file prefix))))
 
     ([e f] @[])))
 
