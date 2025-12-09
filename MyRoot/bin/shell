@@ -92,53 +92,60 @@
 ## Completers
 
 (defn- complete-file
-  [prefix]
-  (def ret @[])
-  (def abs-dirname (-> prefix replace-tide-maybe spork/path/dirname spork/path/abspath))
-  (def last-component-prefix (spork/path/basename prefix))
-  (def leading (string/slice prefix 0 (- -1 (length last-component-prefix))))
-  (each e (os/dir abs-dirname)
-    (def suffix (if (= :directory (os/stat (string abs-dirname "/" e) :mode)) "/" ""))
-    (when (string/has-prefix? last-component-prefix e) (array/push ret (string leading e suffix))))
-  ret)
+  [ret prefix]
+  (var found false)
+  (try
+    (do
+      (def abs-dirname (-> prefix replace-tide-maybe spork/path/dirname spork/path/abspath))
+      (def last-component-prefix (spork/path/basename prefix))
+      (def leading (string/slice prefix 0 (- -1 (length last-component-prefix))))
+      (each e (os/dir abs-dirname)
+        (def suffix (if (= :directory (os/stat (string abs-dirname "/" e) :mode)) "/" ""))
+        (when (string/has-prefix? last-component-prefix e)
+          (set found true)
+          (array/push ret (string leading e suffix)))))
+    ([]))
+  found)
 
 (defn- complete-command
-  [prefix]
-  (def ret @[])
-  (def has-prefix? (fn [cmd] (string/has-prefix? prefix cmd)))
-  (if-let [start-index (find-index has-prefix? cmds)]
-    (take-while has-prefix? (array/slice cmds start-index))
-    ret))
+  [ret prefix]
+  (var found false)
+  (defn has-prefix? [cmd] (string/has-prefix? prefix cmd))
+  (when-let [start-index (find-index has-prefix? cmds)]
+    (def candidates (take-while has-prefix? (array/slice cmds start-index)))
+    (array/concat ret candidates)
+    (set found true))
+  found)
 
 (defn- complete-command-options
-  [prefix line pos]
-
-  (def ret @[])
-  (def ps (spork/sh/split (string/slice line 0 pos)))
-  (def cmd (spork/path/basename (ps 0)))
-  (def opts (-> (spork/sh/exec-slurp "carapace" cmd "export" ;ps) spork/json/decode))
-  (each v (opts "values")
-    (array/push ret (v "value")))
-  ret)
+  [ret prefix line pos]
+  (var found false)
+  (try
+    (do
+      (def ps (spork/sh/split (string/slice line 0 pos)))
+      (def cmd (spork/path/basename (ps 0)))
+      (def opts (-> (spork/sh/exec-slurp "carapace" cmd "export" ;ps) spork/json/decode))
+      (each v (opts "values")
+        (set found true)
+        (array/push ret (v "value"))))
+    ([]))
+  found)
 
 (defn my-autocomplete-options
   "Handler to get available autocomplete options for a given substring."
   [prefix line pos]
   (try
-    (cond
-      (in-janet? line)
+    (if (in-janet? line)
       (spork/getline/default-autocomplete-options prefix)
-
-      (= (length prefix) pos)
-      (complete-command prefix)
-
       (do
-        (def [success ret] (protect (complete-command-options prefix line pos)))
-        (if (and success (not (empty? ret)))
-          ret
-          (complete-file prefix))))
+        (def ret @[])
+        (or
+          (if (= (length prefix) pos) (complete-command ret prefix) false) # Only do cmd completion when only ourself
+          (complete-command-options ret prefix line pos)
+          (complete-file ret prefix))
+        ret))
 
-    ([e f] @[])))
+    ([] @[])))
 
 
 ## Hooks
