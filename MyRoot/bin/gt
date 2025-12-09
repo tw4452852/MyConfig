@@ -17,7 +17,7 @@ try {
 
 try {
   if (==s $platform:os linux) {
-    foot --log-level error --working-directory $dir $@args
+    foot --app-id=_float --log-level error --working-directory $dir $@args
   } else {
     alacritty --working-directory $dir --command $@args
   }
