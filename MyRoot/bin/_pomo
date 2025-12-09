@@ -1,4 +1,4 @@
-#!/usr/bin/env elvish
+#!/usr/bin/env -S elvish -norc
 
 use str
 
@@ -22,24 +22,18 @@ if (not ?(tmux has -t $session 2>/dev/null)) {
     }
 
     work_secs=3600
-    rest_secs=300
     while true; do
       for i in `seq 1 ${work_secs}`; do
         maybe_wait
-        echo working $i $work_secs  > "$file"
+        echo working $i $work_secs  | tee "$file"
         sleep 1
       done
-      foot --log-level=error --app-id=_float sh -c 'echo about to rest | less'
+      gt sh -c 'echo about to rest | less'
       if [ -n $WAYLAND_DISPLAY ]; then
         waylock_wrapper
       else
         xautolock -locknow
       fi
-      for i in `seq 1 $rest_secs}`; do
-        maybe_wait
-        echo resting $i $rest_secs > "$file"
-        sleep 1
-      done
     done
   "
 }
