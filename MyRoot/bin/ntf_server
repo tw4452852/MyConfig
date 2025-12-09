@@ -10,7 +10,7 @@ try { tiramisu -o "#summary\n#body\n#end\n" } catch { echo "#exit" } | while $tr
   if (==s $line "#end") {
     var message = (str:join '' $lines)
     try {
-      foot --log-level=error --app-id=_float sh -c 'printf %s "'$message'"| timeout --foreground 5s less'
+      gt sh -c 'printf %s "'$message'"| timeout --foreground 5s less'
     } catch {
       nop
     } finally {
