@@ -59,7 +59,7 @@
 
 (def- sym-prefix-peg
   (peg/compile
-    ~{:symchar (+ (range "AZ" "az" "09") (set "~+-./_?"))
+    ~{:symchar (+ (range "AZ" "az" "09") (set "~+-./_?@:"))
       :anchor (drop (cmt ($) ,|(= $ 0)))
       :cap (* (+ (> -1 (not :symchar)) :anchor) (* ($) '(some :symchar)))
       :recur (+ :cap (> -1 :recur))
@@ -104,7 +104,7 @@
         (when (string/has-prefix? last-component-prefix e)
           (set found true)
           (array/push ret (string leading e suffix)))))
-    ([]))
+    ([e f] (debug/stacktrace f e "")))
   found)
 
 (defn- complete-command
@@ -119,16 +119,33 @@
 
 (defn- complete-command-options
   [ret prefix line pos]
+
+  (def- specific-completors
+    {"jj" (fn :jj-clap-completer [cmd args]
+            (assert (= cmd "jj"))
+            (def output
+              (spork/sh/exec-slurp "env" "_CLAP_IFS=\n" "COMPLETE=elvish" (string "_CLAP_COMPLETE_INDEX=" (length args)) "jj" "--" "jj" ;args))
+            (if (empty? output)
+              @[]
+              (string/split "\n" output)))})
+
+  (defn- default-completer
+    [cmd args]
+
+    (def opts (-> (spork/sh/exec-slurp "carapace" cmd "export" cmd ;args) spork/json/decode))
+    (map |($ "value") (opts "values")))
+
   (var found false)
   (try
     (do
       (def ps (spork/sh/split (string/slice line 0 pos)))
       (def cmd (spork/path/basename (ps 0)))
-      (def opts (-> (spork/sh/exec-slurp "carapace" cmd "export" ;ps) spork/json/decode))
-      (each v (opts "values")
+      (def args (slice ps 1))
+      (def candidates ((or (get specific-completors cmd) default-completer) cmd args))
+      (unless (empty? candidates)
         (set found true)
-        (array/push ret (v "value"))))
-    ([]))
+        (array/concat ret candidates)))
+    ([e f] (debug/stacktrace f e "")))
   found)
 
 (defn my-autocomplete-options
@@ -145,7 +162,7 @@
           (complete-file ret prefix))
         ret))
 
-    ([] @[])))
+    ([e f] (debug/stacktrace f e "") @[])))
 
 
 ## Hooks
