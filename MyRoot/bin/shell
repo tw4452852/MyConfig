@@ -131,9 +131,8 @@
 
   (defn- default-completer
     [cmd args]
-
-    (def opts (-> (spork/sh/exec-slurp "carapace" cmd "export" cmd ;args) spork/json/decode))
-    (map |($ "value") (opts "values")))
+    (def [success opts] (protect (-> (spork/sh/exec-slurp "carapace" cmd "export" cmd ;args) spork/json/decode))) # possible error is expected
+    (if success (map |($ "value") (opts "values")) @[]))
 
   (var found false)
   (try
