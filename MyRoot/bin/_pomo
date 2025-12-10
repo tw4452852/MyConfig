@@ -28,12 +28,7 @@ if (not ?(tmux has -t $session 2>/dev/null)) {
         echo working $i $work_secs  | tee "$file"
         sleep 1
       done
-      gt sh -c 'echo about to rest | less'
-      if [ -n $WAYLAND_DISPLAY ]; then
-        waylock_wrapper
-      else
-        xautolock -locknow
-      fi
+      gt sh -c 'echo about to rest | less --quit-on-intr && waylock_wrapper'
     done
   "
 }
