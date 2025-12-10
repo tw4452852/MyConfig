@@ -177,7 +177,7 @@
     (var- l "")
     (cond
       (= :cancel r) # Take advantage of unused :cancel result to trigger fuzzy history finder
-      (with [proc (os/spawn ["fzf" "--bind" "alt-c:replace-query" "--bind" "enter:accept-or-print-query" "--header" "<a-c>: Fill query"] :p {:in :pipe :out :pipe})]
+      (with [proc (os/spawn ["fzf" "--wrap" "--bind" "alt-c:replace-query" "--bind" "enter:accept-or-print-query" "--header" "<a-c>: Fill query"] :p {:in :pipe :out :pipe})]
         (->> (:get-all c) (map |(string $ "\n")) string/join (ev/write (proc :in)))
         (let [[out] (ev/gather
                       (ev/read (proc :out) :all)
