@@ -51,10 +51,6 @@
       (spork/rpc/client))))
 
 
-## Client Globals
-
-(var- cmds @[])
-
 ## Completion context capture
 
 (def- sym-prefix-peg
@@ -76,6 +72,7 @@
 
 (defn- in-janet? [s] (string/has-prefix? "(" s))
 (defn- replace-tide-maybe [s] (string/replace "~" (os/getenv "HOME") s))
+(defdyn *cmds* "commands found in PATH")
 (defn- populate-available-cmds
   []
   (def t @{})
@@ -86,7 +83,7 @@
          :let [abs (spork/path/join p e)]
          :when (= (os/stat abs :mode) :file)]
     (set (t e) true))
-  (set cmds (-> t keys sort)))
+  (setdyn *cmds* (-> t keys sort)))
 
 
 ## Completers
@@ -110,6 +107,7 @@
 (defn- complete-command
   [ret prefix]
   (var found false)
+  (def cmds (dyn *cmds*))
   (defn has-prefix? [cmd] (string/has-prefix? prefix cmd))
   (when-let [start-index (find-index has-prefix? cmds)]
     (def candidates (take-while has-prefix? (array/slice cmds start-index)))
@@ -140,7 +138,7 @@
       (def ps (spork/sh/split (string/slice line 0 pos)))
       (def cmd (spork/path/basename (ps 0)))
       (def args (slice ps 1))
-      (def candidates ((or (get specific-completors cmd) default-completer) cmd args))
+      (def candidates ((get specific-completors cmd default-completer) cmd args))
       (unless (empty? candidates)
         (set found true)
         (array/concat ret candidates)))
@@ -175,61 +173,63 @@
 
 
 ## Main loop
-
 (defn- sig_nop_handler [])
-
 (defn- prompt []
   (string (os/cwd) " > "))
 
-(def- gl (spork/getline/make-getline my-autocomplete-context my-autocomplete-options))
+(defn- main-loop []
+  (def gl (spork/getline/make-getline my-autocomplete-context my-autocomplete-options))
 
-(with [c (history-client)]
-  (os/sigaction :int sig_nop_handler) # Ignore Ctrl-C
-  (populate-available-cmds)
-  (forever
-    (def buf @"")
-    (def r (gl (prompt) buf))
+  (with [c (history-client)]
+    (os/sigaction :int sig_nop_handler) # Ignore Ctrl-C
+    (populate-available-cmds)
+    (forever
+      (def buf @"")
+      (def r (gl (prompt) buf))
 
-    (var- l "")
-    (cond
-      (= :cancel r) # Take advantage of unused :cancel result to trigger fuzzy history finder
-      (with [proc (os/spawn ["fzf" "--wrap" "--bind" "alt-c:replace-query" "--bind" "enter:accept-or-print-query" "--header" "<a-c>: Fill query"] :p {:in :pipe :out :pipe})]
-        (->> (:get-all c) (map |(string $ "\n")) string/join (ev/write (proc :in)))
-        (let [[out] (ev/gather
-                      (ev/read (proc :out) :all)
-                      (os/proc-wait proc))]
-          (set l (if out (string/trim out) "")))
-        (print (prompt) l))
+      (var- l "")
+      (cond
+        (= :cancel r) # Take advantage of unused :cancel result to trigger fuzzy history finder
+        (with [proc (os/spawn ["fzf" "--wrap" "--bind" "alt-c:replace-query" "--bind" "enter:accept-or-print-query" "--header" "<a-c>: Fill query"] :p {:in :pipe :out :pipe})]
+          (->> (:get-all c) (map |(string $ "\n")) string/join (ev/write (proc :in)))
+          (let [[out] (ev/gather
+                        (ev/read (proc :out) :all)
+                        (os/proc-wait proc))]
+            (set l (if out (string/trim out) "")))
+          (print (prompt) l))
 
-      (= buf r)
-      (set l (string/trim r))
+        (= buf r)
+        (set l (string/trim r))
 
-      (assert (string "Unexpected result from getline: " r)))
+        (assert (string "Unexpected result from getline: " r)))
 
-    (if-not (empty? l)
-      (let
-        [args (spork/sh/split l)
-         arg0 (replace-tide-maybe (args 0))]
+      (if-not (empty? l)
+        (let
+          [args (spork/sh/split l)
+           arg0 (replace-tide-maybe (args 0))]
 
-        (try
-          (cond
-            (in-janet? arg0)
-            (do
-              (def r (eval-string l))
-              (pp r))
+          (try
+            (cond
+              (in-janet? arg0)
+              (do
+                (def r (eval-string l))
+                (pp r))
 
-            (= "cd" arg0)
-            (do
-              (def abs_path (-> (or (get args 1) "~") replace-tide-maybe spork/path/abspath))
-              (os/cd abs_path)
-              (:add-one c (string "cd " abs_path)))
+              (= "cd" arg0)
+              (do
+                (def abs_path (-> (or (get args 1) "~") replace-tide-maybe spork/path/abspath))
+                (os/cd abs_path)
+                (:add-one c (string "cd " abs_path)))
 
-            (do
-              (run-pre-cmd-hooks l)
-              (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to bash
-              (if (zero? ret)
-                (:add-one c l) # Only add successful command to avoid duplications
-                (printf "Error: %d" ret))))
+              (do
+                (run-pre-cmd-hooks l)
+                (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to bash
+                (if (zero? ret)
+                  (:add-one c l) # Only add successful command to avoid duplications
+                  (printf "Error: %d" ret))))
 
-          ([e f]
-            (debug/stacktrace f e "")))))))
+            ([e f]
+              (debug/stacktrace f e ""))))))))
+
+
+(defn main [&] (main-loop))
