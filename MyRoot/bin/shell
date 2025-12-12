@@ -173,6 +173,7 @@
 
 
 ## Main loop
+
 (defn- sig_nop_handler [])
 (defn- prompt []
   (string (os/cwd) " > "))
@@ -232,4 +233,34 @@
               (debug/stacktrace f e ""))))))))
 
 
-(defn main [&] (main-loop))
+## Testing
+
+(defn- testing
+  []
+
+  (setdyn *cmds* ["a-cmd" "b-cmd"])
+  (assert (deep= @["a-cmd"] (my-autocomplete-options "a" "a" 1)))
+  (assert (deep= @["/tmp/"] (my-autocomplete-options "/tm" "/tm" 3)))
+  (assert (deep= @["--help"] (my-autocomplete-options "--he" "ls --he" 7))))
+
+
+## CLI main
+
+(defn- main
+  [&]
+
+  (def ap
+    (spork/argparse/argparse
+      "Tw's customized shell, implemented with Janet."
+
+      "test"
+      {:short "t"
+       :help "Testing"
+       :kind :flag}))
+
+  # Break on help text
+  (unless ap (break))
+
+  (if (ap "test")
+    (testing)
+    (main-loop)))
