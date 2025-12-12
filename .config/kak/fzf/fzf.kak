@@ -13,8 +13,8 @@ define-command -hidden find_file %{
 		cd_topdir() {
 	        dirname_buffer="${kak_buffile%/*}"
 	        if [ "${dirname_buffer}" = "${kak_buffile}" ]; then
-	            printf 'fail find_file: cannot operate on scratch buffer: %s\n' "${kak_buffile}"
-	            return 1
+	            # If we're scratch buffer, use cwd
+	            dirname_buffer=.
 	        fi
 	        cd "${dirname_buffer}" 2>/dev/null || {
 	            printf 'fail find_file: unable to change the current working directory to: %s\n' "${dirname_buffer}"
