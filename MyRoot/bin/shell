@@ -235,13 +235,21 @@
 
 ## Testing
 
+(defmacro- verbose-deep=
+  [expect got]
+  (let [e (gensym) g (gensym)]
+    ~(let [,e ,expect ,g ,got]
+       (or (,deep= ,e ,g) (eprintf "expect: %p, got: %p" ,e ,g)))))
+
 (defn- testing
   []
-
   (setdyn *cmds* ["a-cmd" "b-cmd"])
-  (assert (deep= @["a-cmd"] (my-autocomplete-options "a" "a" 1)))
-  (assert (deep= @["/tmp/"] (my-autocomplete-options "/tm" "/tm" 3)))
-  (assert (deep= @["--help"] (my-autocomplete-options "--he" "ls --he" 7))))
+
+  (assert (verbose-deep= @['forever] (my-autocomplete-options "fore" "(fore" 5)) "janet completion failed")
+  (assert (verbose-deep= @["a-cmd"] (my-autocomplete-options "a" "a" 1)) "command completion failed")
+  (assert (verbose-deep= @["/tmp/"] (my-autocomplete-options "/tm" "/tm" 3)) "directory completion failed")
+  (assert (verbose-deep= @["--help"] (my-autocomplete-options "--he" "ls --he" 7)) "command's option completion failed")
+  (assert (verbose-deep= @["/tmp/"] (my-autocomplete-options "/tm" "ls /tm" 6)) "command's argument completion failed"))
 
 
 ## CLI main
