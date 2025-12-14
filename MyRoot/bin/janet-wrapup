@@ -1,0 +1,8 @@
+#!/usr/bin/env janet
+
+
+(def- p (parser/new))
+(def- i (file/read stdin :all))
+(parser/consume p i)
+(prin i)
+(->> (parser/state p :delimiters) reverse (map |(if (= $ 40) (prinf "%c" (+ $ 1)) (prinf "%c" (+ $ 2)))))
