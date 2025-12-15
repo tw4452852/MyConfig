@@ -237,7 +237,7 @@
 
 (defmacro- verbose-deep=
   [expect got]
-  (let [e (gensym) g (gensym)]
+  (with-syms [e g]
     ~(let [,e ,expect ,g ,got]
        (or (,deep= ,e ,g) (eprintf "expect: %p, got: %p" ,e ,g)))))
 
@@ -249,7 +249,8 @@
   (assert (verbose-deep= @["a-cmd"] (my-autocomplete-options "a" "a" 1)) "command completion failed")
   (assert (verbose-deep= @["/tmp/"] (my-autocomplete-options "/tm" "/tm" 3)) "directory completion failed")
   (assert (verbose-deep= @["--help"] (my-autocomplete-options "--he" "ls --he" 7)) "command's option completion failed")
-  (assert (verbose-deep= @["/tmp/"] (my-autocomplete-options "/tm" "ls /tm" 6)) "command's argument completion failed"))
+  (assert (verbose-deep= @["log"] (my-autocomplete-options "lo" "git lo" 6)) "command's argument completion failed")
+  (assert (verbose-deep= @["log"] (my-autocomplete-options "lo" "jj lo" 5)) "jj argument completion failed"))
 
 
 ## CLI main
