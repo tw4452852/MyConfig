@@ -175,62 +175,69 @@
 ## Main loop
 
 (defn- sig_nop_handler [])
-(defn- prompt []
+(defn- ps []
   (string (os/cwd) " > "))
 
 (defn- main-loop []
-  (def gl (spork/getline/make-getline my-autocomplete-context my-autocomplete-options))
-
   (with [c (history-client)]
+    (var prefill nil)
+    (def buf @"")
+    (def gl (spork/getline/make-getline my-autocomplete-context my-autocomplete-options))
+
     (os/sigaction :int sig_nop_handler) # Ignore Ctrl-C
     (populate-available-cmds)
+
     (forever
-      (def buf @"")
-      (def r (gl (prompt) buf))
+      (prompt :gl
+        (def r (gl (ps) buf prefill))
+        (set prefill nil) # Reset
 
-      (var- l "")
-      (cond
-        (= :cancel r) # Take advantage of unused :cancel result to trigger fuzzy history finder
-        (with [proc (os/spawn ["fzf" "--wrap" "--bind" "alt-c:replace-query" "--bind" "enter:accept-or-print-query" "--header" "<a-c>: Fill query"] :p {:in :pipe :out :pipe})]
-          (->> (:get-all c) (map |(string $ "\n")) string/join (ev/write (proc :in)))
-          (let [[out] (ev/gather
-                        (ev/read (proc :out) :all)
-                        (os/proc-wait proc))]
-            (set l (if out (string/trim out) "")))
-          (print (prompt) l))
+        (var l "")
+        (cond
+          (= :cancel r) # Take advantage of unused :cancel result to trigger fuzzy history finder
+          (with [proc (os/spawn ["fzf" "--wrap"] :p {:in :pipe :out :pipe})]
+            (->> (:get-all c) (map |(string $ "\n")) string/join (ev/write (proc :in)))
+            (let [[out] (ev/gather
+                          (ev/read (proc :out) :all)
+                          (os/proc-wait proc))]
+              (when out
+                (def out (string/trim out))
+                (if-not (empty? out)
+                  (set prefill out)
+                  (return :gl)))))
 
-        (= buf r)
-        (set l (string/trim r))
+          (= buf r)
+          (set l (string/trim r))
 
-        (assert (string "Unexpected result from getline: " r)))
+          (error (string "Unexpected result from getline: " r)))
 
-      (if-not (empty? l)
-        (let
-          [args (spork/sh/split l)
-           arg0 (replace-tide-maybe (args 0))]
+        (if-not (empty? l)
+          (let
+            [args (spork/sh/split l)
+             arg0 (replace-tide-maybe (args 0))]
 
-          (try
-            (cond
-              (in-janet? arg0)
-              (do
-                (def r (eval-string l))
-                (pp r))
+            (try
+              (cond
+                (in-janet? arg0)
+                (do
+                  (def r (eval-string l))
+                  (pp r))
 
-              (= "cd" arg0)
-              (do
-                (def abs_path (-> (or (get args 1) "~") replace-tide-maybe spork/path/abspath))
-                (os/cd abs_path)
-                (:add-one c (string "cd " abs_path)))
+                (= "cd" arg0)
+                (do
+                  (def abs_path (-> (or (get args 1) "~") replace-tide-maybe spork/path/abspath))
+                  (os/cd abs_path)
+                  (:add-one c (string "cd " abs_path)))
 
-              (do
-                (run-pre-cmd-hooks l)
-                (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to bash
-                (if (zero? ret)
-                  (:add-one c l) # Only add successful command to avoid duplications
-                  (printf "Error: %d" ret))))
+                (do
+                  (run-pre-cmd-hooks l)
+                  (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to bash
+                  (if (zero? ret)
+                    (:add-one c l) # Only add successful command to avoid duplications
+                    (printf "Error: %d" ret))))
 
-            ([e f]
-              (debug/stacktrace f e ""))))))))
+              ([e f]
+                (debug/stacktrace f e "")))))))))
 
 
 ## Testing
