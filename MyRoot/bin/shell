@@ -242,22 +242,20 @@
 
 ## Testing
 
-(defmacro- verbose-deep=
-  [expect got]
-  (with-syms [e g]
-    ~(let [,e ,expect ,g ,got]
-       (or (,deep= ,e ,g) (eprintf "expect: %p, got: %p" ,e ,g)))))
+(defn- aeq
+  [expect got msg]
+  (assert (deep= expect got) (string/format "%s: expect: %p, got: %p" msg expect got)))
 
 (defn- testing
   []
   (setdyn *cmds* ["a-cmd" "b-cmd"])
 
-  (assert (verbose-deep= @['forever] (my-autocomplete-options "fore" "(fore" 5)) "janet completion failed")
-  (assert (verbose-deep= @["a-cmd"] (my-autocomplete-options "a" "a" 1)) "command completion failed")
-  (assert (verbose-deep= @["/tmp/"] (my-autocomplete-options "/tm" "/tm" 3)) "directory completion failed")
-  (assert (verbose-deep= @["--help"] (my-autocomplete-options "--he" "ls --he" 7)) "command's option completion failed")
-  (assert (verbose-deep= @["log"] (my-autocomplete-options "lo" "git lo" 6)) "command's argument completion failed")
-  (assert (verbose-deep= @["log"] (my-autocomplete-options "lo" "jj lo" 5)) "jj argument completion failed"))
+  (aeq @['forever] (my-autocomplete-options "fore" "(fore" 5) "janet completion failed")
+  (aeq @["a-cmd"] (my-autocomplete-options "a" "a" 1) "command completion failed")
+  (aeq @["/tmp/"] (my-autocomplete-options "/tm" "/tm" 3) "directory completion failed")
+  (aeq @["--help"] (my-autocomplete-options "--he" "ls --he" 7) "command's option completion failed")
+  (aeq @["log"] (my-autocomplete-options "lo" "git lo" 6) "command's argument completion failed")
+  (aeq @["log"] (my-autocomplete-options "lo" "jj lo" 5) "jj argument completion failed"))
 
 
 ## CLI main
