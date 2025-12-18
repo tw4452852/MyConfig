@@ -195,15 +195,17 @@
         (var l "")
         (cond
           (= :cancel r) # Take advantage of unused :cancel result to trigger fuzzy history finder
-          (with [proc (os/spawn ["fzf" "--wrap"] :p {:in :pipe :out :pipe})]
-            (->> (:get-all c) (map |(string $ "\n")) string/join (ev/write (proc :in)))
+          (with [proc (os/spawn ["fzf" "--wrap" "--bind=alt-enter:print(#)+accept"] :p {:in :pipe :out :pipe})]
+            (each cmd (:get-all c) (ev/write (proc :in) (string cmd "\n")))
             (let [[out] (ev/gather
                           (ev/read (proc :out) :all)
                           (os/proc-wait proc))]
               (when out
                 (def out (string/trim out))
                 (if-not (empty? out)
-                  (set prefill out)
+                  # Add carriage by default unless the result starts with '#' which is triggered by <alt-enter> from fzf.
+                  (set prefill (string buf
+			(if (string/has-prefix? "#" out) (string/slice out 1) (string out "\x0d"))))
                   (return :gl)))))
 
           (= buf r)
