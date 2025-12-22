@@ -1,3 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
-_pomo toggle;waylock;_pomo reset
+set -e
+
+pomo_path=`which pomo`
+pomo_pid=`pgrep -f ${pomo_path}`
+
+kill -STOP ${pomo_pid}
+waylock
+kill -CONT ${pomo_pid}
+kill -USR1 ${pomo_pid}
