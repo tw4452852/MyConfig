@@ -17,3 +17,5 @@ define-command -hidden insert-tab %{
 map global insert <tab> "<a-;>: insert-tab<ret>"
 
 map global user l ': enter-user-mode lsp<ret>' -docstring 'lsp mode'
+map global goto d <esc>:lsp-definition<ret> -docstring 'LSP definition'
+map global goto r <esc>:lsp-references<ret> -docstring 'LSP references'
