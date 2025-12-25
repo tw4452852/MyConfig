@@ -31,9 +31,6 @@ for i [ normal locked ] {
 # Print => screenshot
 riverctl map normal None Print spawn 'grim -g "$(slurp)" /tmp/screenshot-$(date +%Y%m%d@%H%M%S).png'
 
-# Pause/Break => [un]pause pomo clock
-riverctl map normal None Pause spawn '_pomo toggle'
-
 # win+mouse-left => move current window
 riverctl map-pointer normal Super BTN_LEFT move-view
 # win+mouse-right => resize current window
