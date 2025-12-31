@@ -193,7 +193,7 @@
 
     (forever
       (prompt :gl
-        (def r (gl (ps) buf prefill))
+        (def r (gl (ps) buf nil prefill))
         (set prefill nil) # Reset
 
         (var l "")
