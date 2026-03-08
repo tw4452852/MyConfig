@@ -135,16 +135,16 @@ fi
 
 case $cmd in
 	def)
-		tmux pipep -t $session:1 -I "echo open ""$file_path"" $winid && echo def ""$file_path"" `acme-dot -l $winid`"
+		tmux pipep -t $session:1 -I "echo open ""$file_path"" $winid && echo def ""$file_path"" $1 $2"
 		;;
 	refs)
-		tmux pipep -t $session:1 -I "echo open ""$file_path"" $winid && echo ref ""$file_path"" `acme-dot -l $winid`"
+		tmux pipep -t $session:1 -I "echo open ""$file_path"" $winid && echo ref ""$file_path"" $1 $2"
 		;;
 	restart)
 		tmux respawnp -k -t "$session:1"
 		;;
 	impls)
-		tmux pipep -t $session:1 -I "echo open ""$file_path"" $winid && echo imp ""$file_path"" `acme-dot -l $winid`"
+		tmux pipep -t $session:1 -I "echo open ""$file_path"" $winid && echo imp ""$file_path"" $1 $2"
 		;;
 	*)
 		echo "$cmd not supported"

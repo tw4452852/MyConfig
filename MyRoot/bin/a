@@ -2,8 +2,6 @@
 
 command -v acmefocused >/dev/null 2>&1 || \
  { echo "install acmefocused"; GO111MODULE=on go install 9fans.net/acme-lsp/cmd/acmefocused@latest || exit 1; }
-command -v acme-dot >/dev/null 2>&1 || \
- { echo "install acme-dot"; GO111MODULE=on go install github.com/tw4452852/acme-dot@latest || exit 1; }
 command -v Watch >/dev/null 2>&1 || \
  { echo "install Watch"; GO111MODULE=on go install 9fans.net/go/acme/Watch@latest || exit 1; }
 command -v editinacme >/dev/null 2>&1 || \

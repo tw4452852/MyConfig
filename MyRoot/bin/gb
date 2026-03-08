@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-position=`acme-dot $winid`
-file_path=`9p read acme/$winid/tag | cut -d' ' -f1`
-curOff=`echo $position | cut -d'#' -f3`
-curLineNum=`head -c+$curOff $file_path | wc -l`
-curLineNum=$((curLineNum+1))
+# set -x
 
-git log -L$curLineNum,$curLineNum:$file_path -50
+[ $# != 2 ] && echo "gb [file] [line]" && exit 1;
+f=$1
+l=$(($2+1)) # the input line number is 0-based, but git wants 1-based
+
+git log -L$l,$l:$f -50
