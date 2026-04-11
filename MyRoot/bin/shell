@@ -1,6 +1,7 @@
 #!/usr/bin/env janet
 
 (import spork)
+(import ./getline)
 
 ## History server
 
@@ -156,7 +157,7 @@
   [prefix line pos]
   (try
     (if (in-janet? line)
-      (spork/getline/default-autocomplete-options prefix)
+      (getline/default-autocomplete-options prefix)
       (do
         (def ret @[])
         (or
@@ -188,7 +189,7 @@
   (with [c (history-client)]
     (var prefill nil)
     (def buf @"")
-    (def gl (spork/getline/make-getline my-autocomplete-context my-autocomplete-options))
+    (def gl (getline/make-getline my-autocomplete-context my-autocomplete-options))
 
     (os/sigaction :int sig_nop_handler) # Ignore Ctrl-C
     (populate-available-cmds)
