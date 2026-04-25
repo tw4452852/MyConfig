@@ -52,20 +52,11 @@ pathogen-infect "%val{config}/fzf"
 define-command -hidden grep_from_top %{
 	execute-keys %sh{
 		topdir() {
-	        dirname_buffer="${kak_buffile%/*}"
-	        if [ "${dirname_buffer}" = "${kak_buffile}" ]; then
-	            printf 'fail grep_from_top: cannot operate on scratch buffer: %s\n' "${kak_buffile}"
-	            return 1
-	        fi
-	        cd "${dirname_buffer}" 2>/dev/null || {
-	            printf 'fail grep_from_top: unable to change the current working directory to: %s\n' "${dirname_buffer}"
-	            return 1
-	        }
 	        git_topdir="$(git rev-parse --show-toplevel)"
 	        if [ "${git_topdir}" != "${HOME}" ]; then
 	        	printf "%s" "$(realpath ${git_topdir})"
         	else
-	        	printf "%s" "$(realpath ${dirname_buffer})"
+	        	printf "%s" "$(realpath .)"
 	        fi
 	    }
 		printf ":grep -I -w %s %s<ret>" "${kak_selection}" "$(topdir)"
