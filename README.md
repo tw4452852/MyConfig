@@ -1,5 +1,15 @@
 # My $HOME
 
+Prefer using `jj`:
+
+```
+git clone --bare https://codeberg.org/Totorow/home.git /path/home.git
+mkdir -p /path/home.git/info && echo '*' >> /path/home.git/info/exclude
+cd ~ && jj git init --git-repo /path/home.git
+```
+
+Or just `git`:
+
 ```
 cd ~
 git init
