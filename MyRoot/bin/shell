@@ -17,19 +17,21 @@
     []
     (->> history marshal (spit history-path)))
   (defn add-to-history
-    [l]
+    [l pwd]
     (when (and
             (not (empty? l))
-            (not (string/has-prefix? "#" l))
-            (not (has-key? history l)))
-      (set (history l) true)
+            (not (string/has-prefix? "#" l)))
+      (set (history l) pwd)
       (save-history)))
 
   (def fns
-    {:get-all (fn [self]
-                (ev/with-rlock lock (keys history)))
-     :add-one (fn [self l]
-                (ev/with-wlock lock (add-to-history l)))})
+    {:get-all (fn [self pwd]
+                (defn adding
+                  [acc (c p)]
+                  (if (= p pwd) (array/insert acc 0 c) (array/push acc c)))
+                (ev/with-rlock lock (reduce adding @[] (pairs history))))
+     :add-one (fn [self l pwd]
+                (ev/with-wlock lock (add-to-history l pwd)))})
 
   (if (spork/sh/exists? history-path)
     (load-history)
@@ -199,8 +201,8 @@
         (var l "")
         (cond
           (= :cancel r) # Take advantage of unused :cancel result to trigger fuzzy history finder
-          (with [proc (os/spawn ["fzf" "--wrap" "--bind=alt-enter:print(#)+accept"] :p {:in :pipe :out :pipe})]
-            (each cmd (:get-all c) (ev/write (proc :in) (string cmd "\n")))
+          (with [proc (os/spawn ["fzf" "--wrap" "--scheme=history" "--bind=alt-enter:print(#)+accept"] :p {:in :pipe :out :pipe})]
+            (each cmd (:get-all c (os/cwd)) (ev/write (proc :in) (string cmd "\n")))
             (let [[out] (ev/gather
                           (ev/read (proc :out) :all)
                           (os/proc-wait proc))]
@@ -233,13 +235,13 @@
                 (do
                   (def abs_path (-> (or (get args 1) "~") replace-tide-maybe spork/path/abspath))
                   (os/cd abs_path)
-                  (:add-one c (string "cd " abs_path)))
+                  (:add-one c (string "cd " abs_path) (os/cwd)))
 
                 (do
                   (run-pre-cmd-hooks l)
                   (def ret (spork/sh/exec "bash" "-c" l)) # Delegate to bash
                   (if (zero? ret)
-                    (:add-one c l) # Only add successful command to avoid duplications
+                    (:add-one c l (os/cwd)) # Only add successful command to avoid duplications
                     (printf "Error: %d" ret))))
 
               ([e f]
