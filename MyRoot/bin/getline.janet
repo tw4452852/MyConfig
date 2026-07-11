@@ -333,7 +333,7 @@
             2 # ctrl-b
             (kleft)
             3 # ctrl-c
-            (do (clear-lines) (eprint "^C") (eflush) (rawterm/end) (os/exit 1))
+            (do (buffer/clear buf) (set pos 0) (clear-lines) (refresh))
             4 # ctrl-d, eof
             (if (= pos (length buf) 0)
               (do (set more-input false) (clear-lines))
