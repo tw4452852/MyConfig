@@ -390,6 +390,8 @@
               (chr "d") (kdeletew) # alt-d
               (chr "b") (kleftw) # alt-b
               (chr "f") (krightw) # alt-f
+              (chr "h") (kleft) # alt-h
+              (chr "l") (kright) # alt-l
               (chr ",") (set hindex (history-move hindex (- max-history)))
               (chr ".") (set hindex (history-move hindex max-history))
               127 (kbackw)
