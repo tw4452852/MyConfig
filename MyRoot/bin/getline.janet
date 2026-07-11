@@ -393,7 +393,8 @@
               (chr "h") (kleft) # alt-h
               (chr "l") (kright) # alt-l
               (chr ",") (set hindex (history-move hindex (- max-history)))
-              (chr ".") (set hindex (history-move hindex max-history))
+              (chr ".") (if-let [last (get history (- (length history) 2)) last-words (string/split " " last) last-word (array/peek last-words)]
+                          (insert last-word true))
               127 (kbackw)
               nil))))
       (eprint)
