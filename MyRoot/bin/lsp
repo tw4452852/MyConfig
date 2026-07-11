@@ -1,379 +1,173 @@
-#!/usr/bin/env elvish
-use file
-use str
-use path
+#!/usr/bin/env janet
 
-# pipe between input thread(writer), file tracking thread(writer) and server thread(reader)
-var p = (file:pipe)
+(import spork)
+(use spork/sh-dsl)
 
-var content = (put [&jsonrpc=2.0 &id=(num 1) &method=initialize &params=[
-  &rootUri=file://$pwd
-  &processId=(num $pid)
-  &capabilities=[
-    &general=[
-      &positionEncodings=[utf-8]
-    ]
-    &textDocument=[
-      &publishDiagnostics=[&]
-    ]
-  ]
-]] | to-json)
-put "-------------> main thread send: "$content
-printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-set content = (put [&jsonrpc=2.0 &method=initialized &params=[&]] | to-json)
-put "-------------> main thread send: "$content
-printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+(def supported {:c {:cmd ["clangd" "-log=error"] :root "compile_commands.json"}})
 
-var mnt = '/tmp/acme'
-var winid
-var winname = (echo $pwd | 9 tr .@ _)/+LSP
-var opens = [&]
+(defn get-type
+  [filepath]
+  (def ext (spork/path/ext filepath))
+  (def type (cond
+              (has-value? [".c" ".cpp" ".h" ".hpp" ".cc"] ext)
+              :c
+              (errorf "unknown type for %s" filepath)))
+  (unless (has-key? supported type)
+    (errorf "type %v not supported yet"))
 
-fn checkwin {
-  try {
-    var @parts = (str:fields (9p read acme/index | grep -e $winname))
-    set winid = $parts[0]
-  } catch e {
-    # window not exist, just create one
-    set winid = (str:fields (9p read acme/new/ctl) | take 1)
-    echo 'name '$winname | 9p write acme/$winid/ctl
-    echo 'add_env lsp_root='$pwd | 9p write acme/$winid/ctl
-    # close current window when tmux session exits.
-    tmux set-hook -p 'alert-silence['$winid']' 'run "echo delete | 9p write acme/'$winid'/ctl > /dev/null || true"'
-  }
-}
+  type)
 
-fn append {|s|
-  echo $s | 9p write acme/$winid/body
-  echo clean | 9p write acme/$winid/ctl
-}
+(defn get-project-root
+  [filepath]
+  (def type (get-type filepath))
+  (def target ((in supported type) :root))
+  (var cur-dir (spork/path/dirname filepath))
+  (while (= nil (os/stat (spork/path/join cur-dir target)))
+    (if (= "/" cur-dir) (errorf "can't find project root for %s" filepath))
+    (set cur-dir (spork/path/parent cur-dir)))
+  cur-dir)
 
-fn endoffset {
-  var f = (file:open-output &also-input=$true &if-not-exists=error &if-exists=update $mnt/$winid/addr)
-  print '$' > $f
-  var @parts = (str:fields (cat < $f))
-  put $parts[1]
-  file:close $f
-}
 
-fn show {|begin end|
-  print '#'$begin,'#'$end | 9p write acme/$winid/addr
-  echo dot=addr | 9p write acme/$winid/ctl
-  echo show | 9p write acme/$winid/ctl
-}
+(defn get-sock-path
+  [project-root]
+  (string "/tmp/" (hash project-root) ".sock"))
 
-fn read_line {|f l|
-  var @lines = (cat $f | from-lines)
-  put $lines[$l]
-}
+## Server
 
-var log = (file:open $mnt/log)
-var id = (num 1)
-var cbs = [&]
-run-parallel {
-  # server thread
-  eval (str:join ' ' $args) < $p | while $true {
-    var m
-    try {
-      var n = (read-upto "\n")[16..-2] # get content length
-      read-upto "\n" | nop # skip "\r\n"
-      set m = (echo (read-bytes $n) | from-json)
-    } catch e {
-      put 'server thread error:'
-      pprint $e
-      put 'server thread exit'
-      file:close $p[r]
-      break
-    }
+(defn- read-to-crln
+  [stream]
+  (def buf @"")
+  (while (not (string/has-suffix? "\r\n" buf))
+    (ev/chunk stream 1 buf))
+  buf)
 
-    try {
-      if (and (has-key $m method) (==s $m[method] textDocument/publishDiagnostics)) {
-        if (not (eq $m[params][diagnostics] [])) {
-          var file = $m[params][uri][7..] # skip "file://"
-          var cur_file = (str:fields (9p read acme/(9 dial unix!(9 namespace)/acmefocused)/tag) | take 1)
-          if (==s $file $cur_file) {
-            var begin = (endoffset)
-            for entry $m[params][diagnostics] {
-              var msg = (printf "%s:%d+#%d,%d+#%d: %s" $file^
-                $entry[range][start][line] $entry[range][start][character]^
-                $entry[range][end][line] $entry[range][end][character]^
-                $entry[message] | slurp)
-              append $msg
-            }
-            show $begin (endoffset)
-          }
-        }
-      } else {
-        $cbs[$m[id]] $m[result]
-        del cbs[$m[id]]
-      }
-    } catch e {
-      pprint $m
-    }
-  }
-} {
-  # file tracking thread
-  var content
-  fn handle {|winid cmd @rest|
+(defn- json-encode
+  [x]
+  (def buf (spork/json/encode x))
+  (string/format "Content-Length: %d\r\n\r\n%s" (length buf) buf))
 
-    # skip if there's no file path
-    if (eq $rest []) {
-      return
-    }
-    var name = $rest[0]
-    # skip non-regular file
-    # TODO: symlink?
-    if (not (path:is-regular $name)) {
-      return
-    }
+# Display in LSP window
+(defn- show
+  [x]
+  (def l ($<_ :9p read acme/index |grep -m 1 -e +LSP |awk "{print $1}"))
+  (def winid (cond
+               (and (= :buffer (type l)) (not (empty? l)))
+               l
+               (do
+                 (def _winid ($<_ :9p read acme/new/ctl |awk "{print $1}"))
+                 ($ echo name +LSP |:9p write ,(string "acme/" _winid "/ctl"))
+                 _winid)))
+  ($ printf "%s" ,x |:9p write ,(string "acme/" winid "/body")))
 
-    if (and (==s del $cmd) (has-key $opens $name)) {
-      set content = (put [&jsonrpc=2.0 &method=textDocument/didClose &params=[
-        &textDocument=[
-          &uri=file://$name
-        ]
-      ]] | to-json)
+(defn server
+  [args]
 
-      put "-------------> file tracking thread send: "$content
-      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+  (var id 0)
+  (def pending @{})
+  (def proc (os/spawn args :p {:in :pipe :out :pipe}))
+  (defer (os/proc-close proc)
+    (def fns
+      {:def (fn [self f l c]
+              (++ id)
+              (put pending id (string/format "\ndef %s:%d %s" f (inc l) ($< sed -n ,(string (inc l) "p") ,f)))
+              (->> {:jsonrpc "2.0"
+                    :id id
+                    :method "textDocument/definition"
+                    :params {:textDocument {:uri (string "file://" f)}
+                             :position {:line l :character c}}} json-encode (ev/write (proc :in))))
 
-      del opens[$name]
-      tmux set-hook -pu 'alert-silence['$winid']'
-    } elif (and (==s put $cmd) (has-key $opens $name)) {
-      set content = (put [&jsonrpc=2.0 &method=textDocument/didChange &params=[
-        &textDocument=[
-          &uri=file://$name
-          &version=(num 0)
-        ]
-        &contentChanges=[[&text=(9p read acme/$winid/body | slurp)]]
-      ]] | to-json)
+       :refs (fn [self f l c]
+               (++ id)
+               (put pending id (string/format "\nrefs %s:%d %s" f (inc l) ($< sed -n ,(string (inc l) "p") ,f)))
+               (->> {:jsonrpc "2.0"
+                     :id id
+                     :method "textDocument/references"
+                     :params {:textDocument {:uri (string "file://" f)}
+                              :position {:line l :character c}
+                              :context {:includeDeclaration true}}} json-encode (ev/write (proc :in))))
 
-      put "-------------> file tracking thread send: "$content
-      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+       :open (fn [self f winid]
+               (->> {:jsonrpc "2.0"
+                     :method "textDocument/didOpen"
+                     :params {:textDocument {:uri (string "file://" f)
+                                             :languageId (string (get-type f))
+                                             :version 0
+                                             :text ($< :9p read ,(string "acme/" winid "/body"))}}} json-encode (ev/write (proc :in))))})
 
-      set content = (put [&jsonrpc=2.0 &method=textDocument/didSave &params=[
-        &textDocument=[
-          &uri=file://$name
-        ]
-      ]] | to-json)
+    (def root (os/cwd))
+    (def sock-path (get-sock-path root))
+    (protect (os/rm sock-path))
+    (with [s (spork/rpc/server fns :unix sock-path)]
 
-      put "-------------> file tracking thread send: "$content
-      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
+      (->> {:jsonrpc "2.0"
+            :id (++ id)
+            :method "initialize"
+            :params {:rootUri (string "file://" root)
+                     :processId (os/getpid)
+                     :capabilities {:general {:positionEncodings ["utf-8"]}}}} json-encode (ev/write (proc :in)))
 
-      if (eq $E:_lsp_format_on_save 1) {
-        set id = (+ $id 1)
-        # register a edit callback
-        set cbs[$id] = {|m|
-          var f = (file:open-output &if-not-exists=error &if-exists=update $mnt/$winid/addr)
-          defer {
-            file:close $f
-          }
+      (->> {:jsonrpc "2.0"
+            :method "initialized"
+            :params {}} json-encode (ev/write (proc :in)))
 
-          fn apply {|m|
-            printf '%d+#%d,%d+#%d'^
-              $m[range][start][line] $m[range][start][character]^
-              $m[range][end][line] $m[range][end][character]^
-            > $f
-            print $m[newText] | 9p write acme/$winid/data
-          }
+      (forever
+        (def in (proc :out))
+        (def l (read-to-crln in))
+        (def n (scan-number (string/slice l 16 -3)))
+        (assertf n "can't retrieve content length from \"%s\"" l)
+        (read-to-crln in)
+        (def content (spork/json/decode (ev/chunk in n)))
+        (if-let [rid (get content "id") req (get pending rid)]
+          (do
+            (show req)
+            (if-let [result (get content "result")]
+              (cond
+                (= :array (type result))
+                (show (reduce (fn [acc el]
+                                (def f (string/slice (el "uri") (length "file://")))
+                                (def l (get-in el ["range" "start" "line"]))
+                                (string/format "%s%s:%d %s" acc f (inc l) ($< sed -n ,(string (inc l) "p") ,f))) @"" result)))
 
-          if (==s (kind-of $m) list) {
-            var @entries = (order &less-than={|a b|
-              if (== $a[range][start][line] $b[range][start][line]) {
-                put (< $a[range][start][character] $b[range][start][character])
-              } else {
-                put (< $a[range][start][line] $b[range][start][line])
-              }
-            } &reverse=$true $m)
-            for entry $entries {
-              apply $entry
-            }
-          } elif (not (is $m $nil)) {
-            apply $m
-          }
-        }
+              (do
+                (def f (string/slice (result "uri") (length "file://")))
+                (def l (get-in result ["range" "start" "line"]))
+                (show (string/format "%s:%d %s" f (inc l) ($< sed -n ,(string (inc l) "p") ,f)))))
+            (put pending rid nil))
+          (pp content))))))
 
-        set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/formatting &params=[
-          &textDocument=[
-            &uri=file://$name
-          ]
-          &options=[
-            &tabSize=(num 4)
-            &insertSpaces=$false
-          ]
-        ]] | to-json)
+## Main
 
-        put "-------------> file tracking thread send: "$content
-        printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-      }
-    }
-  }
+(defn- get-server
+  [filepath]
+  (def project-root (get-project-root filepath))
+  (def sock-path (get-sock-path project-root))
+  (def (success stream) (protect (net/connect :unix sock-path)))
+  (if success
+    (do (:close stream) (spork/rpc/client :unix sock-path))
+    (do
+      (def cmd ((supported (get-type filepath)) :cmd))
+      ($ tmux new -d -s ,project-root -c ,project-root ,((dyn :args) 0) server ,;cmd)
+      (ev/sleep 1)
+      (spork/rpc/client :unix sock-path))))
 
-  from-lines < $log | each {|l|
-    try {
-      handle (str:fields $l)
-    } catch e {
-      put $l
-      put 'file tracking thread: error:'
-      put $e
-      put 'file tracking thread: exit'
-      break
-    }
-  }
-} {
-  # Input reader thread (also the main thread)
-  while $true {
-    try {
-      var l = (read-line)
-      var @parts = (str:fields $l)
-      var cmd = $parts[0]
-      var file = $parts[1]
+(defn main
+  [self cmd & args]
 
-      put 'recv: '$l
-      if (==s $cmd def) {
-        if (< (count $parts) 4) {
-          put "not enough parameters for definition, skip: "$l
-          continue
-        }
-        var line = (num $parts[2])
-        var char = (num $parts[3])
+  (cond
+    (= cmd "server")
+    (server args)
 
-        set id = (+ $id 1)
-        set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/definition &params=[
-          &textDocument=[
-            &uri=file://$file
-          ]
-          &position=[
-            &line=$line
-            &character=$char
-          ]
-        ]] | to-json)
+    (or (= cmd "def") (= cmd "refs"))
+    (do
+      (def filepath (os/getenv "samfile"))
+      (assertf filepath "samfile environment variable not set?")
+      (def l (scan-number (get args 0)))
+      (def c (scan-number (get args 1)))
+      (assertf (and l c) "line and colum not set?")
+      (def winid (os/getenv "winid"))
+      (assertf winid "winid not set?")
+      (with [s (get-server filepath)]
+        (:open s filepath winid)
+        ((keyword cmd) s filepath l c)))
 
-        checkwin
-        append (printf "\n%s:%d def: %s" $file (+ 1 $parts[2]) (read_line $file $parts[2]) | slurp)
-      } elif (==s $cmd ref) {
-        if (< (count $parts) 4) {
-          put "not enough parameters for reference, skip: "$l
-          continue
-        }
-        var line = (num $parts[2])
-        var char = (num $parts[3])
-
-        set id = (+ $id 1)
-        set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/references &params=[
-          &textDocument=[
-            &uri=file://$file
-          ]
-          &position=[
-            &line=$line
-            &character=$char
-          ]
-          &context=[
-            &includeDeclaration=$true
-          ]
-        ]] | to-json)
-
-        checkwin
-        append (printf "\n%s:%d refs: %s" $file (+ 1 $parts[2]) (read_line $file $parts[2]) | slurp)
-      } elif (==s $cmd imp) {
-        if (< (count $parts) 4) {
-          put "not enough parameters for implementation, skip: "$l
-          continue
-        }
-        var line = (num $parts[2])
-        var char = (num $parts[3])
-
-        set id = (+ $id 1)
-        set content = (put [&jsonrpc=2.0 &id=$id &method=textDocument/implementation &params=[
-          &textDocument=[
-            &uri=file://$file
-          ]
-          &position=[
-            &line=$line
-            &character=$char
-          ]
-        ]] | to-json)
-
-        checkwin
-        append (printf "\n%s:%d impls: %s" $file (+ 1 $parts[2]) (read_line $file $parts[2]) | slurp)
-      } elif (==s $cmd open) {
-        if (has-key $opens $file) {
-          continue
-        }
-        if (< (count $parts) 3) {
-          put "not enough parameters for open, skip: "$l
-          continue
-        }
-        var winid = $parts[2]
-
-        set content = (put [&jsonrpc=2.0 &method=textDocument/didOpen &params=[
-          &textDocument=[
-            &uri=file://$file
-            &languageId=(try { put (path:ext $file)[1..] } catch e { put unknown })
-            &version=(num 0)
-            &text=(9p read acme/$winid/body | slurp)
-          ]
-        ]] | to-json)
-
-        set opens[$file] = $nil
-        # close current window when tmux session exits.
-        tmux set-hook -p 'alert-silence['$winid']' 'run "echo del | 9p write acme/'$winid'/ctl > /dev/null || true"'
-      } else {
-        put "skip unknown input: "$l
-        continue
-      }
-
-      # register a display callback
-      set cbs[$id] = {|m|
-        var count = 0
-        var addr
-        var begin = (endoffset)
-        var file
-        if (==s (kind-of $m) list) {
-          for entry $m {
-            set file = $entry[uri][7..]
-            set addr = (printf "%s:%d+#%d,%d+#%d" $file^
-              $entry[range][start][line] $entry[range][start][character]^
-              $entry[range][end][line] $entry[range][end][character]^
-            )
-            append (printf "%s %s\n" $addr (read_line $file $entry[range][start][line]))
-            set count = (+ $count 1)
-          }
-        } else {
-          set file = $m[uri][7..]
-          set addr = (printf "%s:%d+#%d,%d+#%d" $file^
-            $m[range][start][line] $m[range][start][character]^
-            $m[range][end][line] $m[range][end][character]^
-          )
-          append (printf "%s %s\n" $addr (read_line $file $m[range][start][line]))
-          set count = (+ $count 1)
-        }
-
-        # jump to it if there's only one result
-        if (== $count 1) {
-          9 plumb -s lsp -d edit -a 'envs=lsp_root:'$pwd $addr
-        }
-
-        # make sure the results are visible
-        show $begin (endoffset)
-      }
-
-      put "-------------> input thread send: "$content
-      printf "Content-Length: %d\r\n\r\n%s" (count $content) $content > $p
-
-    } catch e {
-      var reason = $e[reason]
-      if (and (has-key $e[reason] type) (==s $reason[type] flow) (==s $reason[name] continue)) {
-        continue
-      } else {
-        put 'input thread: error:'
-        pprint $e
-        break
-      }
-    }
-  }
-
-  put 'input thread: exit'
-  file:close $p[w] # terminate server thread
-  file:close $log # terminate file tracking thread
-}
+    (errorf "unknown args: %P" (dyn :args))))
