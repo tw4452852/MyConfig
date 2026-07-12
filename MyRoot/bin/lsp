@@ -30,7 +30,7 @@
 
 (defn get-sock-path
   [project-root]
-  (string "/tmp/" (hash project-root) ".sock"))
+  (string "/tmp/lsp" (hash project-root) ".sock"))
 
 ## Server
 
@@ -97,6 +97,7 @@
     (def root (os/cwd))
     (def sock-path (get-sock-path root))
     (protect (os/rm sock-path))
+    (printf "Listen on %s" sock-path)
     (with [s (spork/rpc/server fns :unix sock-path)]
 
       (->> {:jsonrpc "2.0"
