@@ -30,7 +30,7 @@
 
 (defn get-sock-path
   [project-root]
-  (string "/tmp/lsp" (hash project-root) ".sock"))
+  (string "/tmp/lsp" (hash (os/realpath project-root)) ".sock"))
 
 ## Server
 
