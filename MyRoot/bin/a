@@ -1,11 +1,7 @@
 #!/bin/sh
 
-command -v acmefocused >/dev/null 2>&1 || \
- { echo "install acmefocused"; GO111MODULE=on go install 9fans.net/acme-lsp/cmd/acmefocused@latest || exit 1; }
 command -v Watch >/dev/null 2>&1 || \
  { echo "install Watch"; GO111MODULE=on go install 9fans.net/go/acme/Watch@latest || exit 1; }
-command -v editinacme >/dev/null 2>&1 || \
- { echo "install editinacme"; GO111MODULE=on go install 9fans.net/go/acme/editinacme@latest || exit 1; }
 
 BROWSER=qutebrowser
 Font=/mnt/font/WenQuanYiMicroHei/11a/font
@@ -42,12 +38,5 @@ fi
 ulimit -c unlimited
 acme -f $font -F $Font $* 2>/tmp/acme.log &
 acme_pid=$!
-
-sleep 1
-[ -z "$(pgrep acmefocused)" ] && acmefocused &
-
-[ -d $mnt ] || mkdir $mnt
-u umount -q $mnt
-9 mount `9 namespace`/acme $mnt
 
 wait $acme_pid
