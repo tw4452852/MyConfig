@@ -200,45 +200,54 @@ proxy-groups:
     type: select
     use:
       - "provide"
+      - "provide_ip"
     proxies:
-      - "FALLBACK"
       - "URL-TEST"
-  - name: "FALLBACK"
-    type: fallback
-    use:
-      - "provide"
   - name: "URL-TEST"
     type: url-test
     use:
       - "provide"
+      - "provide_ip"
 proxy-providers:
   "provide":
     type: http
-    url: "subscription url"
+    url: "https://jmssub.net/members/getsub.php?service=xxxxx&usedomains=1"
     proxy: DIRECT
     interval: 86400
-    #path: ./provide/subscription.yaml
-    # filter: 'xxx' # Supports regular expressions to filter by node name
-    # exclude-filter: 'ctb' # Supports regular expressions to exclude based on node name
-    # exclude-type: 'ss|http' # Does not support regular expressions, separated by '|', excluded by node type
     health-check:
       enable: true
       url: http://www.gstatic.com/generate_204
       interval: 3600
-      # "provide-cloud":
-    # type: http
-    # url: "your url"
-    # interval: 3600
-    # path: ./provide/cloud.yml
-    # # filter: 'xxx' # Supports regular expressions to filter by node name
-    # # exclude-filter: 'ctb' # Supports regular expressions to exclude based on node name
-    # # exclude-type: 'ss|http' # Tidak mendukung ekspresi reguler, dipisahkan dengan '|', dikecualikan menurut jenis node
-    # health-check:
-    # enable: true
-    # url: http://www.gstatic.com/generate_204
-    # interval: 3600
+  "provide_ip":
+    type: http
+    url: "https://jmssub.net/members/getsub.php?service=xxxxx"
+    proxy: DIRECT
+    interval: 86400
+    override:
+      additional-prefix: "ip |"
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 3600
 rules:
-  - GEOIP,lan,DIRECT,no-resolve
-  - GEOSITE,CN,DIRECT
-  - GEOIP,CN,DIRECT
+  - RULE-SET,private_ip,DIRECT,no-resolve
+  - RULE-SET,cn_domain,DIRECT
+  - RULE-SET,cn_ip,DIRECT
   - MATCH,Proxy
+
+rule-anchor:
+  ip: &ip {type: http, interval: 86400, behavior: ipcidr, format: mrs}
+  domain: &domain {type: http, interval: 86400, behavior: domain, format: mrs}
+rule-providers:
+  private_domain:
+    <<: *domain
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"
+  cn_domain:
+    <<: *domain
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"
+  private_ip:
+    <<: *ip
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
+  cn_ip:
+    <<: *ip
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"
