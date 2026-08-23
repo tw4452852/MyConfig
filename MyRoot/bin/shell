@@ -242,8 +242,8 @@
                 (= "cd" arg0)
                 (do
                   (def abs_path (-> (or (get args 1) "~") replace-tide-maybe spork/path/abspath))
-                  (def [success _] (protect (os/cd abs_path)))
-                  (if success (:add-one c (string "cd " abs_path) (os/cwd)) (:del-one c (string "cd " abs_path))))
+                  (try (do (os/cd abs_path) (:add-one c (string "cd " abs_path) (os/cwd)))
+                    ([e] (do (print e) (:del-one c (string "cd " abs_path))))))
 
                 (do
                   (run-pre-cmd-hooks l)
