@@ -24,6 +24,11 @@
             (not (string/has-prefix? "#" l)))
       (set (history l) pwd)
       (save-history)))
+  (defn remove-from-history
+    [l]
+    (when (history l)
+      (set (history l) nil)
+      (save-history)))
 
   (def fns
     {:get-all (fn [self pwd]
@@ -31,6 +36,8 @@
                   [acc (c p)]
                   (if (= p pwd) (array/insert acc 0 c) (array/push acc c)))
                 (ev/with-rlock lock (reduce adding @[] (pairs history))))
+     :del-one (fn [self l]
+                (ev/with-wlock lock (remove-from-history l)))
      :add-one (fn [self l pwd]
                 (ev/with-wlock lock (add-to-history l pwd)))})
 
@@ -235,8 +242,8 @@
                 (= "cd" arg0)
                 (do
                   (def abs_path (-> (or (get args 1) "~") replace-tide-maybe spork/path/abspath))
-                  (os/cd abs_path)
-                  (:add-one c (string "cd " abs_path) (os/cwd)))
+                  (def [success _] (protect (os/cd abs_path)))
+                  (if success (:add-one c (string "cd " abs_path) (os/cwd)) (:del-one c (string "cd " abs_path))))
 
                 (do
                   (run-pre-cmd-hooks l)
