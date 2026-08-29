@@ -8,7 +8,7 @@
   (def cmd (string/join args " "))
   (if (empty? cmd)
     (set debug true)
-    (print cmd))
+    (pp cmd))
 
   (def ch (ev/chan 10))
   (ev/give ch :dummy)
@@ -24,7 +24,7 @@
     (if debug (pp e)
       (do
         (def ret (os/shell cmd))
-        (printf "\nReturn %v" ret)))
+        (pp ret)))
     (while (> (ev/count ch) 0)
       (def e (ev/take ch))
       (if debug (pp e)))))
