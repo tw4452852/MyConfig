@@ -1,0 +1,30 @@
+#!/usr/bin/env janet
+
+(defn main
+  [self & args]
+
+  # empty args means debug mode
+  (var debug false)
+  (def cmd (string/join args " "))
+  (if (empty? cmd)
+    (set debug true)
+    (print cmd))
+
+  (def ch (ev/chan 10))
+  (ev/give ch :dummy)
+  (def watcher (filewatch/new ch))
+  (def flag (if debug :all (if (= :linux (os/which)) :modify :write)))
+  (loop [line :iterate (file/read stdin :line)]
+    (def path (string/trimr line "\r\n"))
+    (filewatch/add watcher path flag))
+  (filewatch/listen watcher)
+
+  (forever
+    (def e (ev/take ch))
+    (if debug (pp e)
+      (do
+        (def ret (os/shell cmd))
+        (printf "\nReturn %v" ret)))
+    (while (> (ev/count ch) 0)
+      (def e (ev/take ch))
+      (if debug (pp e)))))
