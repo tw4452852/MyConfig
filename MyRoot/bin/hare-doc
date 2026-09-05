@@ -1,0 +1,56 @@
+#!/usr/bin/env janet
+
+(import spork/path)
+(use spork/sh-dsl)
+
+(def use-peg
+  (peg/compile
+    ~{:id (range "09" "az" "AZ" "__")
+      :all '"*"
+      :select (some (* '(some :id) :s* (? ",") :s*))
+      :path (some (* (some :id) "::"))
+      :main (* "use " '(? :path) (? "{") (group (+ :select :all)) (? "}") ";")}))
+
+(assert (deep= @["" @["a"]] (peg/match use-peg "use a;")))
+(assert (deep= @["b::" @["a"]] (peg/match use-peg "use b::a;")))
+(assert (deep= @["b::" @["a"]] (peg/match use-peg "use b::{a};")))
+(assert (deep= @["b::" @["a" "a_9"]] (peg/match use-peg "use b::{a, a_9};")))
+(assert (deep= @["b::" @["*"]] (peg/match use-peg "use b::*;")))
+
+(defn main
+  [self x]
+
+  (var uses @{})
+
+  (def file-path (os/getenv "samfile"))
+  (assertf file-path "must be called within acme")
+
+  # Populate uses
+  (def f (file/open file-path))
+  (assert f)
+  (defer (file/close f)
+    (loop [l :iterate (file/read f :line) :when (string/has-prefix? "use " l)]
+      (def [prefix targets] (peg/match use-peg l))
+      (each t targets
+        (put uses t (string prefix t)))))
+
+  # Replace the first part with the full path
+  (def parts (string/split "::" x))
+  (put parts 0 (get uses (parts 0) (parts 0)))
+
+  # Find the project root where a Makefile locates
+  (var root (path/parent file-path))
+  (while (= nil (os/stat (path/join root "Makefile")))
+    (if (= "/" root) (errorf "can't find project root"))
+    (set root (path/parent root)))
+
+  # Append the root to the HAREPATH
+  (def harepath ($<_ hare version -vv |grep HAREPATH))
+  (def cmd (string "env " (string harepath ":" root) " haredoc -A -n "))
+
+  (def ret (os/shell (string cmd (string/join parts "::"))))
+  # If not found, try all module if any
+  (if (not= 0 ret)
+    (when-let [all (get uses "*")]
+      (put parts 0 (string/replace "*" (parts 0) all))
+      (os/shell (string cmd (string/join parts "::"))))))
