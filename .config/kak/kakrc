@@ -63,3 +63,10 @@ define-command -hidden grep_from_top %{
 	}
 }
 map global user g "<a-i>w:grep_from_top<ret>" -docstring 'grep word at current cursor'
+
+define-command -params 1 -hidden haredoc %{
+	evaluate-commands %{
+		fifo -name *haredoc* -script %{ samfile=${kak_buffile} hare-doc $@ } -- %arg{@}
+	}
+}
+map global user h ":haredoc <c-r>.<ret>" -docstring 'haredoc selection'
