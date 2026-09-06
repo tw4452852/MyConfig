@@ -41,7 +41,7 @@
   # Find the project root where a Makefile locates
   (var root (path/parent file-path))
   (while (= nil (os/stat (path/join root "Makefile")))
-    (if (= "/" root) (errorf "can't find project root"))
+    (when (= "/" root) (set root (os/cwd)) (break))
     (set root (path/parent root)))
 
   # Append the root to the HAREPATH
