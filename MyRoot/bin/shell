@@ -209,7 +209,7 @@
         (var l "")
         (cond
           (= :cancel r) # Take advantage of unused :cancel result to trigger fuzzy history finder
-          (with [proc (os/spawn ["fzf" "--wrap" "--scheme=history" "--bind=alt-enter:print(#)+accept"] :p {:in :pipe :out :pipe})]
+          (with [proc (os/spawn ["fzf" "--wrap" "--scheme=history" "--bind=alt-enter:print(#)+accept" "--tiebreak=chunk"] :p {:in :pipe :out :pipe})]
             (each cmd (:get-all c (os/cwd)) (ev/write (proc :in) (string cmd "\n")))
             (let [[out] (ev/gather
                           (ev/read (proc :out) :all)
