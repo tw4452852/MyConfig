@@ -1,0 +1,101 @@
+From 313bc4c1623d3f0ddd9898d30e920b273d25b969 Mon Sep 17 00:00:00 2001
+From: jiacai2050 <dev@liujiacai.net>
+Date: Wed, 12 Aug 2026 19:39:46 +0800
+Subject: [PATCH] http: upgrade CONNECT tunnel to TLS for HTTPS targets
+
+Previously `connectProxied` always returned a plain connection after
+establishing the CONNECT tunnel, even when the target required TLS.
+This caused the HTTP request to be sent in plaintext through the
+tunnel, resulting in servers responding with "400 Bad Request: Client
+sent an HTTP request to an HTTPS server."
+
+Now `connectProxied` accepts the target `protocol` parameter. After
+a successful CONNECT handshake, if the target is TLS, the plain
+tunnel connection is upgraded by wrapping the underlying stream in
+TLS before returning it to the caller.
+---
+ lib/std/http/Client.zig | 38 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 33 insertions(+), 5 deletions(-)
+
+diff --git a/lib/std/http/Client.zig b/lib/std/http/Client.zig
+index b0f9461671..9ace1aaf2c 100644
+--- a/lib/std/http/Client.zig
++++ b/lib/std/http/Client.zig
+@@ -1528,6 +1528,7 @@ pub fn connectProxied(
+     proxy: *Proxy,
+     proxied_host: HostName,
+     proxied_port: u16,
++    protocol: Protocol,
+ ) !*Connection {
+     const io = client.io;
+     if (!proxy.supports_connect) return error.TunnelNotSupported;
+@@ -1535,7 +1536,7 @@ pub fn connectProxied(
+     if (try client.connection_pool.findConnection(io, .{
+         .host = proxied_host,
+         .port = proxied_port,
+-        .protocol = proxy.protocol,
++        .protocol = protocol,
+     })) |node| return node;
+ 
+     var maybe_valid = false;
+@@ -1547,10 +1548,13 @@ pub fn connectProxied(
+             .proxied_host = proxied_host,
+             .proxied_port = proxied_port,
+         });
+-        errdefer {
++        // Track whether the plain connection has been released to avoid
++        // double-release in the errdefer after a TLS upgrade.
++        var plain_released = false;
++        errdefer if (!plain_released) {
+             connection.closing = true;
+             client.connection_pool.release(connection, io);
+-        }
++        };
+ 
+         var req = client.request(.CONNECT, .{
+             .scheme = "http",
+@@ -1580,7 +1584,31 @@ pub fn connectProxied(
+ 
+         connection.closing = false;
+ 
+-        return connection;
++        if (protocol == .plain) {
++            return connection;
++        }
++
++        // If the target requires TLS, upgrade the plain tunnel connection
++        // now that the CONNECT handshake has succeeded.
++        const stream = connection.getStream();
++        // Remove from the used pool without recycling into the free list,
++        // then destroy the plain connection (the stream stays open).
++        {
++            client.connection_pool.mutex.lockUncancelable(io);
++            defer client.connection_pool.mutex.unlock(io);
++            client.connection_pool.used.remove(&connection.pool_node);
++        }
++        const plain: *Connection.Plain = @alignCast(@fieldParentPtr("connection", connection));
++        plain.destroy();
++        plain_released = true;
++
++        const tc = Connection.Tls.create(client, proxied_host, proxied_port, stream) catch |err| {
++            stream.close(io);
++            break :tunnel err;
++        };
++        errdefer tc.destroy();
++        try client.connection_pool.addUsed(io, &tc.connection);
++        return &tc.connection;
+     }) catch {
+         // something went wrong with the tunnel
+         proxy.supports_connect = maybe_valid;
+@@ -1614,7 +1642,7 @@ pub fn connect(
+     }
+ 
+     if (proxy.supports_connect) tunnel: {
+-        return connectProxied(client, proxy, host, port) catch |err| switch (err) {
++        return connectProxied(client, proxy, host, port, protocol) catch |err| switch (err) {
+             error.TunnelNotSupported => break :tunnel,
+             else => |e| return e,
+         };
+-- 
+2.55.0
+
